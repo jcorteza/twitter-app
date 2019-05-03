@@ -1,10 +1,10 @@
-#Simple Twitter Application
+# Simple Twitter Application
 Clone this repo to have your very own CLI Twitter Application that will allow you to post status updated and check your personal Twitter feed from the comfort of your command line.
 ---
 **Note:** This application runs with Java, so Java must be installed on your computer. ([Java Download Resources](https://docs.oracle.com/cd/E19182-01/820-7851/inst_cli_jdk_javahome_t/))
 ---
 
-##Steps To Get Up and Running
+## Steps To Get Up and Running
 * Click the green "Clone or download" button, copy the [link](https://github.com/jcorteza/twitter-app.git), and `git clone <the git clone link>` in a directory of your choosing.
 * Create a Twitter account, if you don't have one already, by visiting the [Twitter Sign Up page](https://twitter.com/i/flow/signup) and filling out the form.
 * Log in to Twitter.
