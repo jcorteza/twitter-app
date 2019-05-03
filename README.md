@@ -8,7 +8,7 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 ---
 
 ## Steps To Get Up and Running
-* Click the green "Clone or download" button, copy the [link](https://github.com/jcorteza/twitter-app.git), and `git clone <the git clone link>` in a directory of your choosing.
+### Set Up App Configuration
 * Create a Twitter account, if you don't have one already, by visiting the [Twitter Sign Up page](https://twitter.com/i/flow/signup) and filling out the form.
 * Log in to Twitter.
 * Visit the [Twitter Developers page](https://developer.twitter.com/content/developer-twitter/en.html). In the dropdown menu under your Twitter handle select [Apps](https://developer.twitter.com/en/apps).
@@ -18,4 +18,10 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * Now select the "Keys and tokens" tab of your application. Copy the Consumer API keys and access tokens into a new file "twitter4j.properties," which should be located in the same directory as the cloned git repo.
 * The format of your "twitter4j.properties" file should follow the format shown in the [twitter4J Configuration documentation](http://twitter4j.org/en/configuration.html) as shown below:
 ![example twitter4j.properties file](https://github.com/jcorteza/twitter-app/blob/master/twitter4j-config.png)
-* Once your properties file is saved your apps configuration, you can run the app with the following command: `java -jar twitter-app.jar`
+### Set Up JAR File
+* Click the green "Clone or download" button in the repo, copy the [link](https://github.com/jcorteza/twitter-app.git), and `git clone <the git clone link>` in a directory of your choosing.
+* Create a JAR File
+```
+jar cfm <name of the jar file>.jar resources/manifest-info.txt -C src .
+``` 
+* You can run the app with the following command: `java -jar twitter-app.jar`
