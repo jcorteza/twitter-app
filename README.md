@@ -24,4 +24,5 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 ```
 jar cfm <name of the jar file>.jar resources/manifest-info.txt -C src .
 ``` 
-* You can run the app with the following command: `java -jar twitter-app.jar`
+* Run the "Tweet" feauture with the following command: `java -jar twitter-app.jar tweet <your tweet text>`. If no further arguments are entered after `tweet`, The default tweet text is "Hello Twitter followers!".
+* Run the "Check Feed" feature with the following command: `java -jar twitter-app.jar check_feed`
