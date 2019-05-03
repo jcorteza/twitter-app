@@ -1,0 +1,2 @@
+Main-Class: com.khoros.twitterapp.TwitterApp
+Class-Path: resources/libraries/twitter4j-core-4.0.7.jar
