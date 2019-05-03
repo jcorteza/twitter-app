@@ -12,7 +12,7 @@ public class TwitterApp {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            System.out.println("Please enter either \"tweet\" or \"check_feed\" as a command.");
+            System.out.println("Please enter either \"tweet\" or \"check_feed\" as the first argument in your command.");
             System.exit(-1);
         }
         Twitter factory = new TwitterFactory().getSingleton();
