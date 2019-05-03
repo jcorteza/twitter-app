@@ -1,5 +1,5 @@
 # Simple Twitter Application
-Clone this repo to have your very own CLI Twitter Application that will allow you to post status updated and check your personal Twitter feed from the comfort of your command line.
+Clone this repo to have your very own CLI Twitter Application that will allow you to post status updates and check your personal Twitter feed from the comfort of your command line.
 
 ---
 
