@@ -18,4 +18,5 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * Now select the "Keys and tokens" tab of your application. Copy the Consumer API keys and access tokens into a new file "twitter4j.properties," which should be located in the same directory as the cloned git repo.
 * The format of your "twitter4j.properties" file should follow the format shown in the [twitter4J Configuration documentation](http://twitter4j.org/en/configuration.html) as shown below:
 ![example twitter4j.properties file](https://github.com/jcorteza/twitter-app/blob/master/twitter4j-config.png)
-* Once your properties file is saved your apps configuration, you can run the app with the following command: `java -jar twitter-app.jar`
+* Once your properties file is saved your apps configuration, you can run the app with the following command: 
+`java -jar twitter-app.jar`
