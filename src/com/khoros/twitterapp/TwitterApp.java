@@ -18,15 +18,17 @@ public class TwitterApp {
         Twitter factory = new TwitterFactory().getSingleton();
         switch (args[0].toLowerCase()) {
             case "tweet":
-                String statusText;
+                String statusText = "";
 
                 if (args.length == 1) {
                     statusText = "Hello Twitter followers!";
                 } else {
-                    statusText = args[1];
+                    for (int i = 1; i < args.length; i++) {
+                        statusText += args[i] + " ";
+                    }
                 }
                 try {
-                    Status newStatus = factory.updateStatus(statusText);
+                    Status newStatus = factory.updateStatus(statusText.trim());
                     System.out.println("Status was successfully updated to \"" + statusText + ".\"");
                     System.exit(0);
                 } catch (TwitterException tweetException) {
