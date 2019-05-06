@@ -20,20 +20,20 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 ![example twitter4j.properties file](https://github.com/jcorteza/twitter-app/blob/master/twitter4j-config.png)
 ### Setting Up Maven Project
 * [Install Maven](https://maven.apache.org/install.html) if it's not already installed on your computer.
-* Initialize your Maven project by following the [Creating a Project Maven insructions](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html). Make sure the groupId matches your package name and the artifactId matches the name for your application.
-* Copy your twitter4j.properties file into a new 'resources' directory in the <my-app>/src/main directory.
+* Initialize your Maven project by following the [Creating a Project Maven insructions](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html). Make sure the groupId is com.khoros.twitterapp and the artifactId is TwitterApp.
+* Copy your twitter4j.properties file into a new 'resources' directory in the TwiterApp/src/main directory.
 ### Compile, Package, and Run
-* `cd` into your new <my-app> directory.
+* `cd` into your new 'TwitterApp' directory.
 * Compile the maven src files into a 'target' directory with the following command: `mvn compile`
 * Copy your dependencies into the target directory and package the maven src files into a JAR file with the following command: `mvn dependency:copy-dependencies package`
-* You should now be able to run your application with the following command: `java -jar /target/<my-app>-1.0-SNAPSHOT.jar [options]`
+* You should now be able to run your application with the following command: `java -jar /target/TwitterApp-1.0-SNAPSHOT.jar [options]`
 #### Options
 * To post a new tweet enter `tweet` as an option and follow it with the new tweet text. Ex:
   ```
-  java -jar target/<my-app>-1.0-SNAPSHOT.jar tweet Hello Twitter followers!
+  java -jar target/TwitterApp-1.0-SNAPSHOT.jar tweet Hello Twitter followers!
   ```
   If you do not enter tweet text the application default is to post "Hello Twitter followers!"
 * To check Twitter feed, enter `check_feed` as the option. Ex:
   ```
-  java -jar target/<my-app>-1.0-SNAPSHOT.jar check_feed
+  java -jar target/TwitterApp-1.0-SNAPSHOT.jar check_feed
   ```
