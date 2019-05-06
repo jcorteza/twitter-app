@@ -63,8 +63,9 @@
               <archive>
                 <index>true</index>
                 <manifest>
-                  <mainClass>com.khoros.twitterapp.TwitterApp</mainClass>
                   <addClasspath>true</addClasspath>
+                  <classpathPrefix>lib</classpathPrefix>
+                  <mainClass>com.khoros.twitterapp.TwitterApp</mainClass>
                 </manifest>
                 <manifestEntries>
                   <mode>development</mode>
@@ -87,6 +88,12 @@
               </goals>
             </execution>
           </executions>
+          <configuration>
+            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+            <overWriteReleases>false</overWriteReleases>
+            <overWriteSnapshots>false</overWriteSnapshots>
+            <overWriteIfNewer>true</overWriteIfNewer>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
@@ -108,9 +115,4 @@
       </plugins>
     </pluginManagement>
   </build>
-  <distributionManagement>
-    <repository>
-      <id>jcorteza-repository</id>
-      <name>jcorteza Repository</name>
-      <url>
 </project>
