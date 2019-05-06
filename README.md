@@ -21,7 +21,7 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 ### Setting Up Maven Project
 * [Install Maven](https://maven.apache.org/install.html) if it's not already installed on your computer.
 * Initialize your Maven project by following the [Creating a Project Maven insructions](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html). Make sure the groupId matches your package name and the artifactId matches the name for your application.
-* Copy your twitter4j.properties file into a new resources directory in the <my-app>/src/main directory.
+* Copy your twitter4j.properties file into a new 'resources' directory in the <my-app>/src/main directory.
 ### Compile, Package, and Run
 * `cd` into your new <my-app> directory.
 * Compile the maven src files into a 'target' directory with the following command: `mvn compile`
