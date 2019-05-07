@@ -53,6 +53,10 @@ public class TwitterApp {
                     System.exit(-1);
                 }
                 break;
+            default:
+                System.out.println("Please enter either \"tweet\" or \"check_feed\" as the first argument in your command.");
+                System.exit(-1);
+                break;
         }
     }
 
