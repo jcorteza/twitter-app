@@ -23,16 +23,19 @@ public class TwitterApp {
                         String statusText = "";
 
                         if (args.length > 1) {
+                            StringBuilder tweetBuilder = new StringBuilder(statusText);
                             for (int i = 1; i < args.length; i++) {
-                                statusText += args[i] + " ";
+                                tweetBuilder.append(" " + args[i]);
                             }
-                            statusText = statusText.trim();
+                            statusText = tweetBuilder.toString();
                         } else {
                             throw new LengthException(statusText.length());
                         }
-                        if (statusText.length() > 280 || statusText.length() == 0) throw new LengthException(statusText.length());
+                        if (statusText.length() > 280 || statusText.length() == 0) {
+                            throw new LengthException(statusText.length());
+                        }
                         Status newStatus = factory.updateStatus(statusText);
-                        System.out.println("Status was successfully updated to \"" + statusText + ".\"");
+                        System.out.println("Status was successfully updated to \"" + statusText + "\"");
                         System.exit(0);
                     } catch (LengthException lengthException) {
                         System.out.println(lengthException.getExceptionMessage());
