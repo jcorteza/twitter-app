@@ -1,6 +1,5 @@
 package com.khoros.twitterapp;
 
-import twitter4j.auth.AccessToken;
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.Status;
@@ -28,9 +27,15 @@ public class TwitterApp {
                     }
                 }
                 try {
-                    Status newStatus = factory.updateStatus(statusText.trim());
+                    statusText = statusText.trim();
+                    if(statusText.length() > 280) throw new LengthException(statusText.length());
+                    Status newStatus = factory.updateStatus(statusText);
                     System.out.println("Status was successfully updated to \"" + statusText + ".\"");
                     System.exit(0);
+                } catch (LengthException lengthException) {
+                    System.out.println(lengthException.getExceptionMessage());
+                    System.out.println(lengthException.getCauseMessage());
+                    System.exit(-1);
                 } catch (TwitterException tweetException) {
                     tweetException.printStackTrace();
                     System.out.println(tweetException.getErrorMessage());
@@ -59,5 +64,4 @@ public class TwitterApp {
                 break;
         }
     }
-
 }
