@@ -2,7 +2,8 @@ package com.khoros.twitterapp;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
-import sun.tools.java.Environment;
+import io.dropwizard.setup.Environment;
+
 
 public class TwitterApp2 extends Application<TwitterAppConfiguration> {
     public static void main(String[] args) throws Exception {
@@ -16,6 +17,7 @@ public class TwitterApp2 extends Application<TwitterAppConfiguration> {
 
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
-
+        environment.jersey().register(new HomeFeedResource());
+        environment.jersey().register(new StatusUpdateResource());
     }
 }
