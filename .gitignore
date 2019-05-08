@@ -3,7 +3,7 @@ twitter4j.properties
 libraries/twitter4j-4.0.7.zip
 twitter-app.jar
 **/TwitterApp.class
-C104.iml
+*.iml
 .idea
 **/classes
 **/target
