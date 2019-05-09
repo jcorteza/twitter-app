@@ -23,6 +23,15 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * Initialize your Maven project by following the [Creating a Project Maven insructions](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html). Make sure the groupId is com.khoros.twitterapp and the artifactId is TwitterApp.
 * Copy your twitter4j.properties file into a new 'resources' directory in the TwiterApp/src/main directory.
 ### Setting up Dropwizard
+* Add a file 'configuration.yml' to your root directory and add the following text to the file and save it:
+  ```
+  server:
+    type: simple
+    applicationContextPath: /api/1.0/twitter/
+    connector:
+      type: http
+      port: 8080
+  ```
 * Make sure you have an updated pom.xml file that includes dropwizard as a dependency. You can use [Dropwizard's Tutorial](https://www.dropwizard.io/1.3.9/docs/getting-started.html#tutorial) to get maven set up with Dropwizard.
 * Once your pom.xml file is updated, you can reimport your project with Maven in IntelliJ.
   * Right click on your pom.xml file in IntelliJ.
