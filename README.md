@@ -22,18 +22,31 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * [Install Maven](https://maven.apache.org/install.html) if it's not already installed on your computer.
 * Initialize your Maven project by following the [Creating a Project Maven insructions](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html). Make sure the groupId is com.khoros.twitterapp and the artifactId is TwitterApp.
 * Copy your twitter4j.properties file into a new 'resources' directory in the TwiterApp/src/main directory.
+### Setting up Dropwizard
+* Make sure you have an updated pom.xml file that includes dropwizard as a dependency. You can use [Dropwizard's Tutorial](https://www.dropwizard.io/1.3.9/docs/getting-started.html#tutorial) to get maven set up with Dropwizard.
+* Once your pom.xml file is updated, you can reimport your project with Maven in IntelliJ.
+  * Right click on your pom.xml file in IntelliJ.
+  * Howver over "Maven" until the submenu opens.
+  * Click on reimport.
+  * Give your library a couple of minutes to update.
+* Dropwizard should now be integrated into your Maven project.
 ### Compile, Package, and Run
-* `cd` into your new 'TwitterApp' directory.
-* Compile the maven src files into a 'target' directory with the following command: `mvn compile`
-* Copy your dependencies into the target directory and package the maven src files into a JAR file with the following command: `mvn dependency:copy-dependencies package`
-* You should now be able to run your application with the following command: `java -jar /target/TwitterApp-1.0-SNAPSHOT.jar [options]`
-#### Options
-* To post a new tweet enter `tweet` as an option and follow it with the new tweet text. Ex:
+* Compile and package your Maven project by running the following command in the command line: `mvn package`
+* There should now be a new 'target' directory with two JAR files in it.
+* To run your fat-JAR file and start the Dropwizard server use the following command:
   ```
-  java -jar target/TwitterApp-1.0-SNAPSHOT.jar tweet Hello Twitter followers!
+  java -jar target/TwitterApp-1.0-SNAPSHOT-launcher.jar configuration.yml
   ```
-  If you do not enter tweet text the application default is to post "Hello Twitter followers!"
-* To check Twitter feed, enter `check_feed` as the option. Ex:
+  * [Dropwizard Reference—Runing Your Application](https://www.dropwizard.io/1.3.9/docs/getting-started.html#running-your-application)
+* Your server should now be listening to client requests.
+#### Making Client Requests
+* You can use `curl` to make a POST request to [http://localhost:8080/api/1.0/twitter/tweet](http://localhost:8080/api/1.0/twitter/tweet) as such:
   ```
-  java -jar target/TwitterApp-1.0-SNAPSHOT.jar check_feed
+  curl -X POST --data-urlencode message="<your message>" http://localhost:8080/api/1.0/twitter/tweet
   ```
+* To make GET request to [http://localhost:8080/api/1.0/twitter/timeline](http://localhost:8080/api/1.0/twitter/timeline) you can use curl or the browser:
+  * Using curl:
+    ```
+    curl -X GET http://localhost:8080/api/1.0/twitter/timeline
+    ```
+  * Using the browser: Open [http://localhost:8080/api/1.0/twitter/timeline](http://localhost:8080/api/1.0/twitter/timeline) in the browser of your choice.
