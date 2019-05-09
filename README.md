@@ -35,7 +35,7 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * There should now be a new 'target' directory with two JAR files in it.
 * To run your fat-JAR file and start the Dropwizard server use the following command:
   ```
-  java -jar target/TwitterApp-1.0-SNAPSHOT-launcher.jar configuration.yml
+  java -jar target/TwitterApp-1.0-SNAPSHOT-launcher.jar server configuration.yml
   ```
   * [Dropwizard Reference—Runing Your Application](https://www.dropwizard.io/1.3.9/docs/getting-started.html#running-your-application)
 * Your server should now be listening to client requests.
