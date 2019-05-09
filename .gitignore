@@ -5,3 +5,5 @@ twitter-app.jar
 **/TwitterApp.class
 C104.iml
 .idea
+**/classes
+**/target

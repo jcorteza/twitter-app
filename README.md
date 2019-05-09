@@ -18,17 +18,22 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * Now select the "Keys and tokens" tab of your application. Copy the Consumer API keys and access tokens into a new file "twitter4j.properties," which should be located in the same directory as the cloned git repo.
 * The format of your "twitter4j.properties" file should follow the format shown in the [twitter4J Configuration documentation](http://twitter4j.org/en/configuration.html) as shown below:
 ![example twitter4j.properties file](https://github.com/jcorteza/twitter-app/blob/master/twitter4j-config.png)
-### Compile Source Files
-* To compile the .java file and create your .class file run the following command:
-```
-javac -cp resources/libraries/twitter4j-core-4.0.7.jar src/com/khoros/twitterapp/TwitterApp.java
-```
-### Set Up JAR File
-* Click the green "Clone or download" button in the repo, copy the [link](https://github.com/jcorteza/twitter-app.git), and `git clone <the git clone link>` in a directory of your choosing.
-* Create a JAR File
-```
-jar cfm <name of the jar file>.jar resources/manifest-info.txt -C src .
-``` 
-### Run the Application
-* Run the "Tweet" feauture with the following command: `java -jar twitter-app.jar tweet <your tweet text>`. If no further arguments are entered after `tweet`, The default tweet text is "Hello Twitter followers!".
-* Run the "Check Feed" feature with the following command: `java -jar twitter-app.jar check_feed`
+### Setting Up Maven Project
+* [Install Maven](https://maven.apache.org/install.html) if it's not already installed on your computer.
+* Initialize your Maven project by following the [Creating a Project Maven insructions](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html). Make sure the groupId is com.khoros.twitterapp and the artifactId is TwitterApp.
+* Copy your twitter4j.properties file into a new 'resources' directory in the TwiterApp/src/main directory.
+### Compile, Package, and Run
+* `cd` into your new 'TwitterApp' directory.
+* Compile the maven src files into a 'target' directory with the following command: `mvn compile`
+* Copy your dependencies into the target directory and package the maven src files into a JAR file with the following command: `mvn dependency:copy-dependencies package`
+* You should now be able to run your application with the following command: `java -jar /target/TwitterApp-1.0-SNAPSHOT.jar [options]`
+#### Options
+* To post a new tweet enter `tweet` as an option and follow it with the new tweet text. Ex:
+  ```
+  java -jar target/TwitterApp-1.0-SNAPSHOT.jar tweet Hello Twitter followers!
+  ```
+  If you do not enter tweet text the application default is to post "Hello Twitter followers!"
+* To check Twitter feed, enter `check_feed` as the option. Ex:
+  ```
+  java -jar target/TwitterApp-1.0-SNAPSHOT.jar check_feed
+  ```
