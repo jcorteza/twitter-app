@@ -26,7 +26,7 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * Make sure you have an updated pom.xml file that includes dropwizard as a dependency. You can use [Dropwizard's Tutorial](https://www.dropwizard.io/1.3.9/docs/getting-started.html#tutorial) to get maven set up with Dropwizard.
 * Once your pom.xml file is updated, you can reimport your project with Maven in IntelliJ.
   * Right click on your pom.xml file in IntelliJ.
-  * Howver over "Maven" until the submenu opens.
+  * Hover over "Maven" until the submenu opens.
   * Click on reimport.
   * Give your library a couple of minutes to update.
 * Dropwizard should now be integrated into your Maven project.
