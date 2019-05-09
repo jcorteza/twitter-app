@@ -1,7 +1,7 @@
-twitter4j.properties
+**/*.properties
 .DS_Store
 libraries/twitter4j-4.0.7.zip
-*.jar
+**/*.jar
 **/TwitterApp.class
 *.iml
 .idea
