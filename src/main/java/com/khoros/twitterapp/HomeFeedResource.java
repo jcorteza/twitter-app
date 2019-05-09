@@ -13,7 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/api/1.0/twitter/timeline")
+@Path("/timeline")
 @Produces(MediaType.TEXT_PLAIN)
 public class HomeFeedResource {
 

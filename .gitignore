@@ -1,10 +1,10 @@
 twitter4j.properties
 .DS_Store
 libraries/twitter4j-4.0.7.zip
-twitter-app.jar
+*.jar
 **/TwitterApp.class
 *.iml
 .idea
 **/classes
 **/target
-config.yml
+*.yml

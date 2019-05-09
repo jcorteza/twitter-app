@@ -11,11 +11,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
 
-@Path("/api/1.0/twitter/tweet?message={tweetText}")
+@Path("/tweet")
 @Consumes("application/x-www-form-urlencoded")
 public class StatusUpdateResource {
     @POST
-    public Response postStatus(@FormParam("tweetText") String tweetText) {
+    public Response postStatus(@FormParam("message") String tweetText) {
         Twitter factory = new TwitterFactory().getSingleton();
         String statusText = tweetText.trim();
         try {
