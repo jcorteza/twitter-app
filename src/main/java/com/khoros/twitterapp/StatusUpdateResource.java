@@ -26,7 +26,7 @@ public class StatusUpdateResource {
         } catch (LengthException lengthException) {
             return Response.status(403).entity(lengthException.getCauseMessage()).build();
         } catch (TwitterException tweetException) {
-            return Response.status(tweetException.getStatusCode()).entity(tweetException.getErrorMessage()).build();
+            return Response.status(tweetException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
     }
 }

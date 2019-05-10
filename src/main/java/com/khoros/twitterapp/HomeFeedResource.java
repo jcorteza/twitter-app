@@ -23,7 +23,7 @@ public class HomeFeedResource {
             List<Status> tweetsFeed = factory.getHomeTimeline();
             return Response.status(200).entity(tweetsFeed).type("application/json").build();
         } catch (TwitterException feedException) {
-            return Response.status(feedException.getStatusCode()).entity(feedException.getErrorMessage()).build();
+            return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
     }
 }
