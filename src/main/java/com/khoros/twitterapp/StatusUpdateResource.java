@@ -5,14 +5,12 @@ import twitter4j.Twitter;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Path("/tweet")
 @Consumes("application/x-www-form-urlencoded")
+@Produces("application/json")
 public class StatusUpdateResource {
     @POST
     public Response postStatus(@FormParam("message") String tweetText) {
@@ -22,7 +20,7 @@ public class StatusUpdateResource {
             if (statusText.length() > 0 && statusText.length() <= 280) {
                 Status newStatus = factory.updateStatus(statusText);
                 System.out.println("Status was successfully updated to \"" + statusText + "\"");
-                return Response.status(200).build();
+                return Response.status(200).entity(newStatus).type("application/json").build();
             } else {
                 throw new LengthException(statusText.length());
             }
