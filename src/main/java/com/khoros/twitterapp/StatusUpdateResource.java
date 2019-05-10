@@ -17,14 +17,14 @@ public class StatusUpdateResource {
         Twitter factory = new TwitterFactory().getSingleton();
         String statusText = tweetText.trim();
         try {
-            if (statusText.length() > 0 && statusText.length() <= 280) {
-                Status newStatus = factory.updateStatus(statusText);
-                return Response.status(200).entity(newStatus).type("application/json").build();
+            if (statusText.length() == 0) {
+                return Response.status(403).entity("No tweet text entered.").build();
+            } else if (statusText.length() > 280) {
+                return Response.status(403).entity("Tweet text surpassed 280 characters.").build();
             } else {
-                throw new LengthException(statusText.length());
+                Status newStatus = factory.updateStatus(statusText);
+                return Response.status(200).entity(newStatus).build();
             }
-        } catch (LengthException lengthException) {
-            return Response.status(403).entity(lengthException.getCauseMessage()).build();
         } catch (TwitterException tweetException) {
             return Response.status(tweetException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }

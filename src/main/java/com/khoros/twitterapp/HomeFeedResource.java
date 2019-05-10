@@ -21,7 +21,7 @@ public class HomeFeedResource {
         Twitter factory = new TwitterFactory().getSingleton();
         try {
             List<Status> tweetsFeed = factory.getHomeTimeline();
-            return Response.status(200).entity(tweetsFeed).type("application/json").build();
+            return Response.status(200).entity(tweetsFeed).build();
         } catch (TwitterException feedException) {
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }

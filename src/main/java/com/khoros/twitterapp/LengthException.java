@@ -11,7 +11,7 @@ public class LengthException extends Exception {
         if(characters > 280) {
             cause = new Throwable("Error: Tweet text surpassed 280 characters.");
         } else if (characters == 0) {
-            cause = new Throwable("Error: No tweet text enetered.");
+            cause = new Throwable("Error: No tweet text entered.");
         }
     }
 
