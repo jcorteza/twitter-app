@@ -23,5 +23,4 @@ public class StatusUpdateResource {
             return Response.status(tweetException.getStatusCode()).entity(tweetException).build();
         }
     }
-
 }
