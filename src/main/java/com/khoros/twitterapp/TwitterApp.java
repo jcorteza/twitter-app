@@ -12,7 +12,5 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
     public void run(TwitterAppConfiguration configuration, Environment environment) {
         environment.jersey().register(new HomeFeedResource());
         environment.jersey().register(new StatusUpdateResource());
-        // environment.addResource(new HomeFeedResource());
-        // environment.addHealthCheck(new StatusUpdateResource());
     }
 }
