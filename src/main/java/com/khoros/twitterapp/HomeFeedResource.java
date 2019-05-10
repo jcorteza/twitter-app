@@ -22,13 +22,10 @@ public class HomeFeedResource {
     public Response get() {
         Twitter factory = new TwitterFactory().getSingleton();
         try {
-            // String lineBreak = "========================================================================";
             List<Status> tweetsFeed = factory.getHomeTimeline();
             return Response.status(200).entity(tweetsFeed).type("application/json").build();
         } catch (TwitterException feedException) {
-            feedException.printStackTrace();
-            System.out.println(feedException.getErrorMessage());
-            return Response.status(feedException.getStatusCode()).build();
+            return Response.status(feedException.getStatusCode()).entity(feedException).build();
         }
     }
 }

@@ -17,22 +17,10 @@ public class StatusUpdateResource {
         Twitter factory = new TwitterFactory().getSingleton();
         String statusText = tweetText.trim();
         try {
-            if (statusText.length() > 0 && statusText.length() <= 280) {
-                Status newStatus = factory.updateStatus(statusText);
-                System.out.println("Status was successfully updated to \"" + statusText + "\"");
-                return Response.status(200).entity(newStatus).type("application/json").build();
-            } else {
-                throw new LengthException(statusText.length());
-            }
-        } catch (LengthException lengthException) {
-            System.out.println(lengthException.getExceptionMessage());
-            System.out.println(lengthException.getCauseMessage());
-            return Response.status(403).build();
+            Status newStatus = factory.updateStatus(statusText);
+            return Response.status(200).entity(newStatus).type("application/json").build();
         } catch (TwitterException tweetException) {
-            tweetException.printStackTrace();
-            System.out.println("errorCode: " + tweetException.getErrorCode());
-            System.out.println(tweetException.getErrorMessage());
-            return Response.status(tweetException.getStatusCode()).build();
+            return Response.status(tweetException.getStatusCode()).entity(tweetException).build();
         }
     }
 
