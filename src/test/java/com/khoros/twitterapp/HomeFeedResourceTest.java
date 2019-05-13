@@ -39,6 +39,7 @@ public class HomeFeedResourceTest {
 
     @Test
     public void resourceGetSuccess() {
-        Assert.assertEquals(expectedResponse, feedResource.get().getStatus());
+        Assert.assertEquals(200, feedResource.get().getStatus());
+        Assert.assertEquals(feedEntity, feedResource.get().getEntity());
     }
 }
