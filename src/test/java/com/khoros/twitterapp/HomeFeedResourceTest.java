@@ -22,7 +22,6 @@ public class HomeFeedResourceTest {
 
     List<Status> mockStatus;
     private Response successResponse;
-    private Response exceptionResponse;
 
     @Before
     public void setup() {
@@ -36,18 +35,10 @@ public class HomeFeedResourceTest {
         }
 
         successResponse = Response.status(200).entity(mockStatus).build();
-        exceptionResponse = Response.status(500).entity("Whoops! Something went wrong. Try again later.").build();
-
     }
 
     @Test
     public void resourceGetSuccess() {
         Assert.assertEquals(successResponse, feedResource.get());
-    }
-
-    @Test
-    public void resourceGetException() {
-        doThrow(new TwitterException("Default exception message.")).when(mockFactory.getHomeTimeline());
-        Assert.assertEquals(exceptionResponse, feedResource.get());
     }
 }
