@@ -40,6 +40,7 @@ public class StatusUpdateResourceTest {
     @Test
     public void statusUpdateTest() {
         expectedResponse = Response.status(200).entity(statusEntity).build();
-        Assert.assertEquals(expectedResponse, statusResource.postStatus(exampleText));
+        Assert.assertEquals(200, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(statusEntity, statusResource.postStatus(exampleText).getEntity());
     }
 }
