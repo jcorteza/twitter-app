@@ -6,7 +6,9 @@ import static org.mockito.Mockito.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import twitter4j.Twitter;
+import twitter4j.Status;
 import twitter4j.TwitterException;
+import twitter4j.ResponseList;
 
 import javax.ws.rs.core.Response;
 
@@ -18,13 +20,18 @@ public class HomeFeedResourceTest {
     @Mock
     private Twitter mockFactory;
 
+    private ResponseList<Status> entity;
+    private Response exampleResponse;
+
     @Before
     public void setup() {
         feedResource = new HomeFeedResource();
         mockFactory = mock(Twitter.class);
 
         try {
-            when(mockFactory.getHomeTimeline()).thenReturn("Twitter API call successful!");
+            entity = mockFactory.getHomeTimeline();
+            exampleResponse = Response.status(200).entity(entity).build();
+            when(mockFactory.getHomeTimeline()).thenReturn(entity);
         } catch(TwitterException e) {
             Assert.fail("Test failed due to TwitterException: " + e.getMessage());
         }
@@ -32,6 +39,6 @@ public class HomeFeedResourceTest {
 
     @Test
     public void resourceGetSuccess() {
-        Assert.assertEquals(Response.status(200).entity("Twitter API call successful!").build(), feedResource.get());
+        Assert.assertEquals(exampleResponse, feedResource.get());
     }
 }
