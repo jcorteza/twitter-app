@@ -20,7 +20,7 @@ public class HomeFeedResourceTest {
     @Mock
     private Twitter mockFactory;
 
-    private ResponseList<Status> entity;
+    private ResponseList<Status> feedEntity;
     private Response expectedResponse;
 
     @Before
@@ -29,9 +29,9 @@ public class HomeFeedResourceTest {
         mockFactory = mock(Twitter.class);
 
         try {
-            entity = mockFactory.getHomeTimeline();
-            expectedResponse = Response.status(200).entity(entity).build();
-            when(mockFactory.getHomeTimeline()).thenReturn(entity);
+            feedEntity = mockFactory.getHomeTimeline();
+            expectedResponse = Response.status(200).entity(feedEntity).build();
+            when(mockFactory.getHomeTimeline()).thenReturn(feedEntity);
         } catch(TwitterException e) {
             Assert.fail("Test failed due to TwitterException: " + e.getMessage());
         }
@@ -39,6 +39,6 @@ public class HomeFeedResourceTest {
 
     @Test
     public void resourceGetSuccess() {
-        Assert.assertEquals(expectedResponse, feedResource.get());
+        Assert.assertEquals(expectedResponse, feedResource.get().getStatus());
     }
 }

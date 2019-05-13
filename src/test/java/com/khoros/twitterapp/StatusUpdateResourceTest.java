@@ -21,7 +21,7 @@ public class StatusUpdateResourceTest {
     private Twitter mockFactory;
 
     private String exampleText;
-    private Status entity;
+    private Status statusEntity;
     private Response expectedResponse;
 
     @Before
@@ -31,7 +31,7 @@ public class StatusUpdateResourceTest {
         exampleText = "Hello Twitter!";
 
         try {
-            entity = mockFactory.updateStatus(exampleText);
+            statusEntity = mockFactory.updateStatus(exampleText);
         } catch (TwitterException e) {
             Assert.fail("Test failed due to Twitter Exception: " + e.getMessage());
         }
@@ -39,7 +39,7 @@ public class StatusUpdateResourceTest {
 
     @Test
     public void statusUpdateTest() {
-        expectedResponse = Response.status(200).entity(entity).build();
+        expectedResponse = Response.status(200).entity(statusEntity).build();
         Assert.assertEquals(expectedResponse, statusResource.postStatus(exampleText));
     }
 }
