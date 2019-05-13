@@ -22,7 +22,7 @@ public class StatusUpdateResourceTest {
 
     private String exampleText;
     private Status entity;
-    private Response exampleResponse;
+    private Response expectedResponse;
 
     @Before
     public void setup() {
@@ -39,7 +39,7 @@ public class StatusUpdateResourceTest {
 
     @Test
     public void statusUpdateTest() {
-        exampleResponse = Response.status(200).entity(entity).build();
-        Assert.assertEquals(exampleResponse, statusResource.postStatus(exampleText));
+        expectedResponse = Response.status(200).entity(entity).build();
+        Assert.assertEquals(expectedResponse, statusResource.postStatus(exampleText));
     }
 }
