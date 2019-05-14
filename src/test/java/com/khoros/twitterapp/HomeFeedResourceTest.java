@@ -25,7 +25,7 @@ public class HomeFeedResourceTest {
         feedResource.setFactory(mockFactory);
 
         try {
-            feedEntity = mockFactory.getHomeTimeline();
+            feedEntity = new ResponseImplTest<>();
             when(mockFactory.getHomeTimeline()).thenReturn(feedEntity);
         } catch(TwitterException e) {
             Assert.fail("Test failed due to TwitterException: " + e.getMessage());
