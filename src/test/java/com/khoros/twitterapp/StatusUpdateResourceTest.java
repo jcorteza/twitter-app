@@ -1,6 +1,8 @@
 package com.khoros.twitterapp;
 
 import static org.mockito.Mockito.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,10 +12,8 @@ import twitter4j.Twitter;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
-import twitter4j.JSONObject;
 
-import javax.ws.rs.core.Response;
-
+import java.lang.Exception;
 public class StatusUpdateResourceTest {
 
     @InjectMocks
@@ -31,6 +31,11 @@ public class StatusUpdateResourceTest {
         statusResource = new StatusUpdateResource();
         mockFactory = mock(Twitter.class);
         statusResource.setFactory(mockFactory);
+    }
+
+    @After
+    public void resetMock() {
+        reset(mockFactory);
     }
 
     @Test
@@ -51,16 +56,25 @@ public class StatusUpdateResourceTest {
     @Test
     public void statusLengthZeroTest() {
         exampleText = "";
+
+        Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals("No tweet text entered.", statusResource.postStatus(exampleText).getEntity());
     }
 
     @Test
     public void statusLengthLongTest() {
         exampleText = "hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello";
 
+        Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals("Tweet text surpassed 280 characters.", statusResource.postStatus(exampleText).getEntity());
     }
 
     @Test
     public void statusTwitterExceptionTest() throws TwitterException {
+        exampleText = "Exception.";
+        when(mockFactory.updateStatus(exampleText)).thenThrow(new TwitterException("Testing TwitterException.", new Exception(), 500));
 
+        Assert.assertEquals(500, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals("Whoops! Something went wrong. Try again later.", statusResource.postStatus(exampleText).getEntity());
     }
 }
