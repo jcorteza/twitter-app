@@ -31,6 +31,10 @@ public class StatusUpdateResourceTest {
         statusResource = new StatusUpdateResource();
         mockFactory = mock(Twitter.class);
         statusResource.setFactory(mockFactory);
+    }
+
+    @Test
+    public void statusUpdateTest() {
         exampleText = "Tweet";
 
         try {
@@ -39,12 +43,24 @@ public class StatusUpdateResourceTest {
         } catch (TwitterException e) {
             Assert.fail("Test failed due to Twitter Exception: " + e.getMessage());
         }
+
+        Assert.assertEquals(200, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(statusEntity, statusResource.postStatus(exampleText).getEntity());
     }
 
     @Test
-    public void statusUpdateTest() {
-        // expectedResponse = Response.status(200).entity(statusEntity).build();
-        Assert.assertEquals(200, statusResource.postStatus(exampleText).getStatus());
-        Assert.assertEquals(statusEntity, statusResource.postStatus(exampleText).getEntity());
+    public void statusLengthZeroTest() {
+        exampleText = "";
+    }
+
+    @Test
+    public void statusLengthLongTest() {
+        exampleText = "hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello";
+
+    }
+
+    @Test
+    public void statusTwitterExceptionTest() throws TwitterException {
+
     }
 }
