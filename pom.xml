@@ -146,6 +146,7 @@
                             <exclude>**/TwitterApp.class</exclude>
                             <exclude>**/LengthException.class</exclude>
                             <exclude>**/CommandNotFoundException.class</exclude>
+                            <exclude>**/TwitterAppConfiguration.class</exclude>
                         </excludes>
                     </configuration>
                     <goals>
