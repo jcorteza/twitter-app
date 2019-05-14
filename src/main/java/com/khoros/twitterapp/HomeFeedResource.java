@@ -16,14 +16,19 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
+    private Twitter factory = new TwitterFactory().getSingleton();
+
     @GET
     public Response get() {
-        Twitter factory = new TwitterFactory().getSingleton();
         try {
             List<Status> tweetsFeed = factory.getHomeTimeline();
             return Response.status(200).entity(tweetsFeed).build();
         } catch (TwitterException feedException) {
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
+    }
+
+    protected void setFactory(Twitter factory) {
+        this.factory = factory;
     }
 }

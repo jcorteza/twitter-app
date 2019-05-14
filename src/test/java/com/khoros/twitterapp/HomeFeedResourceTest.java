@@ -14,23 +14,18 @@ import javax.ws.rs.core.Response;
 
 public class HomeFeedResourceTest {
 
-    @InjectMocks
     private HomeFeedResource feedResource;
-
-    @Mock
     private Twitter mockFactory;
-
     private ResponseList<Status> feedEntity;
-    private Response expectedResponse;
 
     @Before
     public void setup() {
         feedResource = new HomeFeedResource();
         mockFactory = mock(Twitter.class);
+        feedResource.setFactory(mockFactory);
 
         try {
             feedEntity = mockFactory.getHomeTimeline();
-            expectedResponse = Response.status(200).entity(feedEntity).build();
             when(mockFactory.getHomeTimeline()).thenReturn(feedEntity);
         } catch(TwitterException e) {
             Assert.fail("Test failed due to TwitterException: " + e.getMessage());

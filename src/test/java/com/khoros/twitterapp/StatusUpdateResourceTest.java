@@ -22,13 +22,14 @@ public class StatusUpdateResourceTest {
 
     private String exampleText;
     private Status statusEntity;
-    private Response expectedResponse;
+    // private Response expectedResponse;
 
     @Before
     public void setup() {
         statusResource = new StatusUpdateResource();
         mockFactory = mock(Twitter.class);
-        exampleText = "Hello Twitter!";
+        statusResource.setFactory(mockFactory);
+        exampleText = "Tweet";
 
         try {
             statusEntity = mockFactory.updateStatus(exampleText);
@@ -39,7 +40,7 @@ public class StatusUpdateResourceTest {
 
     @Test
     public void statusUpdateTest() {
-        expectedResponse = Response.status(200).entity(statusEntity).build();
+        // expectedResponse = Response.status(200).entity(statusEntity).build();
         Assert.assertEquals(200, statusResource.postStatus(exampleText).getStatus());
         Assert.assertEquals(statusEntity, statusResource.postStatus(exampleText).getEntity());
     }

@@ -12,9 +12,11 @@ import javax.ws.rs.core.Response;
 @Consumes("application/x-www-form-urlencoded")
 @Produces("application/json")
 public class StatusUpdateResource {
+
+    private Twitter factory = new TwitterFactory().getSingleton();
+
     @POST
     public Response postStatus(@FormParam("message") String tweetText) {
-        Twitter factory = new TwitterFactory().getSingleton();
         String statusText = tweetText.trim();
         try {
             if (statusText.length() == 0) {
@@ -28,5 +30,9 @@ public class StatusUpdateResource {
         } catch (TwitterException tweetException) {
             return Response.status(tweetException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
+    }
+
+    protected void setFactory(Twitter factory) {
+        this.factory = factory;
     }
 }
