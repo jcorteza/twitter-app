@@ -1,4 +1,4 @@
-package com.khoros.twitterapp;
+package com.khoros.twitterapp.resources;
 
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
@@ -32,7 +32,7 @@ public class StatusUpdateResource {
         }
     }
 
-    protected void setFactory(Twitter factory) {
+    public void setFactory(Twitter factory) {
         this.factory = factory;
     }
 }

@@ -1,5 +1,7 @@
 package com.khoros.twitterapp;
 
+import com.khoros.twitterapp.resources.HomeFeedResource;
+import com.khoros.twitterapp.resources.StatusUpdateResource;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 

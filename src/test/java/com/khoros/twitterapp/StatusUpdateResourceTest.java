@@ -2,6 +2,7 @@ package com.khoros.twitterapp;
 
 import static org.mockito.Mockito.*;
 
+import com.khoros.twitterapp.resources.StatusUpdateResource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
@@ -17,7 +18,7 @@ import java.lang.Exception;
 public class StatusUpdateResourceTest {
 
     @InjectMocks
-    private StatusUpdateResource  statusResource;
+    private StatusUpdateResource statusResource;
 
     @Mock
     private Twitter mockFactory;
