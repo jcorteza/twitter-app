@@ -59,3 +59,7 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
     curl -X GET http://localhost:8080/api/1.0/twitter/timeline
     ```
   * Using the browser: Open [http://localhost:8080/api/1.0/twitter/timeline](http://localhost:8080/api/1.0/twitter/timeline) in the browser of your choice.
+## Testing the Application
+### Generating a Test Coverage Report
+* Type the following command into the command line to generate a test coverage report: `mvn jacoco:report verify`
+* To view the report open the index.html file (located in your `target/site/jacoco/`) in your browser.
