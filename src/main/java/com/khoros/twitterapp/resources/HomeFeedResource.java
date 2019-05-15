@@ -4,6 +4,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.Status;
 import twitter4j.TwitterException;
+import twitter4j.conf.Configuration;
+
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -16,7 +18,16 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
-    private Twitter factory = new TwitterFactory().getSingleton();
+    private Twitter factory;
+
+    public HomeFeedResource(Configuration conf) {
+        this.factory = new TwitterFactory(conf).getInstance();
+    }
+
+    // constructor for unit testing using mock Twitter object
+    public HomeFeedResource(Twitter factory) {
+        this.factory = factory;
+    }
 
     @GET
     public Response get() {
@@ -26,9 +37,5 @@ public class HomeFeedResource {
         } catch (TwitterException feedException) {
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
-    }
-
-    public void setFactory(Twitter factory) {
-        this.factory = factory;
     }
 }

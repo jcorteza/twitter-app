@@ -18,9 +18,8 @@ public class HomeFeedResourceTest {
 
     @Before
     public void setup() {
-        feedResource = new HomeFeedResource();
         mockFactory = mock(Twitter.class);
-        feedResource.setFactory(mockFactory);
+        feedResource = new HomeFeedResource(mockFactory);
     }
 
     @After
@@ -49,5 +48,10 @@ public class HomeFeedResourceTest {
 
         Assert.assertEquals(500, feedResource.get().getStatus());
         Assert.assertEquals("Whoops! Something went wrong. Try again later.", feedResource.get().getEntity());
+    }
+
+    @Test
+    public void mainConstructorTest() {
+
     }
 }

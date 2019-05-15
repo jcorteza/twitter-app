@@ -29,9 +29,8 @@ public class StatusUpdateResourceTest {
 
     @Before
     public void setup() {
-        statusResource = new StatusUpdateResource();
         mockFactory = mock(Twitter.class);
-        statusResource.setFactory(mockFactory);
+        statusResource = new StatusUpdateResource(mockFactory);
     }
 
     @After
