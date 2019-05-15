@@ -1,4 +1,4 @@
-package com.khoros.twitterapp;
+package com.khoros.twitterapp.resources;
 
 import java.lang.Throwable;
 

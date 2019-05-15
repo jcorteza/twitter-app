@@ -1,5 +1,6 @@
 package com.khoros.twitterapp;
 
+import com.khoros.twitterapp.resources.HomeFeedResource;
 import org.junit.*;
 import static org.mockito.Mockito.*;
 import twitter4j.Twitter;
