@@ -1,0 +1,14 @@
+server:
+  type: simple
+  applicationContextPath: /api/1.0/twitter/
+  connector:
+    type: http
+    port: 8080
+maxTweetLength: 280
+twitter4jProps:
+  debug: true
+  oauth:
+    consumerKey: <Your Twitter provided Consumer Key>
+    consumerSecret: <Your Twitter provided Consumer Secret>
+    accessToken: <Your Twitter provided Access Token>
+    accessTokenSecret: <Your Twitter provided Access Token Secret>

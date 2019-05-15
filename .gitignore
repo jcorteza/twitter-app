@@ -7,4 +7,4 @@ libraries/twitter4j-4.0.7.zip
 .idea
 **/classes
 **/target
-*.yml
+TwitterAppConfiguration.yml
