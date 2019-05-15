@@ -12,6 +12,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
+        StatusUpdateResource statusResource = new StatusUpdateResource()
         environment.jersey().register(new HomeFeedResource());
         environment.jersey().register(new StatusUpdateResource());
     }
