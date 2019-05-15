@@ -13,7 +13,14 @@ import javax.ws.rs.core.Response;
 @Produces("application/json")
 public class StatusUpdateResource {
 
-    private Twitter factory = new TwitterFactory().getSingleton();
+    private Twitter factory;
+    private int maxTweetLength;
+//    private Twitter factory = new TwitterFactory().getSingleton();
+
+    public StatusUpdateResource(Twitter factory, int maxTweetLength) {
+        this.factory = factory;
+        this.maxTweetLength = maxTweetLength;
+    }
 
     @POST
     public Response postStatus(@FormParam("message") String tweetText) {

@@ -2,6 +2,7 @@ package com.khoros.twitterapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.*;
+import twitter4j.conf.*;
 
 public class OauthFactory {
     @NotBlank

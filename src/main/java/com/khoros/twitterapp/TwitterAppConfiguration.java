@@ -2,7 +2,7 @@ package com.khoros.twitterapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.dropwizard.Configuration;
-import jdk.nashorn.internal.runtime.linker.Bootstrap;
+import twitter4j.conf.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -10,11 +10,25 @@ import javax.validation.constraints.NotNull;
 
 public class TwitterAppConfiguration extends Configuration {
 
+    @NotNull
+    private int maxTweetLength;
+
+    @NotNull
     private Boolean debug;
 
     @Valid
     @NotNull
     private OauthFactory oauth = new OauthFactory();
+
+    @JsonProperty
+    public int getMaxTweetLength() {
+        return maxTweetLength;
+    }
+
+    @JsonProperty
+    public void setMaxTweetLength(int maxTweetLength) {
+        this.maxTweetLength = maxTweetLength;
+    }
 
     @JsonProperty
     public Boolean getDebug() {
@@ -34,5 +48,16 @@ public class TwitterAppConfiguration extends Configuration {
     @JsonProperty
     public void setOauthFactory(OauthFactory factory) {
         this.oauth = factory;
+    }
+
+    public twitter4j.conf.Configuration build() {
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(this.debug)
+            .setOAuthConsumerKey(this.oauth.getConsumerKey())
+            .setOAuthConsumerSecret(this.oauth.getConsumerSecret())
+            .setOAuthAccessToken(this.oauth.getAccessToken())
+            .setOAuthAccessTokenSecret(this.oauth.getAccessTokenSecret());
+
+
     }
 }
