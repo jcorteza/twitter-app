@@ -18,11 +18,15 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
-    private Configuration conf;
-    private Twitter factory = new TwitterFactory(conf).getInstance();
+    private Twitter factory;
 
     public HomeFeedResource(Configuration conf) {
-        this.conf = conf;
+        this.factory = new TwitterFactory(conf).getInstance();
+    }
+
+    // constructor for unit testing using mock Twitter object
+    public HomeFeedResource(Twitter factory) {
+        this.factory = factory;
     }
 
     @GET
