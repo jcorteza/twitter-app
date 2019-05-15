@@ -15,12 +15,15 @@ import javax.ws.rs.core.Response;
 public class StatusUpdateResource {
 
     private int maxTweetLength;
-    private Configuration conf;
-    private Twitter factory = new TwitterFactory(conf).getInstance();
+    private Twitter factory;
 
     public StatusUpdateResource(Configuration conf, int maxTweetLength) {
-        this.conf = conf;
         this.maxTweetLength = maxTweetLength;
+        this.factory = new TwitterFactory(conf).getInstance();
+    }
+
+    public StatusUpdateResource(Twitter mockFactory) {
+        this.factory = mockFactory;
     }
 
     @POST
