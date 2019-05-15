@@ -1,14 +1,13 @@
 package com.khoros.twitterapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.dropwizard.Configuration;
-import twitter4j.conf.*;
+import twitter4j.conf.ConfigurationBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 
-public class TwitterAppConfiguration extends Configuration {
+public class TwitterAppConfiguration extends io.dropwizard.Configuration {
 
     @NotNull
     private int maxTweetLength;
@@ -50,14 +49,13 @@ public class TwitterAppConfiguration extends Configuration {
         this.oauth = factory;
     }
 
-    public twitter4j.conf.Configuration build() {
+    public twitter4j.conf.Configuration twitter4jConfigurationBuild() {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(this.debug)
             .setOAuthConsumerKey(this.oauth.getConsumerKey())
             .setOAuthConsumerSecret(this.oauth.getConsumerSecret())
             .setOAuthAccessToken(this.oauth.getAccessToken())
             .setOAuthAccessTokenSecret(this.oauth.getAccessTokenSecret());
-
-
+        return cb.build();
     }
 }
