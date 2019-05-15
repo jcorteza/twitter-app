@@ -59,3 +59,37 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
     curl -X GET http://localhost:8080/api/1.0/twitter/timeline
     ```
   * Using the browser: Open [http://localhost:8080/api/1.0/twitter/timeline](http://localhost:8080/api/1.0/twitter/timeline) in the browser of your choice.
+## Testing the Application
+### Generating a Test Coverage Report
+* Make sure the following xml is included in your POM file in the <plugins> section to add the JaCoCO plugin:
+  ```
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.4</version>
+            <executions>
+                <execution>
+                    <id>default-prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>default-report</id>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/TwitterApp.class</exclude>
+                            <exclude>**/LengthException.class</exclude>
+                            <exclude>**/CommandNotFoundException.class</exclude>
+                            <exclude>**/TwitterAppConfiguration.class</exclude>
+                        </excludes>
+                    </configuration>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+  ```
+* Type the following command into the command line to generate a test coverage report: `mvn jacoco:report verify`
+* To view the report open the index.html file (located in your `target/site/jacoco/`) in your browser.

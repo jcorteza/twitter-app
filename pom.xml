@@ -70,26 +70,6 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.22.1</version>
         </plugin>
-        <!--<plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.1.1</version>
-          <configuration>
-              <archive>
-                <index>true</index>
-                <manifest>
-                  <addClasspath>true</addClasspath>
-                  <classpathPrefix>lib</classpathPrefix>
-                  <mainClass>com.khoros.twitterapp.TwitterApp</mainClass>
-                </manifest>
-                <manifestEntries>
-                  <mode>development</mode>
-                  <url>${project.url}</url>
-                  <key>value</key>
-                </manifestEntries>
-              </archive>
-        </configuration>
-        </plugin>-->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-shade-plugin</artifactId>
@@ -149,17 +129,39 @@
           </configuration>
         </plugin>
         <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.4</version>
+            <executions>
+                <execution>
+                    <id>default-prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>default-report</id>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/TwitterApp.class</exclude>
+                            <exclude>**/LengthException.class</exclude>
+                            <exclude>**/CommandNotFoundException.class</exclude>
+                            <exclude>**/TwitterAppConfiguration.class</exclude>
+                        </excludes>
+                    </configuration>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.5.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.8.2</version>
-        </plugin>
-        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.7.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>

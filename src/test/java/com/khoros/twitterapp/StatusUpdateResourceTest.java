@@ -1,6 +1,9 @@
 package com.khoros.twitterapp;
 
 import static org.mockito.Mockito.*;
+
+import com.khoros.twitterapp.resources.StatusUpdateResource;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,27 +13,34 @@ import twitter4j.Twitter;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
-import twitter4j.JSONObject;
 
-import javax.ws.rs.core.Response;
-
+import java.lang.Exception;
 public class StatusUpdateResourceTest {
 
     @InjectMocks
-    private StatusUpdateResource  statusResource;
+    private StatusUpdateResource statusResource;
 
     @Mock
     private Twitter mockFactory;
 
     private String exampleText;
+    private String exceptionEntity;
     private Status statusEntity;
-    // private Response expectedResponse;
 
     @Before
     public void setup() {
         statusResource = new StatusUpdateResource();
         mockFactory = mock(Twitter.class);
         statusResource.setFactory(mockFactory);
+    }
+
+    @After
+    public void resetMock() {
+        reset(mockFactory);
+    }
+
+    @Test
+    public void statusUpdateTest() {
         exampleText = "Tweet";
 
         try {
@@ -39,12 +49,37 @@ public class StatusUpdateResourceTest {
         } catch (TwitterException e) {
             Assert.fail("Test failed due to Twitter Exception: " + e.getMessage());
         }
+
+        Assert.assertEquals(200, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(statusEntity, statusResource.postStatus(exampleText).getEntity());
     }
 
     @Test
-    public void statusUpdateTest() {
-        // expectedResponse = Response.status(200).entity(statusEntity).build();
-        Assert.assertEquals(200, statusResource.postStatus(exampleText).getStatus());
-        Assert.assertEquals(statusEntity, statusResource.postStatus(exampleText).getEntity());
+    public void statusLengthZeroTest() {
+        exampleText = "";
+        exceptionEntity = "No tweet text entered.";
+
+        Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
+    }
+
+    @Test
+    public void statusLengthLongTest() {
+        exampleText = "hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello";
+        exceptionEntity = "Tweet text surpassed 280 characters.";
+
+        Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
+    }
+
+    @Test
+    public void statusTwitterExceptionTest() throws TwitterException {
+        exampleText = "Exception.";
+        exceptionEntity = "Whoops! Something went wrong. Try again later.";
+
+        when(mockFactory.updateStatus(exampleText)).thenThrow(new TwitterException("Testing TwitterException.", new Exception(), 500));
+
+        Assert.assertEquals(500, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
     }
 }
