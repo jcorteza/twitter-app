@@ -24,6 +24,7 @@ public class StatusUpdateResource {
 
     public StatusUpdateResource(Twitter mockFactory) {
         this.factory = mockFactory;
+        this.maxTweetLength = 280;
     }
 
     @POST
