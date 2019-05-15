@@ -18,9 +18,8 @@ public class HomeFeedResourceTest {
 
     @Before
     public void setup() {
-        feedResource = new HomeFeedResource();
         mockFactory = mock(Twitter.class);
-        feedResource.setFactory(mockFactory);
+        feedResource = new HomeFeedResource(mockFactory);
     }
 
     @After
