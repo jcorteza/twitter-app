@@ -42,9 +42,4 @@ public class StatusUpdateResource {
             return Response.status(tweetException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
     }
-
-    // method for testing using mock Twitter object
-    public void setFactory(Twitter factory) {
-        this.factory = factory;
-    }
 }
