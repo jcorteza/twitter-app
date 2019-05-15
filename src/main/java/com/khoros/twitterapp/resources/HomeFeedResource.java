@@ -18,15 +18,11 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
-    private Twitter factory;
+    private Configuration conf;
+    private Twitter factory = new TwitterFactory(conf).getInstance();
 
     public HomeFeedResource(Configuration conf) {
-        this.factory = new TwitterFactory(conf).getInstance();
-    }
-
-    // constructor for unit testing using mock Twitter object
-    public HomeFeedResource(Twitter factory) {
-        this.factory = factory;
+        this.conf = conf;
     }
 
     @GET
@@ -37,5 +33,10 @@ public class HomeFeedResource {
         } catch (TwitterException feedException) {
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
+    }
+
+    // for unit testing using mock Twitter object
+    public void setFactory(Twitter factory) {
+        this.factory = factory;
     }
 }
