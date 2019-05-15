@@ -49,4 +49,9 @@ public class HomeFeedResourceTest {
         Assert.assertEquals(500, feedResource.get().getStatus());
         Assert.assertEquals("Whoops! Something went wrong. Try again later.", feedResource.get().getEntity());
     }
+
+    @Test
+    public void mainConstructorTest() {
+
+    }
 }

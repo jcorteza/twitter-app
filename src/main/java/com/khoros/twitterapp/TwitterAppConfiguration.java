@@ -17,6 +17,7 @@ public class TwitterAppConfiguration extends io.dropwizard.Configuration {
 
     @Valid
     @NotNull
+    @JsonProperty
     private OauthFactory oauth = new OauthFactory();
 
     @JsonProperty
