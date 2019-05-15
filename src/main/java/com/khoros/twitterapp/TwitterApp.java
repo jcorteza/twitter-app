@@ -12,8 +12,12 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
-        StatusUpdateResource statusResource = new StatusUpdateResource()
-        environment.jersey().register(new HomeFeedResource());
-        environment.jersey().register(new StatusUpdateResource());
+        StatusUpdateResource statusResource = new StatusUpdateResource(
+                configuration.twitter4jConfigurationBuild(),
+                configuration.getMaxTweetLength()
+        );
+        HomeFeedResource feedResource = new HomeFeedResource();
+        environment.jersey().register(statusResource);
+        environment.jersey().register(feedResource);
     }
 }
