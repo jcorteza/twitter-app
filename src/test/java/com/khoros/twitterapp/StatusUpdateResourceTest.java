@@ -24,8 +24,8 @@ public class StatusUpdateResourceTest {
     private Twitter mockFactory;
 
     private String exampleText;
+    private String exceptionEntity;
     private Status statusEntity;
-    // private Response expectedResponse;
 
     @Before
     public void setup() {
@@ -57,25 +57,29 @@ public class StatusUpdateResourceTest {
     @Test
     public void statusLengthZeroTest() {
         exampleText = "";
+        exceptionEntity = "No tweet text entered.";
 
         Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
-        Assert.assertEquals("No tweet text entered.", statusResource.postStatus(exampleText).getEntity());
+        Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
     }
 
     @Test
     public void statusLengthLongTest() {
         exampleText = "hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello";
+        exceptionEntity = "Tweet text surpassed 280 characters.";
 
         Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
-        Assert.assertEquals("Tweet text surpassed 280 characters.", statusResource.postStatus(exampleText).getEntity());
+        Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
     }
 
     @Test
     public void statusTwitterExceptionTest() throws TwitterException {
         exampleText = "Exception.";
+        exceptionEntity = "Whoops! Something went wrong. Try again later.";
+
         when(mockFactory.updateStatus(exampleText)).thenThrow(new TwitterException("Testing TwitterException.", new Exception(), 500));
 
         Assert.assertEquals(500, statusResource.postStatus(exampleText).getStatus());
-        Assert.assertEquals("Whoops! Something went wrong. Try again later.", statusResource.postStatus(exampleText).getEntity());
+        Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
     }
 }
