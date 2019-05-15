@@ -16,7 +16,8 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
                 configuration.twitter4jConfigurationBuild(),
                 configuration.getMaxTweetLength()
         );
-        HomeFeedResource feedResource = new HomeFeedResource();
+        HomeFeedResource feedResource = new HomeFeedResource(configuration.twitter4jConfigurationBuild());
+
         environment.jersey().register(statusResource);
         environment.jersey().register(feedResource);
     }
