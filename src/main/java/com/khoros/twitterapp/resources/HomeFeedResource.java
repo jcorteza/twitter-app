@@ -38,9 +38,4 @@ public class HomeFeedResource {
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
     }
-
-    // for unit testing using mock Twitter object
-    public void setFactory(Twitter factory) {
-        this.factory = factory;
-    }
 }
