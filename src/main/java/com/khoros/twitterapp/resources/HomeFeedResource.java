@@ -1,5 +1,6 @@
 package com.khoros.twitterapp.resources;
 
+import com.khoros.twitterapp.TwitterApp;
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.Status;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.net.HttpURLConnection;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -42,7 +44,7 @@ public class HomeFeedResource {
         try {
 
             List<Status> tweetsFeed = factory.getHomeTimeline();
-            return Response.status(200).entity(tweetsFeed).build();
+            return Response.status(HttpURLConnection.HTTP_OK).entity(tweetsFeed).build();
 
         } catch (TwitterException feedException) {
 
@@ -64,7 +66,8 @@ public class HomeFeedResource {
 
             }
 
-            return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
+            return Response.status(feedException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
+
         }
     }
 }

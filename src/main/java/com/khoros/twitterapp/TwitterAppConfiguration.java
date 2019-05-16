@@ -18,7 +18,7 @@ public class TwitterAppConfiguration extends io.dropwizard.Configuration {
     @Valid
     @NotNull
     @JsonProperty
-    private OauthFactory oauth = new OauthFactory();
+    private TwitterAuthorization twitterAuthorization = new TwitterAuthorization();
 
     @JsonProperty
     public int getMaxTweetLength() {
@@ -41,22 +41,22 @@ public class TwitterAppConfiguration extends io.dropwizard.Configuration {
     }
 
     @JsonProperty
-    public OauthFactory getOauthFactory() {
-        return oauth;
+    public TwitterAuthorization getOauthFactory() {
+        return twitterAuthorization;
     }
 
     @JsonProperty
-    public void setOauthFactory(OauthFactory factory) {
-        this.oauth = factory;
+    public void setOauthFactory(TwitterAuthorization factory) {
+        this.twitterAuthorization = factory;
     }
 
     public twitter4j.conf.Configuration twitter4jConfigurationBuild() {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(this.debug)
-            .setOAuthConsumerKey(this.oauth.getConsumerKey())
-            .setOAuthConsumerSecret(this.oauth.getConsumerSecret())
-            .setOAuthAccessToken(this.oauth.getAccessToken())
-            .setOAuthAccessTokenSecret(this.oauth.getAccessTokenSecret());
+            .setOAuthConsumerKey(this.twitterAuthorization.getConsumerKey())
+            .setOAuthConsumerSecret(this.twitterAuthorization.getConsumerSecret())
+            .setOAuthAccessToken(this.twitterAuthorization.getAccessToken())
+            .setOAuthAccessTokenSecret(this.twitterAuthorization.getAccessTokenSecret());
         return cb.build();
     }
 }

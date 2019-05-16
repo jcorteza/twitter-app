@@ -9,6 +9,7 @@ import twitter4j.TwitterException;
 import twitter4j.ResponseList;
 
 import java.lang.Exception;
+import java.net.HttpURLConnection;
 
 public class HomeFeedResourceTest {
 
@@ -37,17 +38,19 @@ public class HomeFeedResourceTest {
             Assert.fail("Test failed due to TwitterException: " + e.getMessage());
         }
 
-        Assert.assertEquals(200, feedResource.get().getStatus());
+        Assert.assertEquals(HttpURLConnection.HTTP_OK, feedResource.get().getStatus());
         Assert.assertEquals(feedEntity, feedResource.get().getEntity());
     }
 
     @Test
     public void resourceGetException() throws TwitterException {
 
-        when(mockFactory.getHomeTimeline()).thenThrow(new TwitterException("Testing TwitterException.", new Exception(), 500));
+        when(mockFactory.getHomeTimeline()).thenThrow(
+                new TwitterException("Testing TwitterException.", new Exception(), HttpURLConnection.HTTP_INTERNAL_ERROR)
+        );
 
-        Assert.assertEquals(500, feedResource.get().getStatus());
-        Assert.assertEquals("Whoops! Something went wrong. Try again later.", feedResource.get().getEntity());
+        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, feedResource.get().getStatus());
+        Assert.assertEquals(TwitterApp.GENERAL_ERR_MSG, feedResource.get().getEntity());
     }
 
     @Test

@@ -1,10 +1,9 @@
 package com.khoros.twitterapp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.*;
-import twitter4j.conf.*;
+import org.hibernate.validator.constraints.NotBlank;
 
-public class OauthFactory {
+public class TwitterAuthorization {
     @NotBlank
     private CharSequence consumerKey;
 

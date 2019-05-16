@@ -1,5 +1,6 @@
 package com.khoros.twitterapp.resources;
 
+import com.khoros.twitterapp.TwitterApp;
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.Status;
@@ -8,28 +9,33 @@ import twitter4j.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.core.Response;
+import java.net.HttpURLConnection;
 
 @Path("/tweet")
 @Consumes("application/x-www-form-urlencoded")
 @Produces("application/json")
 public class StatusUpdateResource {
 
+    public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
+    public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterApp.MAX_TWEET_LENGTH + " characters.";
+
     final Logger logger = LoggerFactory.getLogger(StatusUpdateResource.class);
 
-    private int maxTweetLength;
     private Configuration conf;
     private Twitter factory = new TwitterFactory(conf).getInstance();
 
-    public StatusUpdateResource(Configuration conf, int maxTweetLength) {
-        this.maxTweetLength = maxTweetLength;
+    public StatusUpdateResource(Configuration conf) {
         this.conf = conf;
     }
 
     public StatusUpdateResource(Twitter mockFactory) {
         this.factory = mockFactory;
-        this.maxTweetLength = 280;
     }
 
     @POST
@@ -45,17 +51,17 @@ public class StatusUpdateResource {
             if (statusText.length() == 0) {
 
                 logger.debug("statusText length: {}", statusText.length());
-                return Response.status(403).entity("No tweet text entered.").build();
+                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.NO_TWEET_TEXT_MSG).build();
 
-            } else if (statusText.length() > maxTweetLength) {
+            } else if (statusText.length() > TwitterApp.MAX_TWEET_LENGTH) {
 
                 logger.debug("statusText length: {}", statusText.length());
-                return Response.status(403).entity("Tweet text surpassed 280 characters.").build();
+                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.TWEET_TOO_LONG_MSG).build();
 
             } else {
 
                 Status newStatus = factory.updateStatus(statusText);
-                return Response.status(200).entity(newStatus).build();
+                return Response.status(HttpURLConnection.HTTP_OK).entity(newStatus).build();
 
             }
         } catch (TwitterException tweetException) {
@@ -78,7 +84,7 @@ public class StatusUpdateResource {
 
             }
 
-            return Response.status(tweetException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
+            return Response.status(tweetException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
         }
     }
 }
