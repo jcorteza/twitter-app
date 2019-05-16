@@ -5,6 +5,8 @@ import twitter4j.Twitter;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.conf.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
