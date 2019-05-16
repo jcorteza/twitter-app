@@ -19,10 +19,13 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
-    private Twitter factory;
+    final Logger logger = LoggerFactory.getLogger(HomeFeedResource.class);
+
+    private Configuration conf;
+    private Twitter factory = new TwitterFactory(conf).getInstance();
 
     public HomeFeedResource(Configuration conf) {
-        this.factory = new TwitterFactory(conf).getInstance();
+        this.conf = conf;
     }
 
     // constructor for unit testing using mock Twitter object
@@ -32,10 +35,18 @@ public class HomeFeedResource {
 
     @GET
     public Response get() {
+
+        logger.debug("Configuration setup: {}", conf);
+
         try {
+
             List<Status> tweetsFeed = factory.getHomeTimeline();
             return Response.status(200).entity(tweetsFeed).build();
+
         } catch (TwitterException feedException) {
+
+            logger.debug("feedException thrown: {}", feedException);
+
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
     }
