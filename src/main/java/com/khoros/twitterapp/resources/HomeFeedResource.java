@@ -36,7 +36,8 @@ public class HomeFeedResource {
     @GET
     public Response get() {
 
-        logger.info("Configuration setup: {}", conf);
+        logger.info("Attempting to retrieve Twitter Home timeline.");
+        logger.debug("Configuration setup: {}", conf);
 
         try {
 
@@ -45,7 +46,7 @@ public class HomeFeedResource {
 
         } catch (TwitterException feedException) {
 
-            logger.info("Twitter Exception thrown." );
+            logger.info("Timeline retrieval aborted. Twitter Exception thrown." );
 
             if (feedException.isCausedByNetworkIssue()) {
 
@@ -53,12 +54,12 @@ public class HomeFeedResource {
 
             } else if (feedException.exceededRateLimitation()) {
 
-                logger.info("Current Rate Limit: {}", feedException.getRateLimitStatus());
+                logger.debug("Current Rate Limit: {}", feedException.getRateLimitStatus());
                 logger.debug("Exceed Rate Limitation: {}", feedException.exceededRateLimitation());
 
             } else {
 
-                logger.info("Twitter API Access Level: {}", feedException.getAccessLevel());
+                logger.debug("Twitter API Access Level: {}", feedException.getAccessLevel());
                 logger.debug("TwitterException Error Message: {}", feedException.getErrorMessage());
 
             }

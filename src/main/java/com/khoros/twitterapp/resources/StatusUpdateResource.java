@@ -37,18 +37,19 @@ public class StatusUpdateResource {
 
         String statusText = tweetText.trim();
 
-        logger.info("Twitter Configuration: {}", conf);
-        logger.info("Status Update Text: {}", statusText);
+        logger.info ("Attempting to post a Twitter status update.");
+        logger.debug("Twitter Configuration: {}", conf);
+        logger.debug("Status Update Text: {}", statusText);
 
         try {
             if (statusText.length() == 0) {
 
-                logger.info("statusText length: {}", statusText.length());
+                logger.debug("statusText length: {}", statusText.length());
                 return Response.status(403).entity("No tweet text entered.").build();
 
             } else if (statusText.length() > maxTweetLength) {
 
-                logger.info("statusText length: {}", statusText.length());
+                logger.debug("statusText length: {}", statusText.length());
                 return Response.status(403).entity("Tweet text surpassed 280 characters.").build();
 
             } else {
@@ -59,7 +60,7 @@ public class StatusUpdateResource {
             }
         } catch (TwitterException tweetException) {
 
-            logger.info("Twitter Exception thrown." );
+            logger.info("Status update aborted. Twitter Exception thrown." );
 
             if (tweetException.isCausedByNetworkIssue()) {
 
