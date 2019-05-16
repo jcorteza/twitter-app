@@ -1,5 +1,6 @@
 package com.khoros.twitterapp.resources;
 
+import com.khoros.twitterapp.TwitterApp;
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.Status;
@@ -15,9 +16,9 @@ import java.net.HttpURLConnection;
 @Produces("application/json")
 public class StatusUpdateResource {
 
-    public static final int MAX_TWEET_LENGTH = 280;
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
-    public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + StatusUpdateResource.MAX_TWEET_LENGTH + " characters.";
+    public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterApp.MAX_TWEET_LENGTH + " characters.";
+
     private Twitter factory;
 
     public StatusUpdateResource(Configuration conf) {
@@ -34,7 +35,7 @@ public class StatusUpdateResource {
         try {
             if (statusText.length() == 0) {
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.NO_TWEET_TEXT_MSG).build();
-            } else if (statusText.length() > StatusUpdateResource.MAX_TWEET_LENGTH) {
+            } else if (statusText.length() > TwitterApp.MAX_TWEET_LENGTH) {
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.TWEET_TOO_LONG_MSG).build();
             } else {
                 Status newStatus = factory.updateStatus(statusText);

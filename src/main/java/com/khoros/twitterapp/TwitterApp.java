@@ -6,6 +6,9 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
 public class TwitterApp extends Application<TwitterAppConfiguration> {
+
+    public static final int MAX_TWEET_LENGTH = 280;
+
     public static void main(String[] args) throws Exception {
         new TwitterApp().run(args);
     }
