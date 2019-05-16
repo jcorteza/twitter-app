@@ -1,5 +1,6 @@
 package com.khoros.twitterapp.resources;
 
+import com.khoros.twitterapp.TwitterApp;
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.Status;
@@ -36,7 +37,7 @@ public class HomeFeedResource {
             List<Status> tweetsFeed = factory.getHomeTimeline();
             return Response.status(HttpURLConnection.HTTP_OK).entity(tweetsFeed).build();
         } catch (TwitterException feedException) {
-            return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
+            return Response.status(feedException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
         }
     }
 }

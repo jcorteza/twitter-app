@@ -42,7 +42,7 @@ public class StatusUpdateResource {
                 return Response.status(HttpURLConnection.HTTP_OK).entity(newStatus).build();
             }
         } catch (TwitterException tweetException) {
-            return Response.status(tweetException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
+            return Response.status(tweetException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
         }
     }
 }

@@ -8,6 +8,7 @@ import io.dropwizard.setup.Environment;
 public class TwitterApp extends Application<TwitterAppConfiguration> {
 
     public static final int MAX_TWEET_LENGTH = 280;
+    public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
 
     public static void main(String[] args) throws Exception {
         new TwitterApp().run(args);

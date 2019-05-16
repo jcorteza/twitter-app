@@ -59,7 +59,7 @@ public class StatusUpdateResourceTest {
     @Test
     public void statusLengthZeroTest() {
         exampleText = "";
-        exceptionEntity = "No tweet text entered.";
+        exceptionEntity = StatusUpdateResource.NO_TWEET_TEXT_MSG;
 
         Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, statusResource.postStatus(exampleText).getStatus());
         Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
@@ -68,7 +68,7 @@ public class StatusUpdateResourceTest {
     @Test
     public void statusLengthLongTest() {
         exampleText = StringUtils.repeat("a", TwitterApp.MAX_TWEET_LENGTH + 1);
-        exceptionEntity = "Tweet text surpassed 280 characters.";
+        exceptionEntity = StatusUpdateResource.TWEET_TOO_LONG_MSG;
 
         Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, statusResource.postStatus(exampleText).getStatus());
         Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
@@ -77,13 +77,12 @@ public class StatusUpdateResourceTest {
     @Test
     public void statusTwitterExceptionTest() throws TwitterException {
         exampleText = "Exception.";
-        exceptionEntity = "Whoops! Something went wrong. Try again later.";
 
         when(mockFactory.updateStatus(exampleText)).thenThrow(
                 new TwitterException("Testing TwitterException.", new Exception(), HttpURLConnection.HTTP_INTERNAL_ERROR)
         );
 
         Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, statusResource.postStatus(exampleText).getStatus());
-        Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
+        Assert.assertEquals(TwitterApp.GENERAL_ERR_MSG, statusResource.postStatus(exampleText).getEntity());
     }
 }

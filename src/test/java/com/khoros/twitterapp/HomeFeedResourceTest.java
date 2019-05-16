@@ -16,13 +16,11 @@ public class HomeFeedResourceTest {
     private HomeFeedResource feedResource;
     private Twitter mockFactory;
     private ResponseList<Status> feedEntity;
-    private String stringEntity;
 
     @Before
     public void setup() {
         mockFactory = mock(Twitter.class);
         feedResource = new HomeFeedResource(mockFactory);
-        stringEntity = "Whoops! Something went wrong. Try again later.";
     }
 
     @After
@@ -52,7 +50,7 @@ public class HomeFeedResourceTest {
         );
 
         Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, feedResource.get().getStatus());
-        Assert.assertEquals(stringEntity, feedResource.get().getEntity());
+        Assert.assertEquals(TwitterApp.GENERAL_ERR_MSG, feedResource.get().getEntity());
     }
 
     @Test
