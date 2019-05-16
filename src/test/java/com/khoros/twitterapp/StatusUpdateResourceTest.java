@@ -15,6 +15,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
 
 import java.lang.Exception;
+import java.net.HttpURLConnection;
 import org.apache.commons.lang3.StringUtils;
 
 public class StatusUpdateResourceTest {
@@ -51,7 +52,7 @@ public class StatusUpdateResourceTest {
             Assert.fail("Test failed due to Twitter Exception: " + e.getMessage());
         }
 
-        Assert.assertEquals(200, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(HttpURLConnection.HTTP_OK, statusResource.postStatus(exampleText).getStatus());
         Assert.assertEquals(statusEntity, statusResource.postStatus(exampleText).getEntity());
     }
 
@@ -60,7 +61,7 @@ public class StatusUpdateResourceTest {
         exampleText = "";
         exceptionEntity = "No tweet text entered.";
 
-        Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, statusResource.postStatus(exampleText).getStatus());
         Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
     }
 
@@ -69,7 +70,7 @@ public class StatusUpdateResourceTest {
         exampleText = StringUtils.repeat("a", 281);
         exceptionEntity = "Tweet text surpassed 280 characters.";
 
-        Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, statusResource.postStatus(exampleText).getStatus());
         Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
     }
 
@@ -78,9 +79,11 @@ public class StatusUpdateResourceTest {
         exampleText = "Exception.";
         exceptionEntity = "Whoops! Something went wrong. Try again later.";
 
-        when(mockFactory.updateStatus(exampleText)).thenThrow(new TwitterException("Testing TwitterException.", new Exception(), 500));
+        when(mockFactory.updateStatus(exampleText)).thenThrow(
+                new TwitterException("Testing TwitterException.", new Exception(), HttpURLConnection.HTTP_INTERNAL_ERROR)
+        );
 
-        Assert.assertEquals(500, statusResource.postStatus(exampleText).getStatus());
+        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, statusResource.postStatus(exampleText).getStatus());
         Assert.assertEquals(exceptionEntity, statusResource.postStatus(exampleText).getEntity());
     }
 }
