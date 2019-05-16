@@ -15,6 +15,8 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterObjectFactory;
 
 import java.lang.Exception;
+import org.apache.commons.lang3.StringUtils;
+
 public class StatusUpdateResourceTest {
 
     @InjectMocks
@@ -64,7 +66,7 @@ public class StatusUpdateResourceTest {
 
     @Test
     public void statusLengthLongTest() {
-        exampleText = "hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello hello";
+        exampleText = StringUtils.repeat("a", 281);
         exceptionEntity = "Tweet text surpassed 280 characters.";
 
         Assert.assertEquals(403, statusResource.postStatus(exampleText).getStatus());
