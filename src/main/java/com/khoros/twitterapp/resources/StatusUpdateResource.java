@@ -16,6 +16,8 @@ import java.net.HttpURLConnection;
 public class StatusUpdateResource {
 
     public static final int MAX_TWEET_LENGTH = 280;
+    public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
+    public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + StatusUpdateResource.MAX_TWEET_LENGTH + " characters.";
     private Twitter factory;
 
     public StatusUpdateResource(Configuration conf) {
@@ -31,9 +33,9 @@ public class StatusUpdateResource {
         String statusText = tweetText.trim();
         try {
             if (statusText.length() == 0) {
-                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity("No tweet text entered.").build();
+                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.NO_TWEET_TEXT_MSG).build();
             } else if (statusText.length() > StatusUpdateResource.MAX_TWEET_LENGTH) {
-                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity("Tweet text surpassed 280 characters.").build();
+                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.TWEET_TOO_LONG_MSG).build();
             } else {
                 Status newStatus = factory.updateStatus(statusText);
                 return Response.status(HttpURLConnection.HTTP_OK).entity(newStatus).build();

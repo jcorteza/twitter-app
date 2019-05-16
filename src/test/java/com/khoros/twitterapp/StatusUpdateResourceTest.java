@@ -67,7 +67,7 @@ public class StatusUpdateResourceTest {
 
     @Test
     public void statusLengthLongTest() {
-        exampleText = StringUtils.repeat("a", 281);
+        exampleText = StringUtils.repeat("a", StatusUpdateResource.MAX_TWEET_LENGTH + 1);
         exceptionEntity = "Tweet text surpassed 280 characters.";
 
         Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, statusResource.postStatus(exampleText).getStatus());
