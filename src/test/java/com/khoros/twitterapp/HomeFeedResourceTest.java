@@ -15,11 +15,13 @@ public class HomeFeedResourceTest {
     private HomeFeedResource feedResource;
     private Twitter mockFactory;
     private ResponseList<Status> feedEntity;
+    private String stringEntity;
 
     @Before
     public void setup() {
         mockFactory = mock(Twitter.class);
         feedResource = new HomeFeedResource(mockFactory);
+        stringEntity = "Whoops! Something went wrong. Try again later.";
     }
 
     @After
@@ -47,7 +49,7 @@ public class HomeFeedResourceTest {
         when(mockFactory.getHomeTimeline()).thenThrow(new TwitterException("Testing TwitterException.", new Exception(), 500));
 
         Assert.assertEquals(500, feedResource.get().getStatus());
-        Assert.assertEquals("Whoops! Something went wrong. Try again later.", feedResource.get().getEntity());
+        Assert.assertEquals(stringEntity, feedResource.get().getEntity());
     }
 
     @Test
