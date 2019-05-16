@@ -67,12 +67,12 @@ public class StatusUpdateResource {
 
             } else if (tweetException.exceededRateLimitation()) {
 
+                logger.info("Current Rate Limit: {}", tweetException.getRateLimitStatus());
                 logger.debug("Exceed Rate Limitation: {}", tweetException.exceededRateLimitation());
-                logger.debug("Current Rate Limit: {}", tweetException.getRateLimitStatus());
 
             } else {
 
-                logger.debug("Twitter API Access Level: {}", tweetException.getAccessLevel());
+                logger.info("Twitter API Access Level: {}", tweetException.getAccessLevel());
                 logger.debug("TwitterException Error Message: {}", tweetException.getErrorMessage());
 
             }

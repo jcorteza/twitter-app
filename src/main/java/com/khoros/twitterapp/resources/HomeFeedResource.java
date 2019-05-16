@@ -36,7 +36,7 @@ public class HomeFeedResource {
     @GET
     public Response get() {
 
-        logger.debug("Configuration setup: {}", conf);
+        logger.info("Configuration setup: {}", conf);
 
         try {
 
@@ -45,7 +45,23 @@ public class HomeFeedResource {
 
         } catch (TwitterException feedException) {
 
-            logger.debug("feedException thrown: {}", feedException);
+            logger.info("Twitter Exception thrown." );
+
+            if (feedException.isCausedByNetworkIssue()) {
+
+                logger.debug("Exception Caused By Network Issues: {}", feedException.isCausedByNetworkIssue());
+
+            } else if (feedException.exceededRateLimitation()) {
+
+                logger.info("Current Rate Limit: {}", feedException.getRateLimitStatus());
+                logger.debug("Exceed Rate Limitation: {}", feedException.exceededRateLimitation());
+
+            } else {
+
+                logger.info("Twitter API Access Level: {}", feedException.getAccessLevel());
+                logger.debug("TwitterException Error Message: {}", feedException.getErrorMessage());
+
+            }
 
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }
