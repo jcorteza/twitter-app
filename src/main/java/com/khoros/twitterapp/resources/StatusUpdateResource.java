@@ -15,17 +15,15 @@ import java.net.HttpURLConnection;
 @Produces("application/json")
 public class StatusUpdateResource {
 
-    private int maxTweetLength;
+    public static final int MAX_TWEET_LENGTH = 280;
     private Twitter factory;
 
-    public StatusUpdateResource(Configuration conf, int maxTweetLength) {
-        this.maxTweetLength = maxTweetLength;
+    public StatusUpdateResource(Configuration conf) {
         this.factory = new TwitterFactory(conf).getInstance();
     }
 
     public StatusUpdateResource(Twitter mockFactory) {
         this.factory = mockFactory;
-        this.maxTweetLength = 280;
     }
 
     @POST
@@ -34,7 +32,7 @@ public class StatusUpdateResource {
         try {
             if (statusText.length() == 0) {
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity("No tweet text entered.").build();
-            } else if (statusText.length() > maxTweetLength) {
+            } else if (statusText.length() > StatusUpdateResource.MAX_TWEET_LENGTH) {
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity("Tweet text surpassed 280 characters.").build();
             } else {
                 Status newStatus = factory.updateStatus(statusText);
