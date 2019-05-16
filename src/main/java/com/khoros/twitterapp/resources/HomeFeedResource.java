@@ -7,6 +7,7 @@ import twitter4j.TwitterException;
 import twitter4j.conf.Configuration;
 
 import java.util.List;
+import java.net.HttpURLConnection;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -33,7 +34,7 @@ public class HomeFeedResource {
     public Response get() {
         try {
             List<Status> tweetsFeed = factory.getHomeTimeline();
-            return Response.status(200).entity(tweetsFeed).build();
+            return Response.status(HttpURLConnection.HTTP_OK).entity(tweetsFeed).build();
         } catch (TwitterException feedException) {
             return Response.status(feedException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
         }

@@ -8,6 +8,7 @@ import twitter4j.conf.Configuration;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.net.HttpURLConnection;
 
 @Path("/tweet")
 @Consumes("application/x-www-form-urlencoded")
@@ -32,12 +33,12 @@ public class StatusUpdateResource {
         String statusText = tweetText.trim();
         try {
             if (statusText.length() == 0) {
-                return Response.status(403).entity("No tweet text entered.").build();
+                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity("No tweet text entered.").build();
             } else if (statusText.length() > maxTweetLength) {
-                return Response.status(403).entity("Tweet text surpassed 280 characters.").build();
+                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity("Tweet text surpassed 280 characters.").build();
             } else {
                 Status newStatus = factory.updateStatus(statusText);
-                return Response.status(200).entity(newStatus).build();
+                return Response.status(HttpURLConnection.HTTP_OK).entity(newStatus).build();
             }
         } catch (TwitterException tweetException) {
             return Response.status(tweetException.getStatusCode()).entity("Whoops! Something went wrong. Try again later.").build();
