@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 import twitter4j.conf.*;
 
-public class OauthFactory {
+public class TwitterAuthorization {
     @NotBlank
     private CharSequence consumerKey;
 
