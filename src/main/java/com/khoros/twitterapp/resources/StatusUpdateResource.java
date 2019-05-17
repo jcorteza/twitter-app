@@ -3,7 +3,6 @@ package com.khoros.twitterapp.resources;
 import com.khoros.twitterapp.TwitterApp;
 import com.khoros.twitterapp.services.TwitterService;
 
-import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterResponse;
 
@@ -50,14 +49,14 @@ public class StatusUpdateResource {
 
             TwitterResponse twitterResponse = TwitterService.updateStatus(statusText);
 
-            if(twitterResponse instanceof Status) {
-
-                return Response.status(HttpURLConnection.HTTP_OK).entity(twitterResponse).build();
-
-            } else {
+            if(twitterResponse instanceof TwitterException) {
 
                 TwitterException e = (TwitterException) twitterResponse;
                 return Response.status(e.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
+
+            } else {
+
+                return Response.status(HttpURLConnection.HTTP_OK).entity(twitterResponse).build();
 
             }
         }
