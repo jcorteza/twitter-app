@@ -45,17 +45,17 @@ public class StatusUpdateResource {
         String statusText = tweetText.trim();
 
         logger.info ("Attempting to post a Twitter status update.");
-        logger.debug("Twitter Configuration: {}\nStatus Update Text: {}", conf,statusText);
+        logger.debug("Twitter Configuration: {} — Status Update Text: {}", conf,statusText);
 
         try {
             if (statusText.length() == 0) {
 
-                logger.debug("Status length too short. length: {}", statusText.length(), new Exception("Status Length Exception"));
+                logger.error("Status length too short. length: {}", statusText.length(), new Exception("Status Length Exception"));
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.NO_TWEET_TEXT_MSG).build();
 
             } else if (statusText.length() > TwitterApp.MAX_TWEET_LENGTH) {
 
-                logger.debug("Status length too long. length: {}", statusText.length(), new Exception("Status Length Exception"));
+                logger.error("Status length too long. length: {}", statusText.length(), new Exception("Status Length Exception"));
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.TWEET_TOO_LONG_MSG).build();
 
             } else {
@@ -74,11 +74,11 @@ public class StatusUpdateResource {
 
             } else if (tweetException.exceededRateLimitation()) {
 
-                logger.error("Request Exceeded Rate Limitation: {}\nCurrent Rate Limit: {}", tweetException.exceededRateLimitation(),tweetException.getRateLimitStatus());
+                logger.error("Request Exceeded Rate Limitation: {} — Current Rate Limit: {}", tweetException.exceededRateLimitation(),tweetException.getRateLimitStatus());
 
             } else {
 
-                logger.error("Twitter Exception was thrown. Error Message: {}", tweetException.getErrorMessage(), new Exception("Twitter Exception"));
+                logger.error("Twitter Exception was thrown. Error Message: {}", tweetException.getErrorMessage());
 
             }
 
