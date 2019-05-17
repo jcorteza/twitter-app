@@ -50,12 +50,12 @@ public class StatusUpdateResource {
         try {
             if (statusText.length() == 0) {
 
-                logger.debug("statusText length: {}", statusText.length());
+                logger.debug("Status length too short. length: {}", statusText.length(), new Exception("Status Length Exception"));
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.NO_TWEET_TEXT_MSG).build();
 
             } else if (statusText.length() > TwitterApp.MAX_TWEET_LENGTH) {
 
-                logger.debug("statusText length: {}", statusText.length());
+                logger.debug("Status length too long. length: {}", statusText.length(), new Exception("Status Length Exception"));
                 return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.TWEET_TOO_LONG_MSG).build();
 
             } else {
@@ -70,15 +70,15 @@ public class StatusUpdateResource {
 
             if (tweetException.isCausedByNetworkIssue()) {
 
-                logger.error("Exception Caused By Network Issues: {}", tweetException.isCausedByNetworkIssue());
+                logger.error("Twitter Exception Caused By Network Issues: {}", tweetException.isCausedByNetworkIssue());
 
             } else if (tweetException.exceededRateLimitation()) {
 
-                logger.error("Exceed Rate Limitation: {}\nCurrent Rate Limit: {}", tweetException.exceededRateLimitation(),tweetException.getRateLimitStatus());
+                logger.error("Request Exceeded Rate Limitation: {}\nCurrent Rate Limit: {}", tweetException.exceededRateLimitation(),tweetException.getRateLimitStatus());
 
             } else {
 
-                logger.error("TwitterException Error Message: {}", tweetException.getErrorMessage());
+                logger.error("Twitter Exception was thrown. Error Message: {}", tweetException.getErrorMessage(), new Exception("Twitter Exception"));
 
             }
 
