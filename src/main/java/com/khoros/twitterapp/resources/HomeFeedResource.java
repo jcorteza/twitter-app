@@ -49,21 +49,19 @@ public class HomeFeedResource {
 
         } catch (TwitterException feedException) {
 
-            logger.info("Timeline retrieval aborted. Twitter Exception thrown." );
+            logger.error("Timeline retrieval aborted. Twitter Exception thrown." );
 
             if (feedException.isCausedByNetworkIssue()) {
 
-                logger.debug("Exception Caused By Network Issues: {}", feedException.isCausedByNetworkIssue());
+                logger.error("Exception Caused By Network Issues: {}", feedException.isCausedByNetworkIssue());
 
             } else if (feedException.exceededRateLimitation()) {
 
-                logger.debug("Current Rate Limit: {}", feedException.getRateLimitStatus());
-                logger.debug("Exceed Rate Limitation: {}", feedException.exceededRateLimitation());
+                logger.error("Exceed Rate Limitation: {}\nCurrent Rate Limit: {}", feedException.getRateLimitStatus(),feedException.exceededRateLimitation());
 
             } else {
 
-                logger.debug("Twitter API Access Level: {}", feedException.getAccessLevel());
-                logger.debug("TwitterException Error Message: {}", feedException.getErrorMessage());
+                logger.error("TwitterException Error Message: {}", feedException.getErrorMessage());
 
             }
 
