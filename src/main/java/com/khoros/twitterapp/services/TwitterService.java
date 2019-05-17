@@ -4,6 +4,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.conf.Configuration;
 import twitter4j.Status;
+import twitter4j.TwitterResponse;
 import twitter4j.TwitterException;
 
 import java.util.List;
@@ -23,28 +24,28 @@ public final class TwitterService {
         return singleton;
     }
 
-    public static Status updateStatus(String statusText) {
+    public static TwitterResponse updateStatus(String statusText) {
 
         try {
 
             return twitterFactory.updateStatus(statusText);
 
-        } catch(TwitterException e) {
+        } catch(TwitterException twitterException) {
 
-            return errorHandler(e);
+            return twitterException;
 
         }
     }
 
-    public static List<Status> getHomeTimeline() {
+    public static TwitterResponse getHomeTimeline() {
 
         try {
 
             return twitterFactory.getHomeTimeline();
 
-        } catch(TwitterException e) {
+        } catch(TwitterException twitterException) {
 
-            return errorHandler(e);
+            return twitterException;
 
         }
     }

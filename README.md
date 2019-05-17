@@ -15,9 +15,9 @@ Clone this repo to have your very own CLI Twitter Application that will allow yo
 * On the new page that loads, click on the blue [Create an app](https://developer.twitter.com/en/apps/create) button and fill out the necessary details to receive your API keys.
 * Once your app has been set up, go back to the [Apps page](https://developer.twitter.com/en/apps) and click on the Details button of your new application.
 * Click on the Permissions tab on the new page that loads. Click the blue Edit button, and make sure your Access permission is set to "Read and write."
-* Now select the "Keys and tokens" tab of your application. Copy the Consumer API keys and access tokens into a new file "twitter4j.properties," which should be located in the same directory as the cloned git repo.
-* The format of your "twitter4j.properties" file should follow the format shown in the [twitter4J Configuration documentation](http://twitter4j.org/en/configuration.html) as shown below:
-![example twitter4j.properties file](https://github.com/jcorteza/twitter-app/blob/master/twitter4j-config.png)
+* Now select the "Keys and tokens" tab of your application to view your keys and tokens. 
+* Create a TwitterAppConfiguration.yml file, using the TwitterAppConfiguration-example.yml as an example, and copy your keys and tokens to their corresponding fields in your new configuration YML file.
+* You'll want to add this file to your .gitignore file to hide your keys and tokens.
 ### Setting Up Maven Project
 * [Install Maven](https://maven.apache.org/install.html) if it's not already installed on your computer.
 * Initialize your Maven project by following the [Creating a Project Maven insructions](https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html). Make sure the groupId is com.khoros.twitterapp and the artifactId is TwitterApp.
