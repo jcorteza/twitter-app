@@ -45,8 +45,7 @@ public class StatusUpdateResource {
         String statusText = tweetText.trim();
 
         logger.info ("Attempting to post a Twitter status update.");
-        logger.debug("Twitter Configuration: {}", conf);
-        logger.debug("Status Update Text: {}", statusText);
+        logger.debug("Twitter Configuration: {}\nStatus Update Text: {}", conf,statusText);
 
         try {
             if (statusText.length() == 0) {
@@ -71,17 +70,15 @@ public class StatusUpdateResource {
 
             if (tweetException.isCausedByNetworkIssue()) {
 
-                logger.debug("Exception Caused By Network Issues: {}", tweetException.isCausedByNetworkIssue());
+                logger.error("Exception Caused By Network Issues: {}", tweetException.isCausedByNetworkIssue());
 
             } else if (tweetException.exceededRateLimitation()) {
 
-                logger.info("Current Rate Limit: {}", tweetException.getRateLimitStatus());
-                logger.debug("Exceed Rate Limitation: {}", tweetException.exceededRateLimitation());
+                logger.error("Exceed Rate Limitation: {}\nCurrent Rate Limit: {}", tweetException.exceededRateLimitation(),tweetException.getRateLimitStatus());
 
             } else {
 
-                logger.info("Twitter API Access Level: {}", tweetException.getAccessLevel());
-                logger.debug("TwitterException Error Message: {}", tweetException.getErrorMessage());
+                logger.error("TwitterException Error Message: {}", tweetException.getErrorMessage());
 
             }
 
