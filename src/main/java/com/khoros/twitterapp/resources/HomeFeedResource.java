@@ -24,10 +24,11 @@ public class HomeFeedResource {
     final Logger logger = LoggerFactory.getLogger(HomeFeedResource.class);
 
     private Configuration conf;
-    private Twitter factory = new TwitterFactory(conf).getInstance();
+    private Twitter factory;
 
     public HomeFeedResource(Configuration conf) {
         this.conf = conf;
+        this.factory = new TwitterFactory(conf).getInstance();
     }
 
     // constructor for unit testing using mock Twitter object

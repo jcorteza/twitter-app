@@ -28,10 +28,11 @@ public class StatusUpdateResource {
     final Logger logger = LoggerFactory.getLogger(StatusUpdateResource.class);
 
     private Configuration conf;
-    private Twitter factory = new TwitterFactory(conf).getInstance();
+    private Twitter factory;
 
     public StatusUpdateResource(Configuration conf) {
         this.conf = conf;
+        this.factory = new TwitterFactory(conf).getInstance();
     }
 
     public StatusUpdateResource(Twitter mockFactory) {
