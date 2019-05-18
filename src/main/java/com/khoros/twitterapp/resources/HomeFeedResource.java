@@ -17,21 +17,10 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
-    /*private Twitter factory;
-
-    public HomeFeedResource(Configuration conf) {
-        this.factory = new TwitterFactory(conf).getInstance();
-    }
-
-    // constructor for unit testing using mock Twitter object
-    public HomeFeedResource(Twitter factory) {
-        this.factory = factory;
-    }*/
-
     @GET
     public Response get() {
 
-        TwitterResponse twitterResponse = TwitterService.getHomeTimeline();
+        TwitterResponse twitterResponse = TwitterService.getInstance().getHomeTimeline();
 
         if(twitterResponse instanceof TwitterException) {
 

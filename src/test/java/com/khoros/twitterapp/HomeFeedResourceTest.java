@@ -3,62 +3,53 @@ package com.khoros.twitterapp;
 import com.khoros.twitterapp.resources.HomeFeedResource;
 
 import static org.mockito.Mockito.*;
+
+import com.khoros.twitterapp.services.TwitterService;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.Assert;
-import twitter4j.Twitter;
-import twitter4j.Status;
-import twitter4j.TwitterException;
-import twitter4j.ResponseList;
+import twitter4j.*;
 
 import java.lang.Exception;
 import java.net.HttpURLConnection;
 
 public class HomeFeedResourceTest {
 
+    private TwitterService mockTWService;
+    private TwitterResponse twResponse;
     private HomeFeedResource feedResource;
-    private Twitter mockFactory;
-    private ResponseList<Status> feedEntity;
 
     @Before
     public void setup() {
-        mockFactory = mock(Twitter.class);
-        feedResource = new HomeFeedResource(mockFactory);
+
+        feedResource = new HomeFeedResource();
+        mockTWService = mock(TwitterService.class);
+        twResponse = mockTWService.getHomeTimeline();
+
     }
 
     @After
     public void resetMock() {
-        reset(mockFactory);
+        reset(mockTWService);
     }
 
     @Test
     public void resourceGetSuccess() {
 
-        try {
-            feedEntity = new ResponseImplTest<>();
-            when(mockFactory.getHomeTimeline()).thenReturn(feedEntity);
-        } catch(TwitterException e) {
-            Assert.fail("Test failed due to TwitterException: " + e.getMessage());
-        }
-
         Assert.assertEquals(HttpURLConnection.HTTP_OK, feedResource.get().getStatus());
-        Assert.assertEquals(feedEntity, feedResource.get().getEntity());
+        Assert.assertEquals(twResponse, feedResource.get().getEntity());
+
     }
 
     @Test
     public void resourceGetException() throws TwitterException {
 
-        when(mockFactory.getHomeTimeline()).thenThrow(
+        when(twResponse).thenThrow(
                 new TwitterException("Testing TwitterException.", new Exception(), HttpURLConnection.HTTP_INTERNAL_ERROR)
         );
 
         Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, feedResource.get().getStatus());
         Assert.assertEquals(TwitterApp.GENERAL_ERR_MSG, feedResource.get().getEntity());
-    }
-
-    @Test
-    public void mainConstructorTest() {
-
     }
 }

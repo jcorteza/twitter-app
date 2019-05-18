@@ -21,6 +21,7 @@ public class StatusUpdateResource {
 
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterApp.MAX_TWEET_LENGTH + " characters.";
+    public TwitterService twitterService = TwitterService.getInstance();
 
     @POST
     public Response postStatus(@FormParam("message") String tweetText) {
@@ -37,7 +38,7 @@ public class StatusUpdateResource {
 
         } else {
 
-            TwitterResponse twitterResponse = TwitterService.updateStatus(statusText);
+            TwitterResponse twitterResponse = twitterService.updateStatus(statusText);
 
             if(twitterResponse instanceof TwitterException) {
 
@@ -50,6 +51,12 @@ public class StatusUpdateResource {
 
             }
         }
+
+    }
+
+    public void setTwitterService(TwitterService twitterService) {
+
+        this.twitterService = twitterService;
 
     }
 }
