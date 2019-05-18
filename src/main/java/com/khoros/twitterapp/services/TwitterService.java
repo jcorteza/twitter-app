@@ -12,7 +12,8 @@ import java.util.List;
 public final class TwitterService {
 
     private static final TwitterService singleton = new TwitterService();
-    private static Twitter twitterFactory = new TwitterFactory(TwitterApp.twConf).getInstance();
+    private static final Twitter twitterFactoryRef = new TwitterFactory(TwitterApp.twConf).getInstance();
+    private static Twitter twitterFactory = twitterFactoryRef;
 
     private TwitterService() {
         // hidden constructor
@@ -22,7 +23,7 @@ public final class TwitterService {
         return singleton;
     }
 
-    public static TwitterResponse updateStatus(String statusText) {
+    public TwitterResponse updateStatus(String statusText) {
 
         try {
 
@@ -35,7 +36,7 @@ public final class TwitterService {
         }
     }
 
-    public static TwitterResponse getHomeTimeline() {
+    public TwitterResponse getHomeTimeline() {
 
         try {
 
@@ -48,16 +49,28 @@ public final class TwitterService {
         }
     }
 
-    public static void setTWFactory(Configuration newConf) {
+    public void setTWFactory(Configuration newConf) {
 
         twitterFactory = new TwitterFactory(newConf).getInstance();
 
     }
 
     // mock Twitter Factory construction injection for unit testing
-    public static void setTwitterFactory(Twitter mockFactory) {
+    public void setMockTWFactory(Twitter mockFactory) {
 
         twitterFactory = mockFactory;
-        
+
+    }
+
+    public Twitter getFatory() {
+
+        return twitterFactory;
+
+    }
+
+    public void resetTWFactory() {
+
+        twitterFactory = twitterFactoryRef;
+
     }
 }

@@ -1,8 +1,12 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.resources.HomeFeedResource;
-import org.junit.*;
+
 import static org.mockito.Mockito.*;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
+import org.junit.Assert;
 import twitter4j.Twitter;
 import twitter4j.Status;
 import twitter4j.TwitterException;
