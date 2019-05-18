@@ -12,13 +12,10 @@ import java.util.List;
 public final class TwitterService {
 
     private static final TwitterService singleton = new TwitterService();
-    // private Configuration conf;
-    // private Twitter twitterFactory = new TwitterFactory(conf).getInstance();
-    private static Twitter twitterFactory = new TwitterFactory().getSingleton();
+    private static Twitter twitterFactory = new TwitterFactory(TwitterApp.twConf).getInstance();
 
     private TwitterService() {
         // hidden constructor
-        TwitterApp.getConfigurationClass();
     }
 
     public static TwitterService getInstance() {
@@ -51,7 +48,16 @@ public final class TwitterService {
         }
     }
 
-    public static String errorHandler(TwitterException e) {
-        return "Whoops! Something went wrong. Try again later.";
+    public static void setTWFactory(Configuration newConf) {
+
+        twitterFactory = new TwitterFactory(newConf).getInstance();
+
+    }
+
+    // mock Twitter Factory construction injection for unit testing
+    public static void setTwitterFactory(Twitter mockFactory) {
+
+        twitterFactory = mockFactory;
+        
     }
 }
