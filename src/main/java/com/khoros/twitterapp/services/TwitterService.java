@@ -1,5 +1,6 @@
 package com.khoros.twitterapp.services;
 
+import com.khoros.twitterapp.TwitterApp;
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.conf.Configuration;
@@ -17,6 +18,7 @@ public final class TwitterService {
 
     private TwitterService() {
         // hidden constructor
+        TwitterApp.getConfigurationClass();
     }
 
     public static TwitterService getInstance() {
