@@ -72,16 +72,14 @@ public class StatusUpdateResource {
 
                 logger.error("Twitter Exception thrown. Error Message: {} — Exception Code: {}",
                         tweetException.getErrorMessage(),
-                        tweetException.getExceptionCode(),
-                        tweetException
+                        tweetException.getExceptionCode()
                 );
+                tweetException.printStackTrace();
 
             } else {
 
-                logger.error("Unknown Twitter Exception thrown. — Exception code: {}",
-                        tweetException.getExceptionCode(),
-                        tweetException
-                );
+                logger.error("Unknown Twitter Exception thrown. — Exception code: {}", tweetException.getExceptionCode());
+                tweetException.printStackTrace();
 
             }
 

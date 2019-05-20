@@ -55,14 +55,14 @@ public class HomeFeedResource {
 
                 logger.error("Twitter Exception thrown. Error Message: {} — Exception Code: {}",
                         feedException.getErrorMessage(),
-                        feedException.getExceptionCode(),
-                        feedException);
+                        feedException.getExceptionCode()
+                );
+                feedException.printStackTrace();
 
             } else {
 
-                logger.error("Unknown Twitter Exception thrown. — Exception Code: {}",
-                        feedException.getExceptionCode(),
-                        feedException);
+                logger.error("Unknown Twitter Exception thrown. — Exception Code: {}", feedException.getExceptionCode());
+                feedException.printStackTrace();
 
             }
 
