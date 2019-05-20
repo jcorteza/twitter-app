@@ -1,6 +1,7 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.resources.HomeFeedResource;
+import com.khoros.twitterapp.resources.MainResource;
 import com.khoros.twitterapp.resources.StatusUpdateResource;
 
 import com.khoros.twitterapp.services.TwitterService;
@@ -21,7 +22,8 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
         TwitterService.setTwitterFactoryRef(configuration.twitter4jConfigurationBuild());
 
-        environment.jersey().register(new StatusUpdateResource());
-        environment.jersey().register(new HomeFeedResource());
+        environment.jersey().register(new MainResource());
+        // environment.jersey().register(new StatusUpdateResource());
+        // environment.jersey().register(new HomeFeedResource());
     }
 }

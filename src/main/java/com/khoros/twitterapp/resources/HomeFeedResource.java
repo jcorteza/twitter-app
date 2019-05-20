@@ -13,24 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/timeline")
-@Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
-    @GET
-    public Response get() {
 
-        TwitterResponse twitterResponse = TwitterService.getInstance().getHomeTimeline();
-
-        if(twitterResponse instanceof TwitterException) {
-
-            TwitterException e = (TwitterException) twitterResponse;
-            return Response.status(e.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
-
-        } else {
-
-            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterResponse).build();
-
-        }
-    }
 }
