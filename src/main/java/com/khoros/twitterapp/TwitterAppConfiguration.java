@@ -10,26 +10,13 @@ import javax.validation.constraints.NotNull;
 public class TwitterAppConfiguration extends io.dropwizard.Configuration {
 
     @NotNull
-    private int maxTweetLength;
-
-    @NotNull
     private Boolean debug;
 
     @Valid
     @NotNull
     @JsonProperty
     private TwitterAuthorization twitterAuthorization = new TwitterAuthorization();
-
-    @JsonProperty
-    public int getMaxTweetLength() {
-        return maxTweetLength;
-    }
-
-    @JsonProperty
-    public void setMaxTweetLength(int maxTweetLength) {
-        this.maxTweetLength = maxTweetLength;
-    }
-
+    
     @JsonProperty
     public Boolean getDebug() {
         return debug;
