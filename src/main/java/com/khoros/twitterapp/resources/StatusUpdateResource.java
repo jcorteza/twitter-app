@@ -68,24 +68,20 @@ public class StatusUpdateResource {
 
             logger.info("Status update aborted. Twitter Exception thrown." );
 
-            if (tweetException.isCausedByNetworkIssue()) {
-
-                logger.error("Twitter Exception Caused By Network Issues: {}", tweetException.isCausedByNetworkIssue());
-
-            } else if (tweetException.exceededRateLimitation()) {
-
-                logger.error("Request Exceeded Rate Limitation: {} — Current Rate Limit: {}", tweetException.exceededRateLimitation(),tweetException.getRateLimitStatus());
-
-            } else if (tweetException.isErrorMessageAvailable()) {
+            if (tweetException.isErrorMessageAvailable()) {
 
                 logger.error("Twitter Exception thrown. Error Message: {} — Exception Code: {}",
                         tweetException.getErrorMessage(),
-                        tweetException.getExceptionCode()
+                        tweetException.getExceptionCode(),
+                        tweetException
                 );
 
             } else {
 
-                logger.error("Unknown Twitter Exception thrown. — Exception code: {}", tweetException.getExceptionCode());
+                logger.error("Unknown Twitter Exception thrown. — Exception code: {}",
+                        tweetException.getExceptionCode(),
+                        tweetException
+                );
 
             }
 
