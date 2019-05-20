@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
 
+@Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
 public class MainResource {
 
@@ -24,8 +25,8 @@ public class MainResource {
     public TwitterService twitterService = TwitterService.getInstance();
 
     @Path("/tweet")
-    @Consumes("application/x-www-form-urlencoded")
     @POST
+    @Consumes("application/x-www-form-urlencoded")
     public Response postStatus(@FormParam("message") String tweetText) {
 
         String statusText = tweetText.trim();
