@@ -3,12 +3,15 @@ package com.khoros.twitterapp;
 import com.khoros.twitterapp.services.TwitterService;
 
 import static org.mockito.Mockito.*;
+
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Assert;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
+import twitter4j.ResponseList;
 
 public class TwitterServiceTest {
 
@@ -46,7 +49,7 @@ public class TwitterServiceTest {
         testStatus = "Tweet";
         twResponse = twSingleton.updateStatus(testStatus);
 
-        Assert.assertThat(twResponse, is(instanceof Status));
+        Assert.assertThat(twResponse, IsInstanceOf.<TwitterResponse>instanceOf(Status.class));
 
     }
 
@@ -58,7 +61,7 @@ public class TwitterServiceTest {
         when(mockFactory.updateStatus(testStatus)).thenThrow(new TwitterException("Test"));
         twResponse = twSingleton.updateStatus(testStatus);
 
-        Assert.assertThat(twResponse, is(instanceof TwitterException));
+        Assert.assertThat(twResponse, IsInstanceOf.<TwitterResponse>instanceOf(TwitterException.class));
 
     }
 
@@ -67,7 +70,7 @@ public class TwitterServiceTest {
 
         twResponse = twSingleton.getHomeTimeline();
 
-        Assert.assertThat(twResponse,);
+        Assert.assertThat(twResponse, IsInstanceOf.<TwitterResponse>instanceOf(ResponseList.class));
 
     }
 
