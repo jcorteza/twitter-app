@@ -11,16 +11,22 @@ import java.util.List;
 
 public final class TwitterService {
 
-    private static final TwitterService singleton = new TwitterService();
-    private static final Twitter twitterFactoryRef = new TwitterFactory(TwitterApp.twConf).getInstance();
-    private static Twitter twitterFactory = twitterFactoryRef;
+    private static final TwitterService INSTANCE = new TwitterService();
+    private static Twitter twitterFactoryRef;
+    private static Twitter twitterFactory;
 
     private TwitterService() {
         // hidden constructor
     }
 
     public static TwitterService getInstance() {
-        return singleton;
+        return INSTANCE;
+    }
+
+    public static void setTwitterFactoryRef(Configuration originalConfig) {
+
+        twitterFactoryRef = new TwitterFactory(originalConfig).getInstance();
+        twitterFactory = twitterFactoryRef;
     }
 
     public TwitterResponse updateStatus(String statusText) {
@@ -62,12 +68,13 @@ public final class TwitterService {
 
     }
 
-    public Twitter getFatory() {
+    public Twitter getFactory() {
 
         return twitterFactory;
 
     }
 
+    // method for resetting twitterFactory back to original config after a change
     public void resetTWFactory() {
 
         twitterFactory = twitterFactoryRef;

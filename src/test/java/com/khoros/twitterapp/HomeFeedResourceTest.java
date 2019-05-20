@@ -16,26 +16,30 @@ import java.net.HttpURLConnection;
 
 public class HomeFeedResourceTest {
 
-    private TwitterService mockTWService;
-    private TwitterResponse twResponse;
+    private TwitterService twSingleton;
     private HomeFeedResource feedResource;
 
     @Before
     public void setup() {
 
+        twSingleton = TwitterService.getInstance();
+        twSingleton.setMockTWFactory(mock(Twitter.class));
         feedResource = new HomeFeedResource();
-        mockTWService = mock(TwitterService.class);
-        twResponse = mockTWService.getHomeTimeline();
 
     }
 
     @After
     public void resetMock() {
-        reset(mockTWService);
+
+        twSingleton.resetTWFactory();
+
     }
 
     @Test
     public void resourceGetSuccess() {
+
+        TwitterResponse twResponse = new ResponseImplTest<Status>();
+        when(twSingleton.getHomeTimeline()).thenReturn(twResponse);
 
         Assert.assertEquals(HttpURLConnection.HTTP_OK, feedResource.get().getStatus());
         Assert.assertEquals(twResponse, feedResource.get().getEntity());
@@ -45,7 +49,7 @@ public class HomeFeedResourceTest {
     @Test
     public void resourceGetException() throws TwitterException {
 
-        when(twResponse).thenThrow(
+        when(twSingleton.getHomeTimeline()).thenThrow(
                 new TwitterException("Testing TwitterException.", new Exception(), HttpURLConnection.HTTP_INTERNAL_ERROR)
         );
 
