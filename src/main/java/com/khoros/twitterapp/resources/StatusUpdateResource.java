@@ -53,10 +53,4 @@ public class StatusUpdateResource {
         }
 
     }
-
-    public void setTwitterService(TwitterService twitterService) {
-
-        this.twitterService = twitterService;
-
-    }
 }
