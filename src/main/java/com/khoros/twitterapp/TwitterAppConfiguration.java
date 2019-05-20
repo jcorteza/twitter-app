@@ -16,7 +16,7 @@ public class TwitterAppConfiguration extends io.dropwizard.Configuration {
     @NotNull
     @JsonProperty
     private TwitterAuthorization twitterAuthorization = new TwitterAuthorization();
-    
+
     @JsonProperty
     public Boolean getDebug() {
         return debug;
