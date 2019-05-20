@@ -59,9 +59,19 @@ public class HomeFeedResource {
 
                 logger.error("Request Exceeded Rate Limitation: {} — Current Rate Limit: {}", feedException.getRateLimitStatus(),feedException.exceededRateLimitation());
 
+            } else if (feedException.resourceNotFound()) {
+
+                logger.error("Resource Not Found: {}", feedException.resourceNotFound());
+
+            } else if (feedException.isErrorMessageAvailable()) {
+
+                logger.error("Twitter Exception thrown. Error Message: {} — Exception Code: {}",
+                        feedException.getErrorMessage(),
+                        feedException.getExceptionCode());
+
             } else {
 
-                logger.error("Twitter Exception thrown. Error Message: {}", feedException.getErrorMessage());
+                logger.error("Unknown Twitter Exception thrown. — Exception Code: {}", feedException.getExceptionCode());
 
             }
 
