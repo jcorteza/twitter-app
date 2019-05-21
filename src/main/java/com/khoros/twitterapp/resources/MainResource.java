@@ -3,7 +3,6 @@ package com.khoros.twitterapp.resources;
 import com.khoros.twitterapp.TwitterApp;
 import com.khoros.twitterapp.services.TwitterService;
 
-import sun.rmi.rmic.Main;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
