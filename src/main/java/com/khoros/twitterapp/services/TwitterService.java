@@ -14,10 +14,14 @@ import java.lang.Exception;
 
 public final class TwitterService {
 
+    public static final int MAX_TWEET_LENGTH = 280;
+    public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
+    public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
+    public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     private static final TwitterService INSTANCE = new TwitterService();
     private static Configuration twitterConfiguration;
-    private static Twitter twitterFactoryRef = new TwitterFactory(twitterConfiguration).getInstance();
-    private static Twitter twitterFactory = twitterFactoryRef;
+    private static Twitter twitterFactoryRef;
+    private static Twitter twitterFactory;
 
     private TwitterService() {
         // hidden constructor
@@ -29,16 +33,26 @@ public final class TwitterService {
 
     public Status updateStatus(String statusText) throws Exception {
 
+        if (statusText.length() == 0) {
+
+            throw new Exception(TwitterService.NO_TWEET_TEXT_MSG);
+
+        } else if (statusText.length() > TwitterService.MAX_TWEET_LENGTH) {
+
+            throw new Exception(TwitterService.TWEET_TOO_LONG_MSG);
+
+        } else {
+
             try {
 
                 return twitterFactory.updateStatus(statusText);
 
             } catch (TwitterException twitterException) {
 
-                throw new Exception();
+                throw new Exception("Twitter Exception thrown.", twitterException);
 
             }
-
+        }
     }
 
     public ResponseList<Status> getHomeTimeline() throws Exception {
@@ -49,8 +63,7 @@ public final class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                throw new Exception();
-
+                throw new Exception("Twitter Exception thrown.", twitterException);
             }
     }
 
@@ -66,15 +79,23 @@ public final class TwitterService {
 
     }
 
-    public Twitter getFactory(Boolean getActualFactory) {
+    public Twitter getTwitterFactoryRef() {
 
-        return (getActualFactory)? twitterFactory : twitterFactoryRef;
+        return twitterFactoryRef;
+
+    }
+
+    public Twitter getTwitterFactory() {
+
+        return twitterFactory;
 
     }
 
     public void setTwitterConfiguration(Configuration config) {
 
         twitterConfiguration = config;
+        twitterFactoryRef = new TwitterFactory(config).getInstance();
+        twitterFactory = twitterFactoryRef;
 
     }
 

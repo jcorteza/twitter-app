@@ -21,8 +21,7 @@ import java.lang.Exception;
 @Produces(MediaType.APPLICATION_JSON)
 public class MainResource {
 
-    public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
-    public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterApp.MAX_TWEET_LENGTH + " characters.";
+
     public TwitterService twitterService = TwitterService.getInstance();
 
     @Path("/tweet")
@@ -32,27 +31,24 @@ public class MainResource {
 
         String statusText = tweetText.trim();
 
-        if (statusText.length() == 0) {
+        try {
 
-            return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(MainResource.NO_TWEET_TEXT_MSG).build();
+            Status twitterStatus = twitterService.updateStatus(statusText);
+            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterStatus).build();
 
-        } else if (statusText.length() > TwitterApp.MAX_TWEET_LENGTH) {
+        } catch (Exception twServiceException) {
 
-            return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(MainResource.TWEET_TOO_LONG_MSG).build();
+            if (twServiceException.getCause() == null) {
 
-        } else {
+                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(twServiceException.getMessage()).build();
 
-            try {
+            } else {
 
-                Status twitterStatus = twitterService.updateStatus(statusText);
-                return Response.status(HttpURLConnection.HTTP_OK).entity(twitterStatus).build();
-
-            } catch (Exception twServiceException) {
-
-                return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(TwitterApp.GENERAL_ERR_MSG).build();
+                return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(
+                        twServiceException.getCause().getMessage()
+                ).build();
 
             }
-
         }
 
     }
@@ -68,7 +64,9 @@ public class MainResource {
 
         } catch (Exception twServiceException) {
 
-            return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(TwitterApp.GENERAL_ERR_MSG).build();
+            return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(
+                    twServiceException.getCause().getMessage()
+            ).build();
 
         }
 

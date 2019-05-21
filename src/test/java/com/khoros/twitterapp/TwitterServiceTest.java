@@ -24,7 +24,7 @@ public class TwitterServiceTest {
 
         twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
-        twSingleton.setTWFactory(mockFactory, true);
+        twSingleton.setTWFactory(mockFactory);
         testStatusText = "Tweet Test";
 
     }
@@ -32,8 +32,8 @@ public class TwitterServiceTest {
     @After
     public void reset() {
 
-        Twitter factoryRef = TwitterService.getInstance().getFactory(false);
-        twSingleton.setTWFactory(factoryRef, true);
+        Twitter factoryRef = TwitterService.getInstance().getTwitterFactoryRef();
+        twSingleton.setTWFactory(factoryRef);
 
     }
 
@@ -49,9 +49,9 @@ public class TwitterServiceTest {
             when(mockFactory.updateStatus(testStatusText)).thenReturn(testStatus);
             serviceResponse = twSingleton.updateStatus(testStatusText);
 
-        } catch (TwitterException e) {
+        } catch (Exception e) {
 
-            Assert.fail("Test failed due to Twitter Exception: " + e.getMessage());
+            Assert.fail("Test failed due to Twitter Exception");
 
         }
 
@@ -71,9 +71,9 @@ public class TwitterServiceTest {
             when(mockFactory.getHomeTimeline()).thenReturn(testFeed);
             serviceResponse = twSingleton.getHomeTimeline();
 
-        } catch (TwitterException e) {
+        } catch (Exception e) {
 
-            Assert.fail("Test failed due to Twitter Exception: " + e.getMessage());
+            Assert.fail("Test failed due to Twitter Exception");
 
         }
 
@@ -84,7 +84,7 @@ public class TwitterServiceTest {
     @Test
     public void getFactoryTest() {
 
-        Assert.assertEquals(mockFactory, TwitterService.getInstance().getFactory(true));
+        Assert.assertEquals(mockFactory, TwitterService.getInstance().getTwitterFactory());
 
     }
 
@@ -101,7 +101,7 @@ public class TwitterServiceTest {
                 .build();
         twSingleton.setTWFactory(testConfig);
 
-        Assert.assertEquals(new TwitterFactory(testConfig).getInstance(), TwitterService.getInstance().getFactory(true));
+        Assert.assertEquals(new TwitterFactory(testConfig).getInstance(), TwitterService.getInstance().getTwitterFactory());
 
     }
 
