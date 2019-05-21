@@ -5,6 +5,7 @@ import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
 
 import static org.mockito.Mockito.*;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
@@ -65,7 +66,7 @@ public class MainResourceTest {
     public void postTestException() throws TwitterServiceException {
 
         when(twSingleton.updateStatus(exampleText)).thenThrow(
-                new TwitterServiceException(exceptionText)
+                new TwitterException(exceptionText)
         );
 
         Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.post(exampleText).getStatus());
@@ -112,7 +113,7 @@ public class MainResourceTest {
     public void getTestException() throws TwitterServiceException {
 
         when(twSingleton.getHomeTimeline()).thenThrow(
-                new TwitterServiceException(exceptionText)
+                new TwitterException(exceptionText)
         );
 
         Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.get().getStatus());
