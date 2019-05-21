@@ -1,15 +1,23 @@
 package com.khoros.twitterapp.services;
 
-import twitter4j.*;
+import com.khoros.twitterapp.TwitterAppConfiguration;
+import com.khoros.twitterapp.TwitterAuthorization;
+import twitter4j.Twitter;
+import twitter4j.Status;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.ResponseList;
 import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 import java.lang.Exception;
 
 public final class TwitterService {
 
     private static final TwitterService INSTANCE = new TwitterService();
-    private static Twitter twitterFactoryRef;
-    private static Twitter twitterFactory;
+    private static Configuration twitterConfiguration;
+    private static Twitter twitterFactoryRef = new TwitterFactory(twitterConfiguration).getInstance();
+    private static Twitter twitterFactory = twitterFactoryRef;
 
     private TwitterService() {
         // hidden constructor
@@ -52,24 +60,21 @@ public final class TwitterService {
 
     }
 
-    public void setTWFactory(Twitter factory, Boolean getActualFactory) {
-
-        if (getActualFactory) {
+    public void setTWFactory(Twitter factory) {
 
             twitterFactory = factory;
-
-        } else {
-
-            twitterFactoryRef = factory;
-            twitterFactory = twitterFactoryRef;
-
-        }
 
     }
 
     public Twitter getFactory(Boolean getActualFactory) {
 
         return (getActualFactory)? twitterFactory : twitterFactoryRef;
+
+    }
+
+    public void setTwitterConfiguration(Configuration config) {
+
+        twitterConfiguration = config;
 
     }
 

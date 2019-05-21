@@ -37,13 +37,13 @@ public class TwitterAppConfiguration extends io.dropwizard.Configuration {
         this.twitterAuthorization = factory;
     }
 
-    public twitter4j.conf.Configuration twitter4jConfigurationBuild() {
+    public ConfigurationBuilder twitter4jConfigurationBuild() {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(this.debug)
             .setOAuthConsumerKey(this.twitterAuthorization.getConsumerKey())
             .setOAuthConsumerSecret(this.twitterAuthorization.getConsumerSecret())
             .setOAuthAccessToken(this.twitterAuthorization.getAccessToken())
             .setOAuthAccessTokenSecret(this.twitterAuthorization.getAccessTokenSecret());
-        return cb.build();
+        return cb;
     }
 }

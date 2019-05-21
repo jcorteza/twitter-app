@@ -63,7 +63,7 @@ public class MainResource {
 
         try {
 
-            List<Status> twitterFeed = TwitterService.getInstance().getHomeTimeline();
+            List<Status> twitterFeed = twitterService.getHomeTimeline();
             return Response.status(HttpURLConnection.HTTP_OK).entity(twitterFeed).build();
 
         } catch (Exception twServiceException) {
