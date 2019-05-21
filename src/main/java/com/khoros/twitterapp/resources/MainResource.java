@@ -3,7 +3,7 @@ package com.khoros.twitterapp.resources;
 import com.khoros.twitterapp.TwitterApp;
 import com.khoros.twitterapp.services.TwitterService;
 
-import twitter4j.TwitterResponse;
+import twitter4j.Status;
 import twitter4j.TwitterException;
 
 import javax.ws.rs.Path;
@@ -15,6 +15,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
+import java.util.List;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
@@ -41,18 +42,17 @@ public class MainResource {
 
         } else {
 
-            TwitterResponse twitterResponse = twitterService.updateStatus(statusText);
+            try {
 
-            if(twitterResponse instanceof TwitterException) {
+                Status twitterStatus = twitterService.updateStatus(statusText);
+                return Response.status(HttpURLConnection.HTTP_OK).entity(twitterStatus).build();
 
-                TwitterException e = (TwitterException) twitterResponse;
-                return Response.status(e.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
+            } catch (TwitterException twitterException) {
 
-            } else {
-
-                return Response.status(HttpURLConnection.HTTP_OK).entity(twitterResponse).build();
+                return Response.status(twitterException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
 
             }
+
         }
 
     }
@@ -61,17 +61,16 @@ public class MainResource {
     @GET
     public Response get() {
 
-        TwitterResponse twitterResponse = TwitterService.getInstance().getHomeTimeline();
+        try {
 
-        if(twitterResponse instanceof TwitterException) {
+            List<Status> twitterFeed = TwitterService.getInstance().getHomeTimeline();
+            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterFeed).build();
 
-            TwitterException e = (TwitterException) twitterResponse;
-            return Response.status(e.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
+        } catch (TwitterException twitterException) {
 
-        } else {
-
-            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterResponse).build();
+            return Response.status(twitterException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
 
         }
+
     }
 }
