@@ -4,7 +4,6 @@ import com.khoros.twitterapp.TwitterApp;
 import com.khoros.twitterapp.services.TwitterService;
 
 import twitter4j.Status;
-import twitter4j.TwitterException;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
@@ -16,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
 import java.util.List;
+import java.lang.Exception;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
@@ -47,9 +47,9 @@ public class MainResource {
                 Status twitterStatus = twitterService.updateStatus(statusText);
                 return Response.status(HttpURLConnection.HTTP_OK).entity(twitterStatus).build();
 
-            } catch (TwitterException twitterException) {
+            } catch (Exception twServiceException) {
 
-                return Response.status(twitterException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
+                return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(TwitterApp.GENERAL_ERR_MSG).build();
 
             }
 
@@ -66,9 +66,9 @@ public class MainResource {
             List<Status> twitterFeed = TwitterService.getInstance().getHomeTimeline();
             return Response.status(HttpURLConnection.HTTP_OK).entity(twitterFeed).build();
 
-        } catch (TwitterException twitterException) {
+        } catch (Exception twServiceException) {
 
-            return Response.status(twitterException.getStatusCode()).entity(TwitterApp.GENERAL_ERR_MSG).build();
+            return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(TwitterApp.GENERAL_ERR_MSG).build();
 
         }
 

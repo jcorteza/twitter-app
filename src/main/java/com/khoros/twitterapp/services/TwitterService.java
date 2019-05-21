@@ -1,11 +1,9 @@
 package com.khoros.twitterapp.services;
 
-import twitter4j.ResponseList;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.TwitterException;
+import twitter4j.*;
 import twitter4j.conf.Configuration;
+
+import java.lang.Exception;
 
 public final class TwitterService {
 
@@ -21,15 +19,31 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public Status updateStatus(String statusText) throws TwitterException {
+    public Status updateStatus(String statusText) throws Exception {
 
-            return twitterFactory.updateStatus(statusText);
+            try {
+
+                return twitterFactory.updateStatus(statusText);
+
+            } catch (TwitterException twitterException) {
+
+                throw new Exception();
+
+            }
 
     }
 
-    public ResponseList<Status> getHomeTimeline() throws TwitterException {
+    public ResponseList<Status> getHomeTimeline() throws Exception {
 
-            return twitterFactory.getHomeTimeline();
+            try {
+
+                return twitterFactory.getHomeTimeline();
+
+            } catch (TwitterException twitterException) {
+
+                throw new Exception();
+
+            }
     }
 
     public void setTWFactory(Configuration newConf) {
