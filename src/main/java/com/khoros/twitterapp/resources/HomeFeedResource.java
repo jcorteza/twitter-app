@@ -1,14 +1,17 @@
 package com.khoros.twitterapp.resources;
 
 import com.khoros.twitterapp.TwitterApp;
+import com.khoros.twitterapp.models.Status;
+import com.khoros.twitterapp.models.User;
+
 import twitter4j.TwitterFactory;
 import twitter4j.Twitter;
-import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.conf.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.net.HttpURLConnection;
 import javax.ws.rs.GET;
@@ -44,8 +47,26 @@ public class HomeFeedResource {
 
         try {
 
-            List<Status> tweetsFeed = factory.getHomeTimeline();
-            return Response.status(HttpURLConnection.HTTP_OK).entity(tweetsFeed).build();
+            // List<Status> tweetsFeed = factory.getHomeTimeline();
+            List<Status> statusesList  = new ArrayList<>();
+
+            for (twitter4j.Status originalStatus: factory.getHomeTimeline()) {
+
+                User newUser = new User();
+                newUser.setTwHandle(originalStatus.getUser().getScreenName());
+                newUser.setName(originalStatus.getUser().getName());
+                newUser.setProfileImageUrl(originalStatus.getUser().get400x400ProfileImageURL());
+
+                Status newStatus = new Status();
+                newStatus.setMessage(originalStatus.getText());
+                newStatus.setUser(newUser);
+                newStatus.setCreatedAt(originalStatus.getCreatedAt());
+
+                statusesList.add(newStatus);
+
+            }
+
+            return Response.status(HttpURLConnection.HTTP_OK).entity(statusesList).build();
 
         } catch (TwitterException feedException) {
 
