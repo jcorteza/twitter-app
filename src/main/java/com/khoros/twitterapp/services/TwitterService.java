@@ -28,15 +28,15 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public Status updateStatus(String statusText) throws Exception {
+    public Status updateStatus(String statusText) throws TwitterServiceException {
 
         if (statusText.length() == 0) {
 
-            throw new Exception(TwitterService.NO_TWEET_TEXT_MSG);
+            throw new TwitterServiceException(TwitterService.NO_TWEET_TEXT_MSG);
 
         } else if (statusText.length() > TwitterService.MAX_TWEET_LENGTH) {
 
-            throw new Exception(TwitterService.TWEET_TOO_LONG_MSG);
+            throw new TwitterServiceException(TwitterService.TWEET_TOO_LONG_MSG);
 
         } else {
 
@@ -46,13 +46,13 @@ public final class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                throw new Exception("Twitter Exception thrown.", twitterException);
+                throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
 
             }
         }
     }
 
-    public ResponseList<Status> getHomeTimeline() throws Exception {
+    public ResponseList<Status> getHomeTimeline() throws TwitterServiceException {
 
             try {
 
@@ -60,7 +60,7 @@ public final class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                throw new Exception("Twitter Exception thrown.", twitterException);
+                throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
             }
     }
 

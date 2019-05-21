@@ -1,8 +1,10 @@
 package com.khoros.twitterapp.resources;
 
 import com.khoros.twitterapp.services.TwitterService;
+import com.khoros.twitterapp.services.TwitterServiceException;
 
 import twitter4j.Status;
+import twitter4j.TwitterException;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
@@ -24,8 +26,8 @@ public class MainResource {
     public TwitterService twitterService = TwitterService.getInstance();
 
     @Path("/tweet")
-    @POST
     @Consumes("application/x-www-form-urlencoded")
+    @POST
     public Response post(@FormParam("message") String tweetText) {
 
         String statusText = tweetText.trim();
@@ -35,7 +37,7 @@ public class MainResource {
             Status twitterStatus = twitterService.updateStatus(statusText);
             return Response.status(HttpURLConnection.HTTP_OK).entity(twitterStatus).build();
 
-        } catch (Exception twServiceException) {
+        } catch (TwitterServiceException twServiceException) {
 
             if (twServiceException.getCause() == null) {
 
@@ -61,7 +63,7 @@ public class MainResource {
             List<Status> twitterFeed = twitterService.getHomeTimeline();
             return Response.status(HttpURLConnection.HTTP_OK).entity(twitterFeed).build();
 
-        } catch (Exception twServiceException) {
+        } catch (TwitterServiceException twServiceException) {
 
             return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(
                     twServiceException.getCause().getMessage()
