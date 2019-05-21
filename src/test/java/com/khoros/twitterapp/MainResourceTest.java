@@ -8,13 +8,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
-import twitter4j.TwitterException;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterObjectFactory;
+import twitter4j.*;
 
 import java.lang.Exception;
 import java.net.HttpURLConnection;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class MainResourceTest {
@@ -22,6 +21,7 @@ public class MainResourceTest {
     private TwitterService twSingleton;
     private MainResource mainResource;
     private String exampleText;
+    private String exceptionText;
 
     @Before
     public void setup() {
@@ -30,6 +30,7 @@ public class MainResourceTest {
         twSingleton.setTWFactory(mock(Twitter.class));
         mainResource = new MainResource();
         exampleText = "Tweet Test";
+        exceptionText = "Testing TwitterException.";
 
     }
 
@@ -65,11 +66,11 @@ public class MainResourceTest {
     public void postTestException() throws Exception {
 
         when(twSingleton.updateStatus(exampleText)).thenThrow(
-                new TwitterException("Testing TwitterException.")
+                new TwitterException(exceptionText)
         );
 
         Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.post(exampleText).getStatus());
-        Assert.assertEquals(TwitterApp.GENERAL_ERR_MSG, mainResource.post(exampleText).getEntity());
+        Assert.assertEquals(exceptionText, mainResource.post(exampleText).getEntity());
     }
 
     @Test
@@ -77,15 +78,15 @@ public class MainResourceTest {
         exampleText = "";
 
         Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.post(exampleText).getStatus());
-        Assert.assertEquals(MainResource.NO_TWEET_TEXT_MSG, mainResource.post(exampleText).getEntity());
+        Assert.assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.post(exampleText).getEntity());
     }
 
     @Test
     public void statusLengthLongTest() {
-        exampleText = StringUtils.repeat("a", TwitterApp.MAX_TWEET_LENGTH + 1);
+        exampleText = StringUtils.repeat("a", TwitterService.MAX_TWEET_LENGTH + 1);
 
         Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.post(exampleText).getStatus());
-        Assert.assertEquals(MainResource.TWEET_TOO_LONG_MSG, mainResource.post(exampleText).getEntity());
+        Assert.assertEquals(TwitterService.TWEET_TOO_LONG_MSG, mainResource.post(exampleText).getEntity());
     }
 
     @Test
@@ -112,11 +113,11 @@ public class MainResourceTest {
     public void getTestException() throws Exception {
 
         when(twSingleton.getHomeTimeline()).thenThrow(
-                new TwitterException("Testing TwitterException.")
+                new TwitterException(exceptionText)
         );
 
         Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.get().getStatus());
-        Assert.assertEquals(TwitterApp.GENERAL_ERR_MSG, mainResource.get().getEntity());
+        Assert.assertEquals(exceptionText, mainResource.get().getEntity());
     }
 
 }
