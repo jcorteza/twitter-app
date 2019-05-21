@@ -1,6 +1,0 @@
-HTTP/1.1 405 Method Not Allowed
-Date: Tue, 21 May 2019 22:53:37 GMT
-Allow: GET,OPTIONS
-Content-Type: application/json
-Content-Length: 52
-
