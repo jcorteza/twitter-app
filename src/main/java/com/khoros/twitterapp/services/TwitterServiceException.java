@@ -2,13 +2,13 @@ package com.khoros.twitterapp.services;
 
 public class TwitterServiceException extends Exception {
 
-    TwitterServiceException(String message) {
+    public TwitterServiceException(String message) {
 
         super(message);
 
     }
 
-    TwitterServiceException (String message, Throwable cause) {
+    public TwitterServiceException (String message, Throwable cause) {
 
         super(message, cause);
 

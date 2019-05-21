@@ -4,7 +4,6 @@ import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
 
 import twitter4j.Status;
-import twitter4j.TwitterException;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
@@ -16,7 +15,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
 import java.util.List;
-import java.lang.Exception;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
