@@ -28,7 +28,7 @@ public class MainResource {
     @Path("/tweet")
     @POST
     @Consumes("application/x-www-form-urlencoded")
-    public Response postStatus(@FormParam("message") String tweetText) {
+    public Response post(@FormParam("message") String tweetText) {
 
         String statusText = tweetText.trim();
 
