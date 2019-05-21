@@ -12,7 +12,6 @@ import twitter4j.TwitterException;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterObjectFactory;
-import twitter4j.TwitterObjectFactory;
 
 import java.lang.Exception;
 import java.net.HttpURLConnection;

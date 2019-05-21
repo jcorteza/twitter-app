@@ -1,6 +1,5 @@
 package com.khoros.twitterapp.resources;
 
-import com.khoros.twitterapp.TwitterApp;
 import com.khoros.twitterapp.services.TwitterService;
 
 import twitter4j.Status;
