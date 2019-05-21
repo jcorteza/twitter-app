@@ -24,7 +24,7 @@ public class MainResource {
     public TwitterService twitterService = TwitterService.getInstance();
 
     @Path("/tweet")
-    @Consumes("application/x-www-form-urlencoded")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @POST
     public Response post(@FormParam("message") String tweetText) {
 
