@@ -3,6 +3,7 @@ package com.khoros.twitterapp.resources;
 import com.khoros.twitterapp.TwitterApp;
 import com.khoros.twitterapp.services.TwitterService;
 
+import sun.rmi.rmic.Main;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -34,11 +35,11 @@ public class MainResource {
 
         if (statusText.length() == 0) {
 
-            return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.NO_TWEET_TEXT_MSG).build();
+            return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(MainResource.NO_TWEET_TEXT_MSG).build();
 
         } else if (statusText.length() > TwitterApp.MAX_TWEET_LENGTH) {
 
-            return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(StatusUpdateResource.TWEET_TOO_LONG_MSG).build();
+            return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(MainResource.TWEET_TOO_LONG_MSG).build();
 
         } else {
 
