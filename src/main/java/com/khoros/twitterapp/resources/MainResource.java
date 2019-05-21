@@ -3,7 +3,6 @@ package com.khoros.twitterapp.resources;
 import com.khoros.twitterapp.TwitterApp;
 import com.khoros.twitterapp.services.TwitterService;
 
-import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -16,6 +15,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
+import java.util.List;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
@@ -63,7 +63,7 @@ public class MainResource {
 
         try {
 
-            ResponseList<Status> twitterFeed = TwitterService.getInstance().getHomeTimeline();
+            List<Status> twitterFeed = TwitterService.getInstance().getHomeTimeline();
             return Response.status(HttpURLConnection.HTTP_OK).entity(twitterFeed).build();
 
         } catch (TwitterException twitterException) {
