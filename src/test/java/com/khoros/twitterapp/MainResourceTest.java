@@ -30,7 +30,7 @@ public class MainResourceTest {
     public void setup() {
 
         twSingleton = TwitterService.getInstance();
-        twSingleton.setMockTWFactory(mock(Twitter.class));
+        twSingleton.setTWFactory(mock(Twitter.class), true);
         mainResource = new MainResource();
         exampleText = "Tweet Test";
 
@@ -39,7 +39,8 @@ public class MainResourceTest {
     @After
     public void resetMock() {
 
-        twSingleton.resetTWFactory();
+        Twitter factoryRef = TwitterService.getInstance().getFactory(false);
+        twSingleton.setTWFactory(factoryRef, true);
 
     }
 

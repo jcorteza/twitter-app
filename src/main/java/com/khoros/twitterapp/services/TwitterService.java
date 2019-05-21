@@ -21,12 +21,6 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public static void setTwitterFactoryRef(Configuration originalConfig) {
-
-        twitterFactoryRef = new TwitterFactory(originalConfig).getInstance();
-        twitterFactory = twitterFactoryRef;
-    }
-
     public Status updateStatus(String statusText) throws TwitterException {
 
             return twitterFactory.updateStatus(statusText);
@@ -44,23 +38,25 @@ public final class TwitterService {
 
     }
 
-    // mock Twitter Factory construction injection for unit testing
-    public void setMockTWFactory(Twitter mockFactory) {
+    public void setTWFactory(Twitter factory, Boolean getActualFactory) {
 
-        twitterFactory = mockFactory;
+        if (getActualFactory) {
+
+            twitterFactory = factory;
+
+        } else {
+
+            twitterFactoryRef = factory;
+            twitterFactory = twitterFactoryRef;
+
+        }
+
+    }
+
+    public Twitter getFactory(Boolean getActualFactory) {
+
+        return (getActualFactory)? twitterFactory : twitterFactoryRef;
 
     }
 
-    public Twitter getFactory() {
-
-        return twitterFactory;
-
-    }
-
-    // method for resetting twitterFactory back to original config after a change
-    public void resetTWFactory() {
-
-        twitterFactory = twitterFactoryRef;
-
-    }
 }
