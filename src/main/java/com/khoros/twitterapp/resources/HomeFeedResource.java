@@ -24,7 +24,6 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class HomeFeedResource {
 
-    final Logger logger = LoggerFactory.getLogger(HomeFeedResource.class);
 
     private Configuration conf;
     private Twitter factory;
@@ -42,7 +41,6 @@ public class HomeFeedResource {
     @GET
     public Response get() {
 
-        logger.info("Attempting to retrieve Twitter Home timeline.");
         logger.debug("Configuration setup: {}", conf);
 
         try {
@@ -70,7 +68,6 @@ public class HomeFeedResource {
 
         } catch (TwitterException feedException) {
 
-            logger.info("Timeline retrieval aborted. Twitter Exception thrown." );
 
             if (feedException.isErrorMessageAvailable()) {
 
