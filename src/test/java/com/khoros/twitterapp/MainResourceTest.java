@@ -1,6 +1,5 @@
 package com.khoros.twitterapp;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khoros.twitterapp.resources.MainResource;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
@@ -9,7 +8,6 @@ import com.khoros.twitterapp.models.User;
 
 import static org.mockito.Mockito.*;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
@@ -21,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import twitter4j.conf.Configuration;
 
 public class MainResourceTest {
 
@@ -66,8 +63,8 @@ public class MainResourceTest {
 
         }
 
-        Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.post(exampleText).getStatus());
-        Assert.assertEquals(twitterStatus, mainResource.post(exampleText).getEntity());
+        Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.postStatusUpdate(exampleText).getStatus());
+        Assert.assertEquals(twitterStatus, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
     @Test
@@ -77,24 +74,24 @@ public class MainResourceTest {
                 new TwitterException(exceptionText)
         );
 
-        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.post(exampleText).getStatus());
-        Assert.assertEquals(exceptionText, mainResource.post(exampleText).getEntity());
+        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.postStatusUpdate(exampleText).getStatus());
+        Assert.assertEquals(exceptionText, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
     @Test
     public void statusLengthZeroTest() {
         exampleText = "";
 
-        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.post(exampleText).getStatus());
-        Assert.assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.post(exampleText).getEntity());
+        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.postStatusUpdate(exampleText).getStatus());
+        Assert.assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
     @Test
     public void statusLengthLongTest() {
         exampleText = StringUtils.repeat("a", TwitterService.MAX_TWEET_LENGTH + 1);
 
-        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.post(exampleText).getStatus());
-        Assert.assertEquals(TwitterService.TWEET_TOO_LONG_MSG, mainResource.post(exampleText).getEntity());
+        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.postStatusUpdate(exampleText).getStatus());
+        Assert.assertEquals(TwitterService.TWEET_TOO_LONG_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
     @Test
@@ -110,7 +107,7 @@ public class MainResourceTest {
         try {
 
             when(twSingleton.getHomeTimeline()).thenReturn(twResponse);
-            responseEntity = (ArrayList<Status>) mainResource.get().getEntity();
+            responseEntity = (ArrayList<Status>) mainResource.getHomeTimeline().getEntity();
             responseUser = responseEntity.get(0).getUser();
 
         } catch (Exception e) {
@@ -131,7 +128,7 @@ public class MainResourceTest {
 
         exampleFeedEntity.add(newStatus);
 
-        Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.get().getStatus());
+        Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.getHomeTimeline().getStatus());
         Assert.assertEquals(exampleFeedEntity.get(0).getMessage(), responseEntity.get(0).getMessage());
         Assert.assertEquals(exampleFeedEntity.get(0).getCreatedAt(), responseEntity.get(0).getCreatedAt());
         Assert.assertEquals(exampleFeedEntity.get(0).getUser().getName(), responseUser.getName());
@@ -147,8 +144,8 @@ public class MainResourceTest {
                 new TwitterException(exceptionText)
         );
 
-        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.get().getStatus());
-        Assert.assertEquals(exceptionText, mainResource.get().getEntity());
+        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.getHomeTimeline().getStatus());
+        Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
     }
 
 }

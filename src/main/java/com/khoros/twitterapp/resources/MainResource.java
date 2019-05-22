@@ -26,7 +26,7 @@ public class MainResource {
     @Path("/tweet")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @POST
-    public Response post(@FormParam("message") String tweetText) {
+    public Response postStatusUpdate(@FormParam("message") String tweetText) {
 
         logger.info("Accessing Twitter Service updateStatus feature.");
 
@@ -72,7 +72,7 @@ public class MainResource {
 
     @Path("/timeline")
     @GET
-    public Response get() {
+    public Response getHomeTimeline() {
 
         logger.info("Accessing Twitter Service getHomeTimeline feature.");
 
