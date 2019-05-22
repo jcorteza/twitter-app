@@ -8,11 +8,8 @@ import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.ResponseList;
 import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 
-import java.lang.Exception;
 import java.util.ArrayList;
 import java.util.List;
 
