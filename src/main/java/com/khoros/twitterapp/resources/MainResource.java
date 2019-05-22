@@ -1,7 +1,5 @@
 package com.khoros.twitterapp.resources;
 
-import com.khoros.twitterapp.models.User;
-import com.khoros.twitterapp.models.Status;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
 
@@ -17,8 +15,6 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
