@@ -1,14 +1,13 @@
 package com.khoros.twitterapp;
 
-import com.khoros.twitterapp.resources.HomeFeedResource;
-import com.khoros.twitterapp.resources.StatusUpdateResource;
+import com.khoros.twitterapp.resources.MainResource;
+import com.khoros.twitterapp.services.TwitterService;
+
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
+import twitter4j.TwitterFactory;
 
 public class TwitterApp extends Application<TwitterAppConfiguration> {
-
-    public static final int MAX_TWEET_LENGTH = 280;
-    public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
 
     public static void main(String[] args) throws Exception {
         new TwitterApp().run(args);
@@ -17,10 +16,8 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
 
-        StatusUpdateResource statusResource = new StatusUpdateResource(configuration.twitter4jConfigurationBuild());
-        HomeFeedResource feedResource = new HomeFeedResource(configuration.twitter4jConfigurationBuild());
+        TwitterService.getInstance().setTwitterConfiguration(configuration.twitter4jConfigurationBuild().build());
 
-        environment.jersey().register(statusResource);
-        environment.jersey().register(feedResource);
+        environment.jersey().register(new MainResource());
     }
 }

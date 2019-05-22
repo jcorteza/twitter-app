@@ -10,25 +10,12 @@ import javax.validation.constraints.NotNull;
 public class TwitterAppConfiguration extends io.dropwizard.Configuration {
 
     @NotNull
-    private int maxTweetLength;
-
-    @NotNull
     private Boolean debug;
 
     @Valid
     @NotNull
     @JsonProperty
     private TwitterAuthorization twitterAuthorization = new TwitterAuthorization();
-
-    @JsonProperty
-    public int getMaxTweetLength() {
-        return maxTweetLength;
-    }
-
-    @JsonProperty
-    public void setMaxTweetLength(int maxTweetLength) {
-        this.maxTweetLength = maxTweetLength;
-    }
 
     @JsonProperty
     public Boolean getDebug() {
@@ -50,13 +37,13 @@ public class TwitterAppConfiguration extends io.dropwizard.Configuration {
         this.twitterAuthorization = factory;
     }
 
-    public twitter4j.conf.Configuration twitter4jConfigurationBuild() {
+    public ConfigurationBuilder twitter4jConfigurationBuild() {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(this.debug)
             .setOAuthConsumerKey(this.twitterAuthorization.getConsumerKey())
             .setOAuthConsumerSecret(this.twitterAuthorization.getConsumerSecret())
             .setOAuthAccessToken(this.twitterAuthorization.getAccessToken())
             .setOAuthAccessTokenSecret(this.twitterAuthorization.getAccessTokenSecret());
-        return cb.build();
+        return cb;
     }
 }
