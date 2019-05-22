@@ -38,8 +38,10 @@ public class MainResource {
 
         try {
 
-            twitter4j.Status twitterStatus = twitterService.updateStatus(statusText);
-            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterStatus).build();
+            return Response
+                    .status(HttpURLConnection.HTTP_OK)
+                    .entity(twitterService.updateStatus(statusText))
+                    .build();
 
         } catch (TwitterServiceException twServiceException) {
 
@@ -51,7 +53,10 @@ public class MainResource {
                         twServiceException.getMessage(),
                         twServiceException);
 
-                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(twServiceException.getMessage()).build();
+                return Response
+                        .status(HttpURLConnection.HTTP_FORBIDDEN)
+                        .entity(twServiceException.getMessage())
+                        .build();
 
             } else {
 
@@ -59,9 +64,10 @@ public class MainResource {
                         twServiceException.getCause().getMessage(),
                         twServiceException);
 
-                return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(
-                        twServiceException.getCause().getMessage()
-                ).build();
+                return Response
+                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .entity(twServiceException.getCause().getMessage())
+                        .build();
 
             }
         }
@@ -76,7 +82,10 @@ public class MainResource {
 
         try {
 
-            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterService.getHomeTimeline()).build();
+            return Response
+                    .status(HttpURLConnection.HTTP_OK)
+                    .entity(twitterService.getHomeTimeline())
+                    .build();
 
         } catch (TwitterServiceException twServiceException) {
 
@@ -85,9 +94,10 @@ public class MainResource {
                     twServiceException.getCause().getMessage(),
                     twServiceException);
 
-            return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(
-                    twServiceException.getCause().getMessage()
-            ).build();
+            return Response
+                    .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                    .entity(twServiceException.getCause().getMessage())
+                    .build();
 
         }
 
