@@ -76,25 +76,7 @@ public class MainResource {
 
         try {
 
-            List<Status> statusesList  = new ArrayList<>();
-
-            for (twitter4j.Status originalStatus: twitterService.getHomeTimeline()) {
-
-                User newUser = new User();
-                newUser.setTwHandle(originalStatus.getUser().getScreenName());
-                newUser.setName(originalStatus.getUser().getName());
-                newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
-
-                Status newStatus = new com.khoros.twitterapp.models.Status();
-                newStatus.setMessage(originalStatus.getText());
-                newStatus.setUser(newUser);
-                newStatus.setCreatedAt(originalStatus.getCreatedAt());
-
-                statusesList.add(newStatus);
-
-            }
-
-            return Response.status(HttpURLConnection.HTTP_OK).entity(statusesList).build();
+            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterService.getHomeTimeline()).build();
 
         } catch (TwitterServiceException twServiceException) {
 

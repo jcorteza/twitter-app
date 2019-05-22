@@ -1,9 +1,11 @@
 package com.khoros.twitterapp.services;
 
+import com.khoros.twitterapp.models.Status;
+import com.khoros.twitterapp.models.User;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
-import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.ResponseList;
@@ -11,6 +13,8 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.lang.Exception;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class TwitterService {
 
@@ -32,7 +36,7 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public Status updateStatus(String statusText) throws TwitterServiceException {
+    public twitter4j.Status updateStatus(String statusText) throws TwitterServiceException {
 
         logger.info("Attempting to update status through Twitter API.");
 
@@ -79,13 +83,31 @@ public final class TwitterService {
         }
     }
 
-    public ResponseList<Status> getHomeTimeline() throws TwitterServiceException {
+    public List<Status> getHomeTimeline() throws TwitterServiceException {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
+        List<Status> statusesList  = new ArrayList<>();
+
         try {
 
-            return twitterFactory.getHomeTimeline();
+            for (twitter4j.Status originalStatus: twitterFactory.getHomeTimeline()) {
+
+                User newUser = new User();
+                newUser.setTwHandle(originalStatus.getUser().getScreenName());
+                newUser.setName(originalStatus.getUser().getName());
+                newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
+
+                Status newStatus = new com.khoros.twitterapp.models.Status();
+                newStatus.setMessage(originalStatus.getText());
+                newStatus.setUser(newUser);
+                newStatus.setCreatedAt(originalStatus.getCreatedAt());
+
+                statusesList.add(newStatus);
+
+            }
+
+            return statusesList;
 
         } catch (TwitterException twitterException) {
 
