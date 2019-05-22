@@ -48,7 +48,7 @@ public class MainResourceTest {
     }
 
     @Test
-    public void postTestSuccess() {
+    public void postStatusUpdateTestSuccess() {
 
         twitter4j.Status twitterStatus = null;
 
@@ -68,7 +68,7 @@ public class MainResourceTest {
     }
 
     @Test
-    public void postTestException() throws TwitterServiceException {
+    public void postStatusUpdateTestException() throws TwitterServiceException {
 
         when(twSingleton.updateStatus(exampleText)).thenThrow(
                 new TwitterException(exceptionText)
@@ -95,7 +95,7 @@ public class MainResourceTest {
     }
 
     @Test
-    public void getTestSuccess() {
+    public void getHomeTimelineTestSuccess() {
 
         ResponseList<twitter4j.Status> twResponse = new ResponseImplTest<twitter4j.Status>();
         twResponse.add(new Twitter4jStatusImpl());
@@ -138,7 +138,7 @@ public class MainResourceTest {
     }
 
     @Test
-    public void getTestException() throws TwitterServiceException {
+    public void getHomeTimelineTestException() throws TwitterServiceException {
 
         when(twSingleton.getHomeTimeline()).thenThrow(
                 new TwitterException(exceptionText)
