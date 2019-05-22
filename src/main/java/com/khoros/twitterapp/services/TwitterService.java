@@ -8,6 +8,7 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.ResponseList;
 import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 import java.lang.Exception;
 
@@ -20,9 +21,8 @@ public final class TwitterService {
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     private static final TwitterService INSTANCE = new TwitterService();
-    private static Configuration twitterConfiguration;
-    private static Twitter twitterFactoryRef;
     private static Twitter twitterFactory;
+    private static Configuration twitterConfiguration;
 
     private TwitterService() {
         // hidden constructor
@@ -110,9 +110,15 @@ public final class TwitterService {
         }
     }
 
-    public void setTWFactory(Configuration newConf) {
+    public void setTWFactory(Configuration newConfiguration, Boolean updateConfiguration) {;
 
-        twitterFactory = new TwitterFactory(newConf).getInstance();
+        twitterFactory = new TwitterFactory(newConfiguration).getInstance();;
+
+        if(updateConfiguration) {
+
+            twitterConfiguration = newConfiguration;
+
+        }
 
     }
 
@@ -122,26 +128,11 @@ public final class TwitterService {
 
     }
 
-    public Twitter getTwitterFactoryRef() {
-
-        return twitterFactoryRef;
-
-    }
-
     public Twitter getTwitterFactory() {
 
         return twitterFactory;
 
     }
 
-    public void setTwitterConfiguration(Configuration config) {
-
-        logger.debug("Twitter Configuration setup: {}", config);
-
-        twitterConfiguration = config;
-        twitterFactoryRef = new TwitterFactory(config).getInstance();
-        twitterFactory = twitterFactoryRef;
-
-    }
 
 }

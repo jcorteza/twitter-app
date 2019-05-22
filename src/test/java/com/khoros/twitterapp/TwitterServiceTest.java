@@ -4,7 +4,6 @@ import com.khoros.twitterapp.services.TwitterService;
 
 import static org.mockito.Mockito.*;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
@@ -15,6 +14,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterServiceTest {
 
+    // private Configuration originalConfig;
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
@@ -23,6 +23,7 @@ public class TwitterServiceTest {
     public void setup() {
 
         twSingleton = TwitterService.getInstance();
+        // originalConfig = twSingleton.getTwitterFactory().getConfiguration();
         mockFactory = mock(Twitter.class);
         twSingleton.setTWFactory(mockFactory);
         testStatusText = "Tweet Test";
@@ -32,8 +33,7 @@ public class TwitterServiceTest {
     @After
     public void reset() {
 
-        Twitter factoryRef = TwitterService.getInstance().getTwitterFactoryRef();
-        twSingleton.setTWFactory(factoryRef);
+        // twSingleton.setTWFactory(originalConfig, false);
 
     }
 
@@ -99,9 +99,10 @@ public class TwitterServiceTest {
                 .setOAuthConsumerKey("authorizationConsumerKey")
                 .setOAuthConsumerSecret("authorizationConsumerSecret")
                 .build();
-        twSingleton.setTWFactory(testConfig);
+        twSingleton.setTWFactory(testConfig, true);
 
         Assert.assertEquals(new TwitterFactory(testConfig).getInstance(), TwitterService.getInstance().getTwitterFactory());
+        Assert.assertEquals(testConfig, TwitterService.getInstance().getTwitterFactory().getConfiguration());
 
     }
 

@@ -16,7 +16,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
 
-        TwitterService.getInstance().setTwitterConfiguration(configuration.twitter4jConfigurationBuild().build());
+        TwitterService.getInstance().setTWFactory(configuration.twitter4jConfigurationBuild().build(), true);
 
         environment.jersey().register(new MainResource());
     }

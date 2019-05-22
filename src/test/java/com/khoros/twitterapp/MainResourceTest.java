@@ -1,11 +1,15 @@
 package com.khoros.twitterapp;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.khoros.twitterapp.resources.MainResource;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
+import com.khoros.twitterapp.models.Status;
+import com.khoros.twitterapp.models.User;
 
 import static org.mockito.Mockito.*;
 
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
@@ -13,11 +17,15 @@ import org.junit.Test;
 import twitter4j.*;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import twitter4j.conf.Configuration;
 
 public class MainResourceTest {
 
+    // private Configuration originalConfig;
     private TwitterService twSingleton;
     private MainResource mainResource;
     private String exampleText;
@@ -26,6 +34,7 @@ public class MainResourceTest {
     @Before
     public void setup() {
 
+        // originalConfig = TwitterService.getInstance().getTwitterFactory().getConfiguration();
         twSingleton = TwitterService.getInstance();
         twSingleton.setTWFactory(mock(Twitter.class));
         mainResource = new MainResource();
@@ -37,15 +46,14 @@ public class MainResourceTest {
     @After
     public void resetMock() {
 
-        Twitter factoryRef = TwitterService.getInstance().getTwitterFactoryRef();
-        twSingleton.setTWFactory(factoryRef);
+        // twSingleton.setTWFactory(originalConfig, false);
 
     }
 
     @Test
     public void postTestSuccess() {
 
-        Status twitterStatus = null;
+        twitter4j.Status twitterStatus = null;
 
         try {
 
@@ -92,11 +100,18 @@ public class MainResourceTest {
     @Test
     public void getTestSuccess() {
 
-        ResponseList<Status> twResponse = new ResponseImplTest<Status>();
+        ResponseList<twitter4j.Status> twResponse = new ResponseImplTest<twitter4j.Status>();
+        twResponse.add(new Twitter4jStatusImpl());
+        List<Status> exampleFeedEntity = new ArrayList<>();
+        List<Status> responseEntity = null;
+        User responseUser = null;
+
 
         try {
 
             when(twSingleton.getHomeTimeline()).thenReturn(twResponse);
+            responseEntity = (ArrayList<Status>) mainResource.get().getEntity();
+            responseUser = responseEntity.get(0).getUser();
 
         } catch (Exception e) {
 
@@ -104,8 +119,24 @@ public class MainResourceTest {
 
         }
 
+        User newUser = new User();
+        newUser.setTwHandle(twResponse.get(0).getUser().getScreenName());
+        newUser.setName(twResponse.get(0).getUser().getName());
+        newUser.setProfileImageUrl(twResponse.get(0).getUser().getProfileImageURL());
+
+        Status newStatus = new com.khoros.twitterapp.models.Status();
+        newStatus.setMessage(twResponse.get(0).getText());
+        newStatus.setUser(newUser);
+        newStatus.setCreatedAt(twResponse.get(0).getCreatedAt());
+
+        exampleFeedEntity.add(newStatus);
+
         Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.get().getStatus());
-        Assert.assertEquals(twResponse, mainResource.get().getEntity());
+        Assert.assertEquals(exampleFeedEntity.get(0).getMessage(), responseEntity.get(0).getMessage());
+        Assert.assertEquals(exampleFeedEntity.get(0).getCreatedAt(), responseEntity.get(0).getCreatedAt());
+        Assert.assertEquals(exampleFeedEntity.get(0).getUser().getName(), responseUser.getName());
+        Assert.assertEquals(exampleFeedEntity.get(0).getUser().getProfileImageUrl(), responseUser.getProfileImageUrl());
+        Assert.assertEquals(exampleFeedEntity.get(0).getUser().getTwHandle(), responseUser.getTwHandle());
 
     }
 

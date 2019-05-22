@@ -83,7 +83,7 @@ public class MainResource {
                 User newUser = new User();
                 newUser.setTwHandle(originalStatus.getUser().getScreenName());
                 newUser.setName(originalStatus.getUser().getName());
-                newUser.setProfileImageUrl(originalStatus.getUser().get400x400ProfileImageURL());
+                newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
 
                 Status newStatus = new com.khoros.twitterapp.models.Status();
                 newStatus.setMessage(originalStatus.getText());
