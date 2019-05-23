@@ -9,6 +9,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ public final class TwitterService {
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     private static final TwitterService INSTANCE = new TwitterService();
     private static Twitter twitterFactory;
-    private static Configuration twitterConfiguration;
 
     private TwitterService() {
         // hidden constructor
@@ -37,7 +37,7 @@ public final class TwitterService {
 
         logger.info("Attempting to update status through Twitter API.");
 
-        if (statusText.length() == 0) {
+        if (StringUtils.isEmpty(statusText)) {
 
             logger.info("Twitter status update unsuccessful.");
 
@@ -141,15 +141,9 @@ public final class TwitterService {
         }
     }
 
-    public void setTWFactory(Configuration newConfiguration, Boolean updateConfiguration) {;
+    public void setTWFactory(Configuration newConfiguration) {;
 
         twitterFactory = new TwitterFactory(newConfiguration).getInstance();;
-
-        if(updateConfiguration) {
-
-            twitterConfiguration = newConfiguration;
-
-        }
 
     }
 

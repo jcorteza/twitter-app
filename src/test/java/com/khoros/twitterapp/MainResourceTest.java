@@ -47,13 +47,6 @@ public class MainResourceTest {
 
     }
 
-    @After
-    public void resetMock() {
-
-        // twSingleton.setTWFactory(originalConfig, false);
-
-    }
-
     @Test
     public void postStatusUpdateTestSuccess() {
 

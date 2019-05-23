@@ -28,17 +28,9 @@ public class TwitterServiceTest {
     public void setup() {
 
         twSingleton = TwitterService.getInstance();
-        // originalConfig = twSingleton.getTwitterFactory().getConfiguration();
         mockFactory = mock(Twitter.class);
         twSingleton.setTWFactory(mockFactory);
         testStatusText = "Tweet Test";
-
-    }
-
-    @After
-    public void reset() {
-
-        // twSingleton.setTWFactory(originalConfig, false);
 
     }
 
@@ -119,7 +111,7 @@ public class TwitterServiceTest {
                 .setOAuthConsumerKey("authorizationConsumerKey")
                 .setOAuthConsumerSecret("authorizationConsumerSecret")
                 .build();
-        twSingleton.setTWFactory(testConfig, true);
+        twSingleton.setTWFactory(testConfig);
 
         Assert.assertEquals(new TwitterFactory(testConfig).getInstance(), TwitterService.getInstance().getTwitterFactory());
         Assert.assertEquals(testConfig, TwitterService.getInstance().getTwitterFactory().getConfiguration());
