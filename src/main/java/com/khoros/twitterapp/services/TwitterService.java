@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.stream.Collectors.toList;
 
 public final class TwitterService {
 
@@ -118,6 +119,54 @@ public final class TwitterService {
             }
 
             throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+        }
+    }
+
+    public List<Status> getHomeTimeline(final String keywords) throws TwitterServiceException {
+
+        logger.info("Attempting to retrieve home timeline through Twitter API.");
+
+        List<Status> statusesList  = new ArrayList<>();
+
+        try {
+
+            List<Status>filteredStatusList =
+                    twitterFactory.getHomeTimeline().stream()
+                    .filter(originalStatus ->
+                            originalStatus.getText().contains(keywords) ||
+                            originalStatus.getUser().getName().contains(keywords) ||
+                            originalStatus.getUser().getScreenName().contains(keywords) ||
+                            originalStatus.getUser().getProfileImageURL().contains(keywords))
+                    .map(foundStatus -> createNewStatusObject(foundStatus))
+                    .collect(toList());
+
+            filteredStatusList.stream()
+                    .findFirst()
+                    .orElseThrow(() -> new TwitterServiceException("No matching status found in Twitter home timeline."));
+
+            return filteredStatusList;
+
+        } catch (TwitterException twitterException) {
+
+            logger.info("Timeline retrieval aborted. Twitter Exception thrown." );
+
+            if (twitterException.isErrorMessageAvailable()) {
+
+                logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
+                        twitterException.getErrorMessage(),
+                        twitterException.getExceptionCode(),
+                        twitterException);
+
+            } else {
+
+                logger.error("Unknown Twitter Exception — Exception Code: {}",
+                        twitterException.getExceptionCode(),
+                        twitterException);
+
+            }
+
+            throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+
         }
     }
 

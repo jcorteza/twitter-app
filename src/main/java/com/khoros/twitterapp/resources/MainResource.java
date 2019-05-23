@@ -116,14 +116,30 @@ public class MainResource {
         } catch (TwitterServiceException twServiceException) {
 
             logger.info("Twitter Service process aborted. Twitter Service Exception thrown." );
-            logger.error("Twitter Service Exception — Error Cause: {}",
-                    twServiceException.getCause().getMessage(),
-                    twServiceException);
 
-            return Response
-                    .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                    .entity(twServiceException.getCause().getMessage())
-                    .build();
+            if (twServiceException.getCause() == null) {
+
+                logger.error("Twitter Service Exception — Error Message: {}",
+                        twServiceException.getMessage(),
+                        twServiceException);
+
+                return Response
+                        .status(HttpURLConnection.HTTP_FORBIDDEN)
+                        .entity(twServiceException.getMessage())
+                        .build();
+
+            } else {
+
+                logger.error("Twitter Service Exception — Error Cause: {}",
+                        twServiceException.getCause().getMessage(),
+                        twServiceException);
+
+                return Response
+                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .entity(twServiceException.getCause().getMessage())
+                        .build();
+
+            }
 
         }
 
