@@ -4,11 +4,11 @@ import java.util.Date;
 
 public class Status {
 
-    String message;
+    private String message;
 
-    User user;
+    private User user;
 
-    Date createdAt;
+    private Date createdAt;
 
     public void setMessage(String message) {
 

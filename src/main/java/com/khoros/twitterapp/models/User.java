@@ -2,11 +2,11 @@ package com.khoros.twitterapp.models;
 
 public class User {
 
-    String twHandle;
+    private String twHandle;
 
-    String name;
+    private String name;
 
-    String profileImageUrl;
+    private String profileImageUrl;
 
     public void setTwHandle(String twHandle) {
 
