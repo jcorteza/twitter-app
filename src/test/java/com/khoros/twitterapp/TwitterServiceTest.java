@@ -1,7 +1,6 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.services.TwitterService;
-import com.khoros.twitterapp.models.User;
 import com.khoros.twitterapp.models.Status;
 
 import static org.mockito.Mockito.*;
@@ -9,7 +8,6 @@ import static org.mockito.Mockito.*;
 import com.khoros.twitterapp.services.TwitterServiceException;
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.After;
 import org.junit.Assert;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
@@ -72,7 +70,6 @@ public class TwitterServiceTest {
         twResponse.add(exampleStatus);
 
         List<Status> responseList = null;
-        User responseUser;
 
         try {
 

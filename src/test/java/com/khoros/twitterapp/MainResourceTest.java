@@ -8,7 +8,6 @@ import com.khoros.twitterapp.models.User;
 
 import static org.mockito.Mockito.*;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
