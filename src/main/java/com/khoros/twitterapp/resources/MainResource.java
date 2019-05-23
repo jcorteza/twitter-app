@@ -98,4 +98,34 @@ public class MainResource {
         }
 
     }
+
+    @Path("/timeline/filter")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @GET
+    public Response getFilteredTimeline(@FormParam("keywords") String keywords) {
+
+        logger.info("Accessing Twitter Service getHomeTimeline feature.");
+
+        try {
+
+            return Response
+                    .status(HttpURLConnection.HTTP_OK)
+                    .entity(twitterService.getHomeTimeline(keywords))
+                    .build();
+
+        } catch (TwitterServiceException twServiceException) {
+
+            logger.info("Twitter Service process aborted. Twitter Service Exception thrown." );
+            logger.error("Twitter Service Exception — Error Cause: {}",
+                    twServiceException.getCause().getMessage(),
+                    twServiceException);
+
+            return Response
+                    .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                    .entity(twServiceException.getCause().getMessage())
+                    .build();
+
+        }
+
+    }
 }
