@@ -1,23 +1,28 @@
 package com.khoros.twitterapp.services;
 
+import com.khoros.twitterapp.models.Status;
+import com.khoros.twitterapp.models.User;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
-import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.ResponseList;
 import twitter4j.conf.Configuration;
+import org.apache.commons.lang3.StringUtils;
 
-import java.lang.Exception;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class TwitterService {
+
+    final Logger logger = LoggerFactory.getLogger(TwitterService.class);
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     private static final TwitterService INSTANCE = new TwitterService();
-    private static Configuration twitterConfiguration;
-    private static Twitter twitterFactoryRef;
     private static Twitter twitterFactory;
 
     private TwitterService() {
@@ -30,11 +35,17 @@ public final class TwitterService {
 
     public Status updateStatus(String statusText) throws TwitterServiceException {
 
-        if (statusText.length() == 0) {
+        logger.info("Attempting to update status through Twitter API.");
+
+        if (StringUtils.isEmpty(statusText)) {
+
+            logger.info("Twitter status update unsuccessful.");
 
             throw new TwitterServiceException(TwitterService.NO_TWEET_TEXT_MSG);
 
         } else if (statusText.length() > TwitterService.MAX_TWEET_LENGTH) {
+
+            logger.info("Twitter status update unsuccessful.");
 
             throw new TwitterServiceException(TwitterService.TWEET_TOO_LONG_MSG);
 
@@ -42,9 +53,28 @@ public final class TwitterService {
 
             try {
 
-                return twitterFactory.updateStatus(statusText);
+                twitter4j.Status responseStatus = twitterFactory.updateStatus(statusText);
+
+                return createNewStatusObject(responseStatus);
 
             } catch (TwitterException twitterException) {
+
+                logger.info("Twitter status update aborted. Twitter Exception thrown.");
+
+                if (twitterException.isErrorMessageAvailable()) {
+
+                    logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
+                            twitterException.getErrorMessage(),
+                            twitterException.getExceptionCode(),
+                            twitterException);
+
+                } else {
+
+                    logger.error("Unknown Twitter Exception — Exception Code: {}",
+                            twitterException.getExceptionCode(),
+                            twitterException);
+
+                }
 
                 throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
 
@@ -52,33 +82,54 @@ public final class TwitterService {
         }
     }
 
-    public ResponseList<Status> getHomeTimeline() throws TwitterServiceException {
+    public List<Status> getHomeTimeline() throws TwitterServiceException {
 
-            try {
+        logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-                return twitterFactory.getHomeTimeline();
+        List<Status> statusesList  = new ArrayList<>();
 
-            } catch (TwitterException twitterException) {
+        try {
 
-                throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+            for (twitter4j.Status originalStatus: twitterFactory.getHomeTimeline()) {
+
+                statusesList.add(createNewStatusObject(originalStatus));
+
             }
+
+            return statusesList;
+
+        } catch (TwitterException twitterException) {
+
+            logger.info("Timeline retrieval aborted. Twitter Exception thrown." );
+
+            if (twitterException.isErrorMessageAvailable()) {
+
+                logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
+                        twitterException.getErrorMessage(),
+                        twitterException.getExceptionCode(),
+                        twitterException);
+
+            } else {
+
+                logger.error("Unknown Twitter Exception — Exception Code: {}",
+                        twitterException.getExceptionCode(),
+                        twitterException);
+
+            }
+
+            throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+        }
     }
 
-    public void setTWFactory(Configuration newConf) {
+    public void setTWFactory(Configuration newConfiguration) {;
 
-        twitterFactory = new TwitterFactory(newConf).getInstance();
+        twitterFactory = new TwitterFactory(newConfiguration).getInstance();;
 
     }
 
     public void setTWFactory(Twitter factory) {
 
-            twitterFactory = factory;
-
-    }
-
-    public Twitter getTwitterFactoryRef() {
-
-        return twitterFactoryRef;
+        twitterFactory = factory;
 
     }
 
@@ -88,12 +139,21 @@ public final class TwitterService {
 
     }
 
-    public void setTwitterConfiguration(Configuration config) {
+    private Status createNewStatusObject(twitter4j.Status originalStatus) {
 
-        twitterConfiguration = config;
-        twitterFactoryRef = new TwitterFactory(config).getInstance();
-        twitterFactory = twitterFactoryRef;
+        User newUser = new User();
+        newUser.setTwHandle(originalStatus.getUser().getScreenName());
+        newUser.setName(originalStatus.getUser().getName());
+        newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
+
+        Status newStatus = new com.khoros.twitterapp.models.Status();
+        newStatus.setMessage(originalStatus.getText());
+        newStatus.setUser(newUser);
+        newStatus.setCreatedAt(originalStatus.getCreatedAt());
+
+        return newStatus;
 
     }
+
 
 }

@@ -3,7 +3,8 @@ package com.khoros.twitterapp.resources;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
 
-import twitter4j.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
@@ -14,38 +15,55 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
-import java.util.List;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
 public class MainResource {
 
-
-    public TwitterService twitterService = TwitterService.getInstance();
+    final Logger logger = LoggerFactory.getLogger(MainResource.class);
+    private TwitterService twitterService = TwitterService.getInstance();
 
     @Path("/tweet")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @POST
-    public Response post(@FormParam("message") String tweetText) {
+    public Response postStatusUpdate(@FormParam("message") String tweetText) {
+
+        logger.info("Accessing Twitter Service updateStatus feature.");
 
         String statusText = tweetText.trim();
 
         try {
 
-            Status twitterStatus = twitterService.updateStatus(statusText);
-            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterStatus).build();
+            return Response
+                    .status(HttpURLConnection.HTTP_OK)
+                    .entity(twitterService.updateStatus(statusText))
+                    .build();
 
         } catch (TwitterServiceException twServiceException) {
 
+            logger.info("Twitter Service process aborted. Twitter Service Excpetion thrown.");
+
             if (twServiceException.getCause() == null) {
 
-                return Response.status(HttpURLConnection.HTTP_FORBIDDEN).entity(twServiceException.getMessage()).build();
+                logger.error("Twitter Service Exception — Error Message: {}",
+                        twServiceException.getMessage(),
+                        twServiceException);
+
+                return Response
+                        .status(HttpURLConnection.HTTP_FORBIDDEN)
+                        .entity(twServiceException.getMessage())
+                        .build();
 
             } else {
 
-                return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(
-                        twServiceException.getCause().getMessage()
-                ).build();
+                logger.error("Twitter Service Exception — Error Cause: {}",
+                        twServiceException.getCause().getMessage(),
+                        twServiceException);
+
+                return Response
+                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .entity(twServiceException.getCause().getMessage())
+                        .build();
 
             }
         }
@@ -54,18 +72,28 @@ public class MainResource {
 
     @Path("/timeline")
     @GET
-    public Response get() {
+    public Response getHomeTimeline() {
+
+        logger.info("Accessing Twitter Service getHomeTimeline feature.");
 
         try {
 
-            List<Status> twitterFeed = twitterService.getHomeTimeline();
-            return Response.status(HttpURLConnection.HTTP_OK).entity(twitterFeed).build();
+            return Response
+                    .status(HttpURLConnection.HTTP_OK)
+                    .entity(twitterService.getHomeTimeline())
+                    .build();
 
         } catch (TwitterServiceException twServiceException) {
 
-            return Response.status(HttpURLConnection.HTTP_INTERNAL_ERROR).entity(
-                    twServiceException.getCause().getMessage()
-            ).build();
+            logger.info("Twitter Service process aborted. Twitter Service Exception thrown." );
+            logger.error("Twitter Service Exception — Error Cause: {}",
+                    twServiceException.getCause().getMessage(),
+                    twServiceException);
+
+            return Response
+                    .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                    .entity(twServiceException.getCause().getMessage())
+                    .build();
 
         }
 
