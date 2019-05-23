@@ -12,7 +12,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
-import twitter4j.*;
+import twitter4j.Twitter;
+import twitter4j.ResponseList;
+import twitter4j.TwitterException;
+import twitter4j.TwitterObjectFactory;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -70,7 +73,7 @@ public class MainResourceTest {
         }
 
         Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.postStatusUpdate(exampleText).getStatus());
-        Assert.assertEquals(twitterStatus.getText(),statusResponse.getMessage());
+        Assert.assertEquals(twitterStatus.getText(), statusResponse.getMessage());
     }
 
     @Test

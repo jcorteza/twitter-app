@@ -5,7 +5,6 @@ import twitter4j.Status;
 import twitter4j.URLEntity;
 import twitter4j.User;
 
-import java.io.Serializable;
 import java.util.Date;
 
 public class Twitter4jUserImpl implements User {

@@ -1,6 +1,16 @@
 package com.khoros.twitterapp;
 
-import twitter4j.*;
+import twitter4j.GeoLocation;
+import twitter4j.HashtagEntity;
+import twitter4j.MediaEntity;
+import twitter4j.Place;
+import twitter4j.RateLimitStatus;
+import twitter4j.Scopes;
+import twitter4j.Status;
+import twitter4j.SymbolEntity;
+import twitter4j.URLEntity;
+import twitter4j.User;
+import twitter4j.UserMentionEntity;
 
 import java.util.Date;
 

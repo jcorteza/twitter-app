@@ -21,7 +21,7 @@ import java.net.HttpURLConnection;
 public class MainResource {
 
     final Logger logger = LoggerFactory.getLogger(MainResource.class);
-    public TwitterService twitterService = TwitterService.getInstance();
+    private TwitterService twitterService = TwitterService.getInstance();
 
     @Path("/tweet")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

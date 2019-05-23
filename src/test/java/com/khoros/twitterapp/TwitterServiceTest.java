@@ -15,7 +15,6 @@ import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TwitterServiceTest {

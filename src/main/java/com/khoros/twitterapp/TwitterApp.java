@@ -5,7 +5,6 @@ import com.khoros.twitterapp.services.TwitterService;
 
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import twitter4j.TwitterFactory;
 
 public class TwitterApp extends Application<TwitterAppConfiguration> {
 
