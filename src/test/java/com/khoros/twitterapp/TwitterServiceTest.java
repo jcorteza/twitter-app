@@ -1,9 +1,12 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.services.TwitterService;
+import com.khoros.twitterapp.models.User;
+import com.khoros.twitterapp.models.Status;
 
 import static org.mockito.Mockito.*;
 
+import com.khoros.twitterapp.services.TwitterServiceException;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
@@ -11,6 +14,9 @@ import org.junit.Assert;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TwitterServiceTest {
 
@@ -40,7 +46,7 @@ public class TwitterServiceTest {
     @Test
     public void updateStatusTestSuccess() {
 
-        Status testStatus = null;
+        twitter4j.Status testStatus = null;
         Status serviceResponse = null;
 
         try {
@@ -49,27 +55,38 @@ public class TwitterServiceTest {
             when(mockFactory.updateStatus(testStatusText)).thenReturn(testStatus);
             serviceResponse = twSingleton.updateStatus(testStatusText);
 
-        } catch (Exception e) {
+        } catch (TwitterException e) {
 
             Assert.fail("Test failed due to Twitter Exception");
 
+        } catch (TwitterServiceException e) {
+
+            Assert.fail("Test failed due to Twitter Service Exception.");
+
         }
 
-        Assert.assertEquals(testStatus, serviceResponse);
+        Assert.assertEquals(testStatus.getText(), serviceResponse.getMessage());
+        Assert.assertEquals(testStatus.getCreatedAt(), serviceResponse.getCreatedAt());
+        Assert.assertEquals(testStatus.getUser().getProfileImageURL(), serviceResponse.getUser().getProfileImageUrl());
+        Assert.assertEquals(testStatus.getUser().getScreenName(), serviceResponse.getUser().getTwHandle());
+        Assert.assertEquals(testStatus.getUser().getName(), serviceResponse.getUser().getName());
 
     }
 
     @Test
     public void getHomeTimelineTestSuccess() {
 
-        ResponseList<Status> testFeed = null;
-        ResponseList<Status> serviceResponse = null;
+        ResponseList<twitter4j.Status> twResponse = new ResponseImplTest<twitter4j.Status>();
+        twitter4j.Status exampleStatus = new Twitter4jStatusImpl();
+        twResponse.add(exampleStatus);
+
+        List<Status> responseList = null;
+        User responseUser;
 
         try {
 
-            testFeed = new ResponseImplTest<Status>();
-            when(mockFactory.getHomeTimeline()).thenReturn(testFeed);
-            serviceResponse = twSingleton.getHomeTimeline();
+            when(mockFactory.getHomeTimeline()).thenReturn(twResponse);
+            responseList = twSingleton.getHomeTimeline();
 
         } catch (Exception e) {
 
@@ -77,7 +94,11 @@ public class TwitterServiceTest {
 
         }
 
-        Assert.assertEquals(testFeed, serviceResponse);
+        Assert.assertEquals(exampleStatus.getText(), responseList.get(0).getMessage());
+        Assert.assertEquals(exampleStatus.getCreatedAt(), responseList.get(0).getCreatedAt());
+        Assert.assertEquals(exampleStatus.getUser().getName(), responseList.get(0).getUser().getName());
+        Assert.assertEquals(exampleStatus.getUser().getScreenName(), responseList.get(0).getUser().getTwHandle());
+        Assert.assertEquals(exampleStatus.getUser().getProfileImageURL(), responseList.get(0).getUser().getProfileImageUrl());
 
     }
 

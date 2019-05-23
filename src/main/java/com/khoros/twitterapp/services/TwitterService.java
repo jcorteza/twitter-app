@@ -33,7 +33,7 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public twitter4j.Status updateStatus(String statusText) throws TwitterServiceException {
+    public Status updateStatus(String statusText) throws TwitterServiceException {
 
         logger.info("Attempting to update status through Twitter API.");
 
@@ -53,7 +53,19 @@ public final class TwitterService {
 
             try {
 
-                return twitterFactory.updateStatus(statusText);
+                twitter4j.Status responseStatus = twitterFactory.updateStatus(statusText);
+
+                User statusUser = new User();
+                statusUser.setName(responseStatus.getUser().getName());
+                statusUser.setTwHandle(responseStatus.getUser().getScreenName());
+                statusUser.setProfileImageUrl(responseStatus.getUser().getProfileImageURL());
+
+                Status newStatus = new Status();
+                newStatus.setMessage(responseStatus.getText());
+                newStatus.setUser(statusUser);
+                newStatus.setCreatedAt(responseStatus.getCreatedAt());
+
+                return newStatus;
 
             } catch (TwitterException twitterException) {
 
