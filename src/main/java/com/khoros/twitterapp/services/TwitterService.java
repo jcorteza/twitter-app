@@ -55,17 +55,7 @@ public final class TwitterService {
 
                 twitter4j.Status responseStatus = twitterFactory.updateStatus(statusText);
 
-                User statusUser = new User();
-                statusUser.setName(responseStatus.getUser().getName());
-                statusUser.setTwHandle(responseStatus.getUser().getScreenName());
-                statusUser.setProfileImageUrl(responseStatus.getUser().getProfileImageURL());
-
-                Status newStatus = new Status();
-                newStatus.setMessage(responseStatus.getText());
-                newStatus.setUser(statusUser);
-                newStatus.setCreatedAt(responseStatus.getCreatedAt());
-
-                return newStatus;
+                return createNewStatusObject(responseStatus);
 
             } catch (TwitterException twitterException) {
 
@@ -102,17 +92,7 @@ public final class TwitterService {
 
             for (twitter4j.Status originalStatus: twitterFactory.getHomeTimeline()) {
 
-                User newUser = new User();
-                newUser.setTwHandle(originalStatus.getUser().getScreenName());
-                newUser.setName(originalStatus.getUser().getName());
-                newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
-
-                Status newStatus = new com.khoros.twitterapp.models.Status();
-                newStatus.setMessage(originalStatus.getText());
-                newStatus.setUser(newUser);
-                newStatus.setCreatedAt(originalStatus.getCreatedAt());
-
-                statusesList.add(newStatus);
+                statusesList.add(createNewStatusObject(originalStatus));
 
             }
 
@@ -156,6 +136,22 @@ public final class TwitterService {
     public Twitter getTwitterFactory() {
 
         return twitterFactory;
+
+    }
+
+    private Status createNewStatusObject(twitter4j.Status originalStatus) {
+
+        User newUser = new User();
+        newUser.setTwHandle(originalStatus.getUser().getScreenName());
+        newUser.setName(originalStatus.getUser().getName());
+        newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
+
+        Status newStatus = new com.khoros.twitterapp.models.Status();
+        newStatus.setMessage(originalStatus.getText());
+        newStatus.setUser(newUser);
+        newStatus.setCreatedAt(originalStatus.getCreatedAt());
+
+        return newStatus;
 
     }
 
