@@ -11,8 +11,11 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -35,7 +38,7 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public Status updateStatus(String statusText) throws TwitterServiceException {
+    public List<Status> updateStatus(String statusText) throws TwitterServiceException {
 
         logger.info("Attempting to update status through Twitter API.");
 
@@ -55,9 +58,9 @@ public final class TwitterService {
 
             try {
 
-                twitter4j.Status responseStatus = twitterFactory.updateStatus(statusText);
-
-                return createNewStatusObject(responseStatus);
+                return Stream.of(twitterFactory.updateStatus(statusText))
+                        .map(status -> createNewStatusObject(status))
+                        .collect(Collectors.toList());
 
             } catch (TwitterException twitterException) {
 
@@ -96,10 +99,27 @@ public final class TwitterService {
 
         try {
 
-            List<Status> statusList = createStatusList(twitterFactory.getHomeTimeline(), keyword);
+
+            List<Status> statusList = twitterFactory.getHomeTimeline().stream()
+                    .filter(originalStatus -> {
+
+                        if (keyword == null) {
+
+                            return true;
+
+                        } else {
+
+                            return originalStatus.getText().contains(keyword) ||
+                                    originalStatus.getUser().getName().contains(keyword) ||
+                                    originalStatus.getUser().getProfileImageURL().contains(keyword) ||
+                                    originalStatus.getUser().getScreenName().contains(keyword);
+                        }
+                    })
+                    .map(thisStatus -> createNewStatusObject(thisStatus))
+                    .collect(toList());
 
             statusList
-                    .parallelStream()
+                    .stream()
                     .findAny()
                     .orElseThrow(() -> new TwitterServiceException("No statuses found on Twitter home timeline."));
 
@@ -163,28 +183,6 @@ public final class TwitterService {
         newStatus.setCreatedAt(originalStatus.getCreatedAt());
 
         return newStatus;
-
-    }
-
-    private List<Status> createStatusList(twitter4j.ResponseList<twitter4j.Status> timeline, String keyword) {
-
-        return timeline.stream()
-                .filter(originalStatus -> {
-
-                    if (keyword == null) {
-
-                        return true;
-
-                    } else {
-
-                        return originalStatus.getText().contains(keyword) ||
-                                originalStatus.getUser().getName().contains(keyword) ||
-                                originalStatus.getUser().getProfileImageURL().contains(keyword) ||
-                                originalStatus.getUser().getScreenName().contains(keyword);
-                    }
-                })
-                .map(thisStatus -> createNewStatusObject(thisStatus))
-                .collect(toList());
 
     }
 }

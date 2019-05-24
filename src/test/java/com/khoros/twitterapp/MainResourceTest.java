@@ -192,7 +192,7 @@ public class MainResourceTest {
             throw new TwitterServiceException("test", e);
 
         }
-        
+
         Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.getFilteredTimeline(exampleText).getStatus());
         Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
     }
