@@ -38,7 +38,7 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public List<Status> updateStatus(String statusText) throws TwitterServiceException {
+    public Status updateStatus(String statusText) throws TwitterServiceException {
 
         logger.info("Attempting to update status through Twitter API.");
 
@@ -60,7 +60,8 @@ public final class TwitterService {
 
                 return Stream.of(twitterFactory.updateStatus(statusText))
                         .map(status -> createNewStatusObject(status))
-                        .collect(Collectors.toList());
+                        .findFirst()
+                        .orElseThrow(() -> new TwitterServiceException("Internal error."));
 
             } catch (TwitterException twitterException) {
 
