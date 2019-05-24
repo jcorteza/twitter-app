@@ -59,17 +59,18 @@ public final class TwitterService {
 
             try {
 
+                /*
                 return Optional.ofNullable(twitterFactory.updateStatus(statusText))
                         .stream()
                         .findAny()
                         .map(s -> createNewStatusObject(s))
                         .orElseThrow(() -> new TwitterServiceException("Internal error."));
 
-                /*
+                 */
+
                 return Optional.ofNullable(twitterFactory.updateStatus(statusText))
                         .map(s -> createNewStatusObject(s))
-                        .orElseThrow(() -> new TwitterServiceException("Internal error."));
-                 */
+                        .get();
 
             } catch (TwitterException twitterException) {
 
