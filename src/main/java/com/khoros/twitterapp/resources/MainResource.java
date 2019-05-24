@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.GET;
@@ -99,10 +100,10 @@ public class MainResource {
 
     }
 
-    @Path("/timeline/filter")
+    @Path("/timeline/{filter}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @GET
-    public Response getFilteredTimeline(@FormParam("keywords") String keywords) {
+    public Response getFilteredTimeline(@PathParam("filter") String keyword) {
 
         logger.info("Accessing Twitter Service getHomeTimeline feature.");
 
@@ -110,7 +111,7 @@ public class MainResource {
 
             return Response
                     .status(HttpURLConnection.HTTP_OK)
-                    .entity(twitterService.getHomeTimelineFilteredByKeyword(keywords))
+                    .entity(twitterService.getHomeTimelineFilteredByKeyword(keyword))
                     .build();
 
         } catch (TwitterServiceException twServiceException) {

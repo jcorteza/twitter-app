@@ -96,9 +96,14 @@ public final class TwitterService {
 
         try {
 
-            return Optional
-                    .of(createStatusList(twitterFactory.getHomeTimeline(), keyword))
+            List<Status> statusList = createStatusList(twitterFactory.getHomeTimeline(), keyword);
+
+            statusList
+                    .parallelStream()
+                    .findAny()
                     .orElseThrow(() -> new TwitterServiceException("No statuses found on Twitter home timeline."));
+
+            return statusList;
 
         } catch (TwitterException twitterException) {
 

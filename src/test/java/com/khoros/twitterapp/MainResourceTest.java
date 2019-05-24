@@ -14,7 +14,6 @@ import org.junit.Test;
 import twitter4j.Twitter;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
-import twitter4j.TwitterObjectFactory;
 
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -166,7 +165,7 @@ public class MainResourceTest {
         try {
 
             when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
-            responseList = (List<Status>) mainResource.getHomeTimeline().getEntity();
+            responseList = (List<Status>) mainResource.getFilteredTimeline(exampleText).getEntity();
 
         } catch (TwitterException e) {
 
@@ -184,17 +183,17 @@ public class MainResourceTest {
 
         try {
 
-            when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
+            when(mockFactory.getHomeTimeline())
+                    .thenReturn(exampleTwitterFeed)
+                    .thenThrow(new TwitterException(exceptionText));
 
         } catch (TwitterException e) {
 
-            Assert.fail("Unit test failed due to Twitter Exception.");
+            throw new TwitterServiceException("test", e);
 
         }
-
-        when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
-
-        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.getFilteredTimeline(exampleText).getStatus());
+        
+        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.getFilteredTimeline(exampleText).getStatus());
         Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
     }
 
