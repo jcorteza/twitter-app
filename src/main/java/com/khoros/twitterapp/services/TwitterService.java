@@ -65,6 +65,12 @@ public final class TwitterService {
                         .map(s -> createNewStatusObject(s))
                         .orElseThrow(() -> new TwitterServiceException("Internal error."));
 
+                /*
+                return Optional.ofNullable(twitterFactory.updateStatus(statusText))
+                        .map(s -> createNewStatusObject(s))
+                        .orElseThrow(() -> new TwitterServiceException("Internal error."));
+                 */
+
             } catch (TwitterException twitterException) {
 
                 logger.info("Twitter status update aborted. Twitter Exception thrown.");
@@ -102,8 +108,9 @@ public final class TwitterService {
 
         try {
 
-
-            List<Status> statusList = twitterFactory.getHomeTimeline().stream()
+           return Optional.ofNullable(twitterFactory.getHomeTimeline())
+                    .get()
+                    .stream()
                     .filter(originalStatus -> {
 
                         if (keyword == null) {
@@ -112,21 +119,11 @@ public final class TwitterService {
 
                         } else {
 
-                            return originalStatus.getText().contains(keyword) ||
-                                    originalStatus.getUser().getName().contains(keyword) ||
-                                    originalStatus.getUser().getProfileImageURL().contains(keyword) ||
-                                    originalStatus.getUser().getScreenName().contains(keyword);
+                            return originalStatus.getText().contains(keyword);
                         }
                     })
                     .map(thisStatus -> createNewStatusObject(thisStatus))
                     .collect(toList());
-
-            statusList
-                    .stream()
-                    .findAny()
-                    .orElseThrow(() -> new TwitterServiceException("No statuses found on Twitter home timeline."));
-
-            return statusList;
 
         } catch (TwitterException twitterException) {
 

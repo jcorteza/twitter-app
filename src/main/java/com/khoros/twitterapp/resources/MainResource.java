@@ -16,6 +16,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
+import java.util.Optional;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,6 +24,8 @@ public class MainResource {
 
     final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private TwitterService twitterService = TwitterService.getInstance();
+    private Object responseEntity;
+
 
     @Path("/tweet")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -35,10 +38,20 @@ public class MainResource {
 
         try {
 
+
+            Response
+                    .status(HttpURLConnection.HTTP_OK)
+                    .entity(
+                            Optional.ofNullable(twitterService.updateStatus(statusText))
+                            .
+                    ).build();
+
             return Response
                     .status(HttpURLConnection.HTTP_OK)
                     .entity(twitterService.updateStatus(statusText))
                     .build();
+
+
 
         } catch (TwitterServiceException twServiceException) {
 
