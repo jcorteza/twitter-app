@@ -110,7 +110,7 @@ public class MainResource {
 
             return Response
                     .status(HttpURLConnection.HTTP_OK)
-                    .entity(twitterService.getHomeTimeline(keywords))
+                    .entity(twitterService.getHomeTimelineFilteredByKeyword(keywords))
                     .build();
 
         } catch (TwitterServiceException twServiceException) {
