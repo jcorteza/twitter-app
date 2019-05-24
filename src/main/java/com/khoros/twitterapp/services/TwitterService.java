@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,10 +59,9 @@ public final class TwitterService {
 
             try {
 
-                return Stream.of(twitterFactory.updateStatus(statusText))
-                        .map(status -> createNewStatusObject(status))
-                        .findFirst()
-                        .orElseThrow(() -> new TwitterServiceException("Internal error."));
+                Function<twitter4j.Status, Status> mapNewStatus = (s) -> createNewStatusObject(s);
+
+                return mapNewStatus.apply(twitterFactory.updateStatus(statusText));
 
             } catch (TwitterException twitterException) {
 
