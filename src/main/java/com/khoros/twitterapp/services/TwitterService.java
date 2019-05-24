@@ -39,7 +39,7 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public Status updateStatus(String statusText) throws TwitterServiceException {
+    public Optional<Status> updateStatus(String statusText) throws TwitterServiceException {
 
         logger.info("Attempting to update status through Twitter API.");
 
@@ -59,18 +59,8 @@ public final class TwitterService {
 
             try {
 
-                /*
                 return Optional.ofNullable(twitterFactory.updateStatus(statusText))
-                        .stream()
-                        .findAny()
-                        .map(s -> createNewStatusObject(s))
-                        .orElseThrow(() -> new TwitterServiceException("Internal error."));
-
-                 */
-
-                return Optional.ofNullable(twitterFactory.updateStatus(statusText))
-                        .map(s -> createNewStatusObject(s))
-                        .get();
+                        .map(s -> createNewStatusObject(s));
 
             } catch (TwitterException twitterException) {
 
@@ -97,19 +87,19 @@ public final class TwitterService {
         }
     }
 
-    public List<Status> getHomeTimeline() throws TwitterServiceException {
+    public Optional<List<Status>> getHomeTimeline() throws TwitterServiceException {
 
         return getHomeTimelineFilteredByKeyword(null);
 
     }
 
-    public List<Status> getHomeTimelineFilteredByKeyword(String keyword) throws TwitterServiceException {
+    public Optional<List<Status>> getHomeTimelineFilteredByKeyword(String keyword) throws TwitterServiceException {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
         try {
 
-           return Optional.ofNullable(twitterFactory.getHomeTimeline())
+           /*return Optional.ofNullable(twitterFactory.getHomeTimeline())
                     .get()
                     .stream()
                     .filter(originalStatus -> {
@@ -123,8 +113,26 @@ public final class TwitterService {
                             return originalStatus.getText().contains(keyword);
                         }
                     })
-                    .map(thisStatus -> createNewStatusObject(thisStatus))
-                    .collect(toList());
+                    .map(thisStatus -> createNewStatusObject(thisStatus));*/
+
+            return Optional.ofNullable(twitterFactory.getHomeTimeline())
+                    .map(list ->
+                        list.stream()
+                            .filter(originalStatus -> {
+
+                                if (keyword == null) {
+
+                                    return true;
+
+                                } else {
+
+                                    return originalStatus.getText().contains(keyword);
+                                }
+                            })
+                            .map(thisStatus -> createNewStatusObject(thisStatus))
+                            .collect(Collectors.toList())
+                    );
+
 
         } catch (TwitterException twitterException) {
 

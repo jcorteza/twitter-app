@@ -1,5 +1,6 @@
 package com.khoros.twitterapp.resources;
 
+import com.khoros.twitterapp.models.Status;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
 
@@ -38,8 +39,8 @@ public class MainResource {
 
         try {
 
+            Optional<Status> newStatus = Optional.ofNullable(twitterService.updateStatus(statusText));
 
-            Response
                     .status(HttpURLConnection.HTTP_OK)
                     .entity(
                             Optional.ofNullable(twitterService.updateStatus(statusText))
