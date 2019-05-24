@@ -59,9 +59,11 @@ public final class TwitterService {
 
             try {
 
-                Function<twitter4j.Status, Status> mapNewStatus = (s) -> createNewStatusObject(s);
-
-                return mapNewStatus.apply(twitterFactory.updateStatus(statusText));
+                return Optional.ofNullable(twitterFactory.updateStatus(statusText))
+                        .stream()
+                        .findAny()
+                        .map(s -> createNewStatusObject(s))
+                        .orElseThrow(() -> new TwitterServiceException("Internal error."));
 
             } catch (TwitterException twitterException) {
 
