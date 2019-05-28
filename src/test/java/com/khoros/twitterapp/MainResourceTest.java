@@ -18,6 +18,7 @@ import twitter4j.TwitterException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,7 +31,7 @@ public class MainResourceTest {
     private String exceptionText;
     private ResponseList<twitter4j.Status> exampleTwitterFeed;
     private List<Status> twServiceResponse = new ArrayList<>();
-    private List<Status> responseList = null;
+    private Optional<List<Status>> responseList = null;
     private User newUser = new User();
     private Status newStatus = new com.khoros.twitterapp.models.Status();
     private twitter4j.Status twitterStatus;
@@ -64,12 +65,12 @@ public class MainResourceTest {
     @Test
     public void postStatusUpdateTestSuccess() {
 
-        Status statusResponse = null;
+        Optional<Status> statusResponse = Optional.empty();
 
         try {
 
             when(mockFactory.updateStatus(exampleText)).thenReturn(twitterStatus);
-            statusResponse = (Status) mainResource.postStatusUpdate(exampleText).getEntity();
+            statusResponse = (Optional<Status>) mainResource.postStatusUpdate(exampleText).getEntity();
 
         } catch (TwitterException e) {
 
@@ -77,8 +78,8 @@ public class MainResourceTest {
 
         }
 
-        Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.postStatusUpdate(exampleText).getStatus());
-        Assert.assertEquals(twitterStatus.getText(), statusResponse.getMessage());
+        Assert.assertEquals(HttpURLConnection.HTTP_CREATED, mainResource.postStatusUpdate(exampleText).getStatus());
+        Assert.assertEquals(twitterStatus.getText(), statusResponse.get().getMessage());
     }
 
     @Test
@@ -125,7 +126,7 @@ public class MainResourceTest {
         try {
 
             when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
-            responseList = (List<Status>) mainResource.getHomeTimeline().getEntity();
+            responseList = (Optional<List<Status>>) mainResource.getHomeTimeline().getEntity();
 
         } catch (TwitterException e) {
 
@@ -134,7 +135,7 @@ public class MainResourceTest {
         }
 
         Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.getHomeTimeline().getStatus());
-        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
+        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get().get(0).getMessage());
 
     }
 
@@ -165,7 +166,7 @@ public class MainResourceTest {
         try {
 
             when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
-            responseList = (List<Status>) mainResource.getFilteredTimeline(exampleText).getEntity();
+            responseList = (Optional<List<Status>>) mainResource.getFilteredTimeline(exampleText).getEntity();
 
         } catch (TwitterException e) {
 
@@ -174,7 +175,7 @@ public class MainResourceTest {
         }
 
         Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.getFilteredTimeline(exampleText).getStatus());
-        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
+        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get().get(0).getMessage());
 
     }
 
@@ -193,7 +194,7 @@ public class MainResourceTest {
 
         }
 
-        Assert.assertEquals(HttpURLConnection.HTTP_FORBIDDEN, mainResource.getFilteredTimeline(exampleText).getStatus());
+        Assert.assertEquals(HttpURLConnection.HTTP_INTERNAL_ERROR, mainResource.getFilteredTimeline(exampleText).getStatus());
         Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
     }
 
