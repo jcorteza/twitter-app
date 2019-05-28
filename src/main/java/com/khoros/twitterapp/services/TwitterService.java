@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public final class TwitterService {
 
-    final Logger logger = LoggerFactory.getLogger(TwitterService.class);
+    private final Logger logger = LoggerFactory.getLogger(TwitterService.class);
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
@@ -93,22 +93,6 @@ public final class TwitterService {
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
         try {
-
-           /*return Optional.ofNullable(twitterFactory.getHomeTimeline())
-                    .get()
-                    .stream()
-                    .filter(originalStatus -> {
-
-                        if (keyword == null) {
-
-                            return true;
-
-                        } else {
-
-                            return originalStatus.getText().contains(keyword);
-                        }
-                    })
-                    .map(thisStatus -> createNewStatusObject(thisStatus));*/
 
             return Optional.ofNullable(twitterFactory.getHomeTimeline())
                     .map(list ->
