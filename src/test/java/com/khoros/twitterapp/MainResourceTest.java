@@ -65,12 +65,12 @@ public class MainResourceTest {
     @Test
     public void postStatusUpdateTestSuccess() {
 
-        Optional<Status> statusResponse = Optional.empty();
+        Status statusResponse = null;
 
         try {
 
             when(mockFactory.updateStatus(exampleText)).thenReturn(twitterStatus);
-            statusResponse = (Optional<Status>) mainResource.postStatusUpdate(exampleText).getEntity();
+            statusResponse = (Status) mainResource.postStatusUpdate(exampleText).getEntity();
 
         } catch (TwitterException e) {
 
@@ -79,7 +79,7 @@ public class MainResourceTest {
         }
 
         Assert.assertEquals(HttpURLConnection.HTTP_CREATED, mainResource.postStatusUpdate(exampleText).getStatus());
-        Assert.assertEquals(twitterStatus.getText(), statusResponse.get().getMessage());
+        Assert.assertEquals(twitterStatus.getText(), statusResponse.getMessage());
     }
 
     @Test
