@@ -16,7 +16,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,10 +23,8 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 public class MainResource {
 
-    final Logger logger = LoggerFactory.getLogger(MainResource.class);
+    private final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private TwitterService twitterService = TwitterService.getInstance();
-    private Object responseEntity;
-
 
     @Path("/tweet")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -40,22 +37,15 @@ public class MainResource {
 
         try {
 
-            Optional<Status> newStatus = twitterService.updateStatus(statusText);
-
-            if(newStatus.isPresent()) {
-
-                return Response
-                        .status(HttpURLConnection.HTTP_CREATED)
-                        .entity(newStatus)
-                        .build();
-            } else {
-
-                return Response
-                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                        .entity(TwitterService.GENERAL_ERR_MSG)
-                        .build();
-            }
-
+            return twitterService.updateStatus(statusText)
+                    .map(newStatus -> Response
+                            .status(Response.Status.CREATED)
+                            .entity(newStatus)
+                            .build())
+                    .orElse(Response
+                            .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(TwitterService.GENERAL_ERR_MSG)
+                            .build());
 
         } catch (TwitterServiceException twServiceException) {
 
@@ -68,7 +58,7 @@ public class MainResource {
                         twServiceException);
 
                 return Response
-                        .status(HttpURLConnection.HTTP_FORBIDDEN)
+                        .status(Response.Status.FORBIDDEN)
                         .entity(twServiceException.getMessage())
                         .build();
 
@@ -79,7 +69,7 @@ public class MainResource {
                         twServiceException);
 
                 return Response
-                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(twServiceException.getCause().getMessage())
                         .build();
 
@@ -101,14 +91,14 @@ public class MainResource {
             if (feedResponse.isPresent()) {
 
                 return Response
-                        .status(HttpURLConnection.HTTP_OK)
+                        .status(Response.Status.OK)
                         .entity(feedResponse)
                         .build();
 
             } else {
 
                 return Response
-                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(TwitterService.GENERAL_ERR_MSG)
                         .build();
 
@@ -125,7 +115,7 @@ public class MainResource {
                         twServiceException);
 
                 return Response
-                        .status(HttpURLConnection.HTTP_FORBIDDEN)
+                        .status(Response.Status.FORBIDDEN)
                         .entity(twServiceException.getMessage())
                         .build();
 
@@ -136,7 +126,7 @@ public class MainResource {
                         twServiceException);
 
                 return Response
-                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(twServiceException.getCause().getMessage())
                         .build();
 
@@ -160,14 +150,14 @@ public class MainResource {
             if(feedResponse.isPresent()) {
 
                     return Response
-                            .status(HttpURLConnection.HTTP_OK)
+                            .status(Response.Status.OK)
                             .entity(twitterService.getHomeTimelineFilteredByKeyword(keyword))
                             .build();
 
             } else {
 
                 return Response
-                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(TwitterService.GENERAL_ERR_MSG)
                         .build();
 
@@ -184,7 +174,7 @@ public class MainResource {
                         twServiceException);
 
                 return Response
-                        .status(HttpURLConnection.HTTP_FORBIDDEN)
+                        .status(Response.Status.FORBIDDEN)
                         .entity(twServiceException.getMessage())
                         .build();
 
@@ -195,7 +185,7 @@ public class MainResource {
                         twServiceException);
 
                 return Response
-                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(twServiceException.getCause().getMessage())
                         .build();
 
