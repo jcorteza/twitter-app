@@ -18,7 +18,6 @@ import twitter4j.TwitterException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,7 +30,7 @@ public class MainResourceTest {
     private String exceptionText;
     private ResponseList<twitter4j.Status> exampleTwitterFeed;
     private List<Status> twServiceResponse = new ArrayList<>();
-    private Optional<List<Status>> responseList = null;
+    private List<Status> responseList;
     private User newUser = new User();
     private Status newStatus = new com.khoros.twitterapp.models.Status();
     private twitter4j.Status twitterStatus;
@@ -126,7 +125,7 @@ public class MainResourceTest {
         try {
 
             when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
-            responseList = (Optional<List<Status>>) mainResource.getHomeTimeline().getEntity();
+            responseList = (List<Status>) mainResource.getHomeTimeline().getEntity();
 
         } catch (TwitterException e) {
 
@@ -135,7 +134,7 @@ public class MainResourceTest {
         }
 
         Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.getHomeTimeline().getStatus());
-        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get().get(0).getMessage());
+        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
 
     }
 
@@ -166,7 +165,7 @@ public class MainResourceTest {
         try {
 
             when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
-            responseList = (Optional<List<Status>>) mainResource.getFilteredTimeline(exampleText).getEntity();
+            responseList = (List<Status>) mainResource.getFilteredTimeline(exampleText).getEntity();
 
         } catch (TwitterException e) {
 
@@ -175,7 +174,7 @@ public class MainResourceTest {
         }
 
         Assert.assertEquals(HttpURLConnection.HTTP_OK, mainResource.getFilteredTimeline(exampleText).getStatus());
-        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get().get(0).getMessage());
+        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
 
     }
 
