@@ -17,6 +17,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
+import java.util.List;
 import java.util.Optional;
 
 @Path("/api/1.0/twitter")
@@ -39,19 +40,21 @@ public class MainResource {
 
         try {
 
-            Optional<Status> newStatus = Optional.ofNullable(twitterService.updateStatus(statusText));
+            Optional<Status> newStatus = twitterService.updateStatus(statusText);
 
-                    .status(HttpURLConnection.HTTP_OK)
-                    .entity(
-                            Optional.ofNullable(twitterService.updateStatus(statusText))
-                            .
-                    ).build();
+            if(newStatus.isPresent()) {
 
-            return Response
-                    .status(HttpURLConnection.HTTP_OK)
-                    .entity(twitterService.updateStatus(statusText))
-                    .build();
+                return Response
+                        .status(HttpURLConnection.HTTP_CREATED)
+                        .entity(newStatus)
+                        .build();
+            } else {
 
+                return Response
+                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .entity(TwitterService.GENERAL_ERR_MSG)
+                        .build();
+            }
 
 
         } catch (TwitterServiceException twServiceException) {
@@ -93,22 +96,51 @@ public class MainResource {
 
         try {
 
-            return Response
-                    .status(HttpURLConnection.HTTP_OK)
-                    .entity(twitterService.getHomeTimeline())
-                    .build();
+            Optional<List<Status>> feedResponse = twitterService.getHomeTimeline();
+
+            if (feedResponse.isPresent()) {
+
+                return Response
+                        .status(HttpURLConnection.HTTP_OK)
+                        .entity(feedResponse)
+                        .build();
+
+            } else {
+
+                return Response
+                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .entity(TwitterService.GENERAL_ERR_MSG)
+                        .build();
+
+            }
 
         } catch (TwitterServiceException twServiceException) {
 
             logger.info("Twitter Service process aborted. Twitter Service Exception thrown." );
-            logger.error("Twitter Service Exception — Error Cause: {}",
-                    twServiceException.getCause().getMessage(),
-                    twServiceException);
 
-            return Response
-                    .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                    .entity(twServiceException.getCause().getMessage())
-                    .build();
+            if (twServiceException.getCause() == null) {
+
+                logger.error("Twitter Service Exception — Error Message: {}",
+                        twServiceException.getMessage(),
+                        twServiceException);
+
+                return Response
+                        .status(HttpURLConnection.HTTP_FORBIDDEN)
+                        .entity(twServiceException.getMessage())
+                        .build();
+
+            } else {
+
+                logger.error("Twitter Service Exception — Error Cause: {}",
+                        twServiceException.getCause().getMessage(),
+                        twServiceException);
+
+                return Response
+                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .entity(twServiceException.getCause().getMessage())
+                        .build();
+
+            }
 
         }
 
@@ -123,10 +155,23 @@ public class MainResource {
 
         try {
 
-            return Response
-                    .status(HttpURLConnection.HTTP_OK)
-                    .entity(twitterService.getHomeTimelineFilteredByKeyword(keyword))
-                    .build();
+            Optional<List<Status>> feedResponse = twitterService.getHomeTimeline();
+
+            if(feedResponse.isPresent()) {
+
+                    return Response
+                            .status(HttpURLConnection.HTTP_OK)
+                            .entity(twitterService.getHomeTimelineFilteredByKeyword(keyword))
+                            .build();
+
+            } else {
+
+                return Response
+                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
+                        .entity(TwitterService.GENERAL_ERR_MSG)
+                        .build();
+
+            }
 
         } catch (TwitterServiceException twServiceException) {
 

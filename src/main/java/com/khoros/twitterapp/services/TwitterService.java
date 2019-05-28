@@ -11,14 +11,9 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 public final class TwitterService {
 
@@ -120,7 +115,7 @@ public final class TwitterService {
                         list.stream()
                             .filter(originalStatus -> {
 
-                                if (keyword == null) {
+                                if (StringUtils.isEmpty(keyword)) {
 
                                     return true;
 
