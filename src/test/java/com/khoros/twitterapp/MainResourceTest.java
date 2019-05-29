@@ -8,8 +8,8 @@ import com.khoros.twitterapp.models.User;
 
 import static org.mockito.Mockito.*;
 import org.junit.Before;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Assert;
 import twitter4j.Twitter;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
@@ -39,7 +39,7 @@ public class MainResourceTest {
         twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
         twSingleton.setTWFactory(mockFactory);
-        mainResource = new MainResource();
+        mainResource = new MainResource(twSingleton);
         exampleText = "Tweet Test";
         exceptionText = "Testing TwitterException.";
         exampleTwitterFeed = new ResponseImplTest<>();
