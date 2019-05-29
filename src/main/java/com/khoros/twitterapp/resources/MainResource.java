@@ -8,19 +8,20 @@ import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.GET;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.HttpURLConnection;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
 public class MainResource {
 
-    final Logger logger = LoggerFactory.getLogger(MainResource.class);
+    private final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private TwitterService twitterService = TwitterService.getInstance();
 
     @Path("/tweet")
@@ -34,38 +35,21 @@ public class MainResource {
 
         try {
 
-            return Response
-                    .status(HttpURLConnection.HTTP_OK)
-                    .entity(twitterService.updateStatus(statusText))
-                    .build();
+            return twitterService.updateStatus(statusText)
+                    .map(newStatus -> Response
+                            .status(Response.Status.CREATED)
+                            .entity(newStatus)
+                            .build())
+                    .orElse(Response
+                            .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(TwitterService.GENERAL_ERR_MSG)
+                            .build());
 
         } catch (TwitterServiceException twServiceException) {
 
             logger.info("Twitter Service process aborted. Twitter Service Excpetion thrown.");
 
-            if (twServiceException.getCause() == null) {
-
-                logger.error("Twitter Service Exception — Error Message: {}",
-                        twServiceException.getMessage(),
-                        twServiceException);
-
-                return Response
-                        .status(HttpURLConnection.HTTP_FORBIDDEN)
-                        .entity(twServiceException.getMessage())
-                        .build();
-
-            } else {
-
-                logger.error("Twitter Service Exception — Error Cause: {}",
-                        twServiceException.getCause().getMessage(),
-                        twServiceException);
-
-                return Response
-                        .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                        .entity(twServiceException.getCause().getMessage())
-                        .build();
-
-            }
+            return handleException(twServiceException);
         }
 
     }
@@ -78,21 +62,77 @@ public class MainResource {
 
         try {
 
-            return Response
-                    .status(HttpURLConnection.HTTP_OK)
-                    .entity(twitterService.getHomeTimeline())
-                    .build();
+            return twitterService.getHomeTimeline()
+                    .map(feedResponse -> Response
+                            .status(Response.Status.OK)
+                            .entity(feedResponse)
+                            .build())
+                    .orElse(Response
+                            .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(TwitterService.GENERAL_ERR_MSG)
+                            .build());
 
         } catch (TwitterServiceException twServiceException) {
 
             logger.info("Twitter Service process aborted. Twitter Service Exception thrown." );
-            logger.error("Twitter Service Exception — Error Cause: {}",
-                    twServiceException.getCause().getMessage(),
-                    twServiceException);
+
+            return handleException(twServiceException);
+
+        }
+
+    }
+
+    @Path("/timeline/filter")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @GET
+    public Response getFilteredTimeline(@QueryParam("keyword") String keyword) {
+
+        logger.info("Accessing Twitter Service getHomeTimeline feature.");
+
+        try {
+
+            return twitterService.getHomeTimelineFilteredByKeyword(keyword)
+                    .map(feedResponse -> Response
+                            .status(Response.Status.OK)
+                            .entity(feedResponse)
+                            .build())
+                    .orElse(Response
+                            .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(TwitterService.GENERAL_ERR_MSG)
+                            .build());
+
+        } catch (TwitterServiceException twServiceException) {
+
+            logger.info("Twitter Service process aborted. Twitter Service Exception thrown." );
+
+            return handleException(twServiceException);
+
+        }
+
+    }
+
+    private Response handleException(TwitterServiceException exception) {
+
+        if (exception.getCause() == null) {
+
+            logger.error("Twitter Service Exception — Error Message: {}",
+                    exception.getMessage(),
+                    exception);
 
             return Response
-                    .status(HttpURLConnection.HTTP_INTERNAL_ERROR)
-                    .entity(twServiceException.getCause().getMessage())
+                    .status(Response.Status.FORBIDDEN)
+                    .entity(exception.getMessage())
+                    .build();
+
+        } else {
+
+            logger.error("Twitter Service Exception — Error Cause: {}",
+                    exception.getCause().getMessage(),
+                    exception);
+
+            return Response
+                    .status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(exception.getCause().getMessage())
                     .build();
 
         }

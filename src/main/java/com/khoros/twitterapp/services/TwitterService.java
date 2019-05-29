@@ -11,12 +11,13 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class TwitterService {
 
-    final Logger logger = LoggerFactory.getLogger(TwitterService.class);
+    private final Logger logger = LoggerFactory.getLogger(TwitterService.class);
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
@@ -33,7 +34,7 @@ public final class TwitterService {
         return INSTANCE;
     }
 
-    public Status updateStatus(String statusText) throws TwitterServiceException {
+    public Optional<Status> updateStatus(String statusText) throws TwitterServiceException {
 
         logger.info("Attempting to update status through Twitter API.");
 
@@ -53,9 +54,8 @@ public final class TwitterService {
 
             try {
 
-                twitter4j.Status responseStatus = twitterFactory.updateStatus(statusText);
-
-                return createNewStatusObject(responseStatus);
+                return Optional.ofNullable(twitterFactory.updateStatus(statusText))
+                        .map(s -> createNewStatusObject(s));
 
             } catch (TwitterException twitterException) {
 
@@ -82,25 +82,40 @@ public final class TwitterService {
         }
     }
 
-    public List<Status> getHomeTimeline() throws TwitterServiceException {
+    public Optional<List<Status>> getHomeTimeline() throws TwitterServiceException {
+
+        return getHomeTimelineFilteredByKeyword(null);
+
+    }
+
+    public Optional<List<Status>> getHomeTimelineFilteredByKeyword(String keyword) throws TwitterServiceException {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        List<Status> statusesList  = new ArrayList<>();
-
         try {
 
-            for (twitter4j.Status originalStatus: twitterFactory.getHomeTimeline()) {
+            return Optional.ofNullable(twitterFactory.getHomeTimeline())
+                    .map(list ->
+                        list.stream()
+                            .filter(originalStatus -> {
 
-                statusesList.add(createNewStatusObject(originalStatus));
+                                if (StringUtils.isEmpty(keyword)) {
 
-            }
+                                    return true;
 
-            return statusesList;
+                                } else {
+
+                                    return originalStatus.getText().contains(keyword);
+                                }
+                            })
+                            .map(thisStatus -> createNewStatusObject(thisStatus))
+                            .collect(Collectors.toList())
+                    );
+
 
         } catch (TwitterException twitterException) {
 
-            logger.info("Timeline retrieval aborted. Twitter Exception thrown." );
+            logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
 
             if (twitterException.isErrorMessageAvailable()) {
 
@@ -118,12 +133,16 @@ public final class TwitterService {
             }
 
             throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+
         }
+
     }
 
-    public void setTWFactory(Configuration newConfiguration) {;
+    public void setTWFactory(Configuration newConfiguration) {
+        ;
 
-        twitterFactory = new TwitterFactory(newConfiguration).getInstance();;
+        twitterFactory = new TwitterFactory(newConfiguration).getInstance();
+        ;
 
     }
 
@@ -154,6 +173,4 @@ public final class TwitterService {
         return newStatus;
 
     }
-
-
 }
