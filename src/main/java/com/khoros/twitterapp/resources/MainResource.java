@@ -26,7 +26,7 @@ public class MainResource {
     private final TwitterService twitterService;
     // private TwitterService twitterService = TwitterService.getInstance();
 
-    MainResource(TwitterService twitterService) {
+    @Inject MainResource(TwitterService twitterService) {
         this.twitterService = twitterService;
     }
 

@@ -27,7 +27,7 @@ public final class TwitterService {
     private static final TwitterService INSTANCE = new TwitterService();
     private static Twitter twitterFactory;
 
-    @Inject private TwitterService() {
+    private TwitterService() {
         // hidden constructor
     }
 

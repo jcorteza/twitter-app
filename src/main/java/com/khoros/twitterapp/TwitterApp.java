@@ -26,7 +26,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         TwitterService.getInstance().setTWFactory(configuration.twitter4jConfigurationBuild().build());
         ResourceComponent resourceComponent = DaggerTwitterApp_ResourceComponent.builder()
                 .serviceProviderModule(new ServiceProviderModule())
-                .build;
+                .build();
 
         environment.jersey().register(resourceComponent.mainResource());
     }
