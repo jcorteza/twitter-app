@@ -81,10 +81,10 @@ public class MainResource {
 
     }
 
-    @Path("/timeline/{filter}")
+    @Path("/timeline/filter")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @GET
-    public Response getFilteredTimeline(@PathParam("filter") String keyword) {
+    public Response getFilteredTimeline(@FormParam("keyword") String keyword) {
 
         logger.info("Accessing Twitter Service getHomeTimeline feature.");
 
