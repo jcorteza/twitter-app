@@ -24,7 +24,7 @@
     <mockito.version>2.27.0</mockito.version>
     <slf4j.version>1.7.26</slf4j.version>
     <logback.version>1.2.3</logback.version>
-    <dagger2.version>2.x</dagger2.version>
+    <dagger2.version>2.23</dagger2.version>
   </properties>
 
   <dependencies>
