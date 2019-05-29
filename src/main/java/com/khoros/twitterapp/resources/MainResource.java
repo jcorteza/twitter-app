@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.GET;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -84,7 +85,7 @@ public class MainResource {
     @Path("/timeline/filter")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @GET
-    public Response getFilteredTimeline(@FormParam("keyword") String keyword) {
+    public Response getFilteredTimeline(@QueryParam("keyword") String keyword) {
 
         logger.info("Accessing Twitter Service getHomeTimeline feature.");
 
