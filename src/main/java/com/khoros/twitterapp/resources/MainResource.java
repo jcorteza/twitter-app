@@ -16,13 +16,19 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.inject.Inject;
 
 @Path("/api/1.0/twitter")
 @Produces(MediaType.APPLICATION_JSON)
 public class MainResource {
 
     private final Logger logger = LoggerFactory.getLogger(MainResource.class);
-    private TwitterService twitterService = TwitterService.getInstance();
+    private final TwitterService twitterService;
+    // private TwitterService twitterService = TwitterService.getInstance();
+
+    MainResource(TwitterService twitterService) {
+        this.twitterService = twitterService;
+    }
 
     @Path("/tweet")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

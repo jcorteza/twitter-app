@@ -11,6 +11,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public final class TwitterService {
     private static final TwitterService INSTANCE = new TwitterService();
     private static Twitter twitterFactory;
 
-    private TwitterService() {
+    @Inject private TwitterService() {
         // hidden constructor
     }
 
