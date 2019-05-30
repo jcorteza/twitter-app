@@ -16,6 +16,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         new TwitterApp().run(args);
     }
 
+    // component which uses TwitterFactoryModule to inject Twitter object into TwitterService
     @Component(modules = TwitterFactoryModule.class)
     public interface TwitterServiceComponent {
         void injectTwitterService(TwitterService twService);
@@ -37,6 +38,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         TwitterServiceComponent twServiceComponent = DaggerTwitterApp_TwitterServiceComponent.builder()
                 .twitterFactoryModule(new TwitterFactoryModule(twFactory))
                 .build();
+        // use injectTwitterService method to injection Twitter object
         twServiceComponent.injectTwitterService(TwitterService.getInstance());
         ResourceComponent resourceComponent = DaggerTwitterApp_ResourceComponent.builder()
                 .twitterServiceComponent(twServiceComponent)
