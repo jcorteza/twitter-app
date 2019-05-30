@@ -22,15 +22,10 @@ public final class TwitterService {
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
-    private static final TwitterService INSTANCE = new TwitterService();
-    @Inject Twitter twitterFactory;
+    public static Twitter twitterFactory;
 
-    private TwitterService() {
-        // hidden constructor
-    }
-
-    public static TwitterService getInstance() {
-        return INSTANCE;
+    @Inject public TwitterService(Twitter twitterFactory) {
+        this.twitterFactory = twitterFactory;
     }
 
     public Optional<Status> updateStatus(String statusText) throws TwitterServiceException {
@@ -134,12 +129,6 @@ public final class TwitterService {
             throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
 
         }
-
-    }
-
-    public void setTWFactory(Twitter factory) {
-
-        twitterFactory = factory;
 
     }
 

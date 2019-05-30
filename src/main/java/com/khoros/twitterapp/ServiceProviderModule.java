@@ -1,15 +1,23 @@
 package com.khoros.twitterapp;
 
-
 import com.khoros.twitterapp.services.TwitterService;
+
 import dagger.Module;
 import dagger.Provides;
+import twitter4j.Twitter;
+import javax.inject.Singleton;
 
 @Module
 class ServiceProviderModule {
-    @Provides
+    private Twitter twFactory;
+
+    public ServiceProviderModule(Twitter twFactory) {
+        this.twFactory = twFactory;
+    }
+
+    @Provides @Singleton
     TwitterService provideTwitterService() {
-            return TwitterService.getInstance();
+            return new TwitterService(twFactory);
     }
 
 }

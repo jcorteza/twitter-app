@@ -10,6 +10,8 @@ import twitter4j.conf.Configuration;
 import twitter4j.TwitterFactory;
 import dagger.Component;
 
+import javax.inject.Singleton;
+
 public class TwitterApp extends Application<TwitterAppConfiguration> {
 
     public static void main(String[] args) throws Exception {
@@ -26,6 +28,8 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
             dependencies = TwitterServiceComponent.class,
             modules = ServiceProviderModule.class
     )
+
+    @Singleton
     public interface ResourceComponent {
         MainResource mainResource();
     }
