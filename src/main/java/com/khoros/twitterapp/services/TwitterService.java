@@ -139,23 +139,9 @@ public final class TwitterService {
 
     }
 
-    public void setTWFactory(Configuration newConfiguration) {
-        ;
-
-        twitterFactory = new TwitterFactory(newConfiguration).getInstance();
-        ;
-
-    }
-
     public void setTWFactory(Twitter factory) {
 
         twitterFactory = factory;
-
-    }
-
-    public Twitter getTwitterFactory() {
-
-        return twitterFactory;
 
     }
 
