@@ -8,7 +8,6 @@ import twitter4j.Twitter;
 import twitter4j.conf.Configuration;
 import twitter4j.TwitterFactory;
 import dagger.Component;
-import javax.inject.Singleton;
 
 public class TwitterApp extends Application<TwitterAppConfiguration> {
 
@@ -16,11 +15,17 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         new TwitterApp().run(args);
     }
 
-    @Singleton
-    @Component(modules = {TwitterFactoryModule.class, ServiceProviderModule.class})
+    @Component(modules = TwitterFactoryModule.class)
+    public interface TwitterServiceComponent {
+        Twitter twFactory();
+    }
+
+    @Component(
+            dependencies = TwitterServiceComponent.class,
+            modules = ServiceProviderModule.class
+    )
     public interface ResourceComponent {
         MainResource mainResource();
-        void injectTwitterFactory(Twitter twFactory);
     }
 
     @Override
@@ -28,9 +33,13 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
         Configuration twConfig = configuration.twitter4jConfigurationBuild().build();
         Twitter twFactory = new TwitterFactory(twConfig).getInstance();
-        ResourceComponent resourceComponent = DaggerTwitterApp_ResourceComponent.builder().build();
+        TwitterServiceComponent twServiceComponent = DaggerTwitterApp_TwitterServiceComponent.builder()
+                .twitterFactoryModule(new TwitterFactoryModule(twFactory))
+                .build();
+        ResourceComponent resourceComponent = DaggerTwitterApp_ResourceComponent.builder()
+                .twitterServiceComponent(twServiceComponent)
+                .build();
 
-        resourceComponent.injectTwitterFactory(twFactory);
         environment.jersey().register(resourceComponent.mainResource());
     }
 }
