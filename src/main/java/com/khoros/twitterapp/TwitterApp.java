@@ -2,6 +2,7 @@ package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.resources.MainResource;
 
+import com.khoros.twitterapp.services.TwitterService;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 import twitter4j.Twitter;
@@ -17,7 +18,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
     @Component(modules = TwitterFactoryModule.class)
     public interface TwitterServiceComponent {
-        Twitter twFactory();
+        void injectTwitterService(TwitterService twService);
     }
 
     @Component(
@@ -36,6 +37,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         TwitterServiceComponent twServiceComponent = DaggerTwitterApp_TwitterServiceComponent.builder()
                 .twitterFactoryModule(new TwitterFactoryModule(twFactory))
                 .build();
+        twServiceComponent.injectTwitterService(TwitterService.getInstance());
         ResourceComponent resourceComponent = DaggerTwitterApp_ResourceComponent.builder()
                 .twitterServiceComponent(twServiceComponent)
                 .build();
