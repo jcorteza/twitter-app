@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 public final class TwitterService {
 
@@ -24,7 +25,7 @@ public final class TwitterService {
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     private static final TwitterService INSTANCE = new TwitterService();
-    private static Twitter twitterFactory;
+    @Inject Twitter twitterFactory;
 
     private TwitterService() {
         // hidden constructor
