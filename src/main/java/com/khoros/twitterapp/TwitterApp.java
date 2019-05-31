@@ -18,17 +18,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         new TwitterApp().run(args);
     }
 
-    // component which uses TwitterFactoryModule to inject Twitter object into TwitterService
-    @Component(modules = TwitterFactoryModule.class)
-    public interface TwitterServiceComponent {
-        void injectTwitterService(TwitterService twService);
-    }
-
-    @Component(
-            dependencies = TwitterServiceComponent.class,
-            modules = ServiceProviderModule.class
-    )
-
+    @Component(modules = ServiceProviderModule.class)
     @Singleton
     public interface ResourceComponent {
         MainResource mainResource();
@@ -39,13 +29,8 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
         Configuration twConfig = configuration.twitter4jConfigurationBuild().build();
         Twitter twFactory = new TwitterFactory(twConfig).getInstance();
-        TwitterServiceComponent twServiceComponent = DaggerTwitterApp_TwitterServiceComponent.builder()
-                .twitterFactoryModule(new TwitterFactoryModule(twFactory))
-                .build();
-        // use injectTwitterService method to injection Twitter object
-        twServiceComponent.injectTwitterService(TwitterService.getInstance());
         ResourceComponent resourceComponent = DaggerTwitterApp_ResourceComponent.builder()
-                .twitterServiceComponent(twServiceComponent)
+                .serviceProviderModule(new ServiceProviderModule(twFactory))
                 .build();
 
         environment.jersey().register(resourceComponent.mainResource());

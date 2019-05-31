@@ -3,22 +3,18 @@ package com.khoros.twitterapp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.models.Status;
 
-import static org.mockito.Mockito.*;
-
 import com.khoros.twitterapp.services.TwitterServiceException;
+
+import static org.mockito.Mockito.*;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
 import twitter4j.*;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
-
 import java.util.List;
 import java.util.Optional;
 
 public class TwitterServiceTest {
 
-    // private Configuration originalConfig;
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
@@ -28,9 +24,9 @@ public class TwitterServiceTest {
     @Before
     public void setup() {
 
-        twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
-        twSingleton.setTWFactory(mockFactory);
+        twSingleton = new TwitterService(mockFactory);
+        // twSingleton.setTWFactory(mockFactory);
         testStatusText = "Tweet Test";
         twResponse = new ResponseImplTest<twitter4j.Status>();
         exampleStatus = new Twitter4jStatusImpl();

@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
-public final class TwitterService {
+public class TwitterService {
 
     private final Logger logger = LoggerFactory.getLogger(TwitterService.class);
 
@@ -22,7 +22,7 @@ public final class TwitterService {
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
-    public static Twitter twitterFactory;
+    public Twitter twitterFactory;
 
     @Inject public TwitterService(Twitter twitterFactory) {
         this.twitterFactory = twitterFactory;

@@ -36,9 +36,8 @@ public class MainResourceTest {
     @Before
     public void setup() {
 
-        twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
-        twSingleton.setTWFactory(mockFactory);
+        twSingleton = new TwitterService(mockFactory);
         mainResource = new MainResource(twSingleton);
         exampleText = "Tweet Test";
         exceptionText = "Testing TwitterException.";
