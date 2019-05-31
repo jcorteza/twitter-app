@@ -14,7 +14,8 @@ class TwitterFactoryModule {
         this.twConf = twConf;
     }
 
-    @Provides Twitter provideTwitterFactory() {
+    @Provides
+    Twitter provideTwitterFactory() {
         return new TwitterFactory(twConf).getInstance();
     }
 

@@ -26,7 +26,6 @@ public class TwitterServiceTest {
 
         mockFactory = mock(Twitter.class);
         twSingleton = new TwitterService(mockFactory);
-        // twSingleton.setTWFactory(mockFactory);
         testStatusText = "Tweet Test";
         twResponse = new ResponseImplTest<twitter4j.Status>();
         exampleStatus = new Twitter4jStatusImpl();

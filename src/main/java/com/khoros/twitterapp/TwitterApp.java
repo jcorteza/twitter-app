@@ -1,12 +1,7 @@
 package com.khoros.twitterapp;
 
-import com.khoros.twitterapp.resources.MainResource;
-
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
-import twitter4j.Twitter;
-import dagger.Component;
-import javax.inject.Singleton;
 
 public class TwitterApp extends Application<TwitterAppConfiguration> {
 
@@ -14,24 +9,10 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         new TwitterApp().run(args);
     }
 
-    @Component(modules = TwitterFactoryModule.class)
-    public interface TwitterFactoryComponent {
-        Twitter twFactory();
-    }
-
-    @Component(
-            dependencies = TwitterFactoryComponent.class,
-            modules = ServiceProviderModule.class
-    )
-    @Singleton
-    public interface ResourceComponent {
-        MainResource mainResource();
-    }
-
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
 
-        TwitterFactoryComponent twComponent = DaggerTwitterApp_TwitterFactoryComponent.builder()
+        TwitterFactoryComponent twComponent = DaggerTwitterFactoryComponent.builder()
                 .twitterFactoryModule(
                         new TwitterFactoryModule(
                                 // Twitter Configuration Object
@@ -39,7 +20,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
                         )
                 )
                 .build();
-        ResourceComponent resourceComponent = DaggerTwitterApp_ResourceComponent.builder()
+        ResourceComponent resourceComponent = DaggerResourceComponent.builder()
                 .twitterFactoryComponent(twComponent)
                 .build();
 

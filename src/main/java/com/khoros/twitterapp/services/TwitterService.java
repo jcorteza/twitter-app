@@ -24,7 +24,8 @@ public class TwitterService {
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
 
-    @Inject public TwitterService(Twitter twitterFactory) {
+    @Inject
+    public TwitterService(Twitter twitterFactory) {
         this.twitterFactory = twitterFactory;
     }
 
