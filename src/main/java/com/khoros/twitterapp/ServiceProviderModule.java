@@ -9,14 +9,9 @@ import javax.inject.Singleton;
 
 @Module
 class ServiceProviderModule {
-    private Twitter twFactory;
-
-    public ServiceProviderModule(Twitter twFactory) {
-        this.twFactory = twFactory;
-    }
 
     @Provides @Singleton
-    TwitterService provideTwitterService() {
+    TwitterService provideTwitterService(Twitter twFactory) {
             return new TwitterService(twFactory);
     }
 

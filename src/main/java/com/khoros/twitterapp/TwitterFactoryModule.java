@@ -2,18 +2,20 @@ package com.khoros.twitterapp;
 
 import dagger.Module;
 import dagger.Provides;
+import twitter4j.conf.Configuration;
 import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
 
 @Module
 class TwitterFactoryModule {
-    private Twitter twFactory;
+    private Configuration twConf;
 
-    TwitterFactoryModule(Twitter twFactory) {
-        this.twFactory = twFactory;
+    TwitterFactoryModule(Configuration twConf) {
+        this.twConf = twConf;
     }
 
     @Provides Twitter provideTwitterFactory() {
-        return twFactory;
+        return new TwitterFactory(twConf).getInstance();
     }
 
 }
