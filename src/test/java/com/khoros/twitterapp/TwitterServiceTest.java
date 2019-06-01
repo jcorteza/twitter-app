@@ -5,7 +5,8 @@ import com.khoros.twitterapp.models.Status;
 
 import com.khoros.twitterapp.services.TwitterServiceException;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
