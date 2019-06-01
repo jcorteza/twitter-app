@@ -14,10 +14,7 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
         TwitterFactoryComponent twComponent = DaggerTwitterFactoryComponent.builder()
                 .twitterFactoryModule(
-                        new TwitterFactoryModule(
-                                // Twitter Configuration Object
-                                configuration.twitter4jConfigurationBuild().build()
-                        )
+                        new TwitterFactoryModule(configuration.twitter4jConfigurationBuild())
                 )
                 .build();
         ResourceComponent resourceComponent = DaggerResourceComponent.builder()
