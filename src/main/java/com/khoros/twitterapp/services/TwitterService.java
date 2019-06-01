@@ -2,6 +2,7 @@ package com.khoros.twitterapp.services;
 
 import com.khoros.twitterapp.models.Status;
 import com.khoros.twitterapp.models.User;
+import com.khoros.twitterapp.models.CacheStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,9 +109,44 @@ public final class TwitterService {
                                     return originalStatus.getText().contains(keyword);
                                 }
                             })
-                            .map(thisStatus -> createNewStatusObject(thisStatus))
+                            .filter(originalStatus -> {
+                                String cacheStatusKey = new StringBuilder()
+                                        .append(originalStatus.getCreatedAt())
+                                        .append("-")
+                                        .append(originalStatus.getUser().getScreenName())
+                                        .append("-")
+                                        .append(originalStatus.getText())
+                                        .toString();
+
+                                if(CacheUp.getCacheStatusHashMap().containsKey(cacheStatusKey)) {
+
+                                    CacheUp.getCacheStatusList().add(
+                                            CacheUp.getCacheStatusHashMap().get(cacheStatusKey).getStatus()
+                                    );
+
+                                    return false;
+
+                                } else {
+                                    // return status if cache does NOT contain key
+                                    return true;
+
+                                }
+                            })
+                            .map(thisStatus -> {
+
+                                Status newStatusObject = createNewStatusObject(thisStatus);
+
+                                CacheUp.addStatusToCache(newStatusObject);
+                                return newStatusObject;
+
+                            })
                             .collect(Collectors.toList())
-                    );
+                    )
+                    .map(filteredList -> {
+                        filteredList.addAll(CacheUp.getCacheStatusList());
+                        CacheUp.getCacheStatusList().clear();
+                        return filteredList;
+                    });
 
 
         } catch (TwitterException twitterException) {
