@@ -14,4 +14,7 @@ public class CacheStatus {
     public Status  getStatus() {
         return statusObject;
     }
+    public Date getCacheObjectCreated() {
+        return cacheObjectCreated;
+    }
 }
