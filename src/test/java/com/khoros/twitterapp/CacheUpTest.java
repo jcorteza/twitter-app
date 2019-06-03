@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class TwitterAppTest {
+public class CacheUpTest {
 
     private HashMap<String, CacheStatus> testCacheMap;
     private HashMap<String, CacheStatus> originalHashMap;
