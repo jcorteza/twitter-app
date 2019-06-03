@@ -11,9 +11,10 @@ public class CacheStatus {
         this.statusObject = statusObject;
     }
 
-    public Status  getStatus() {
+    public Status getStatus() {
         return statusObject;
     }
+
     public Date getCacheObjectCreated() {
         return cacheObjectCreated;
     }

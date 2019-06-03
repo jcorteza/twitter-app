@@ -15,7 +15,6 @@ import java.util.HashMap;
 
 public class CacheUpTest {
 
-    private CacheUp cacheUp = CacheUp.getInstance();
     private HashMap<String, CacheStatus> testCacheMap;
     private HashMap<String, CacheStatus> originalHashMap;
     private Runnable originalRunnable;
@@ -28,12 +27,12 @@ public class CacheUpTest {
     public void setup() {
 
 
-        originalRunnable = cacheUp.getCleanCache();
+        originalRunnable = CacheUp.getCleanCache();
         // 5 minute interval for testing
         testInterval = 300000;
         testDate = new Date();
         long timeDiffFiveMin = 5 * 60 * 1000;
-        originalHashMap = cacheUp.getCacheStatusHashMap();
+        originalHashMap = CacheUp.getCacheStatusHashMap();
         testCacheMap = new HashMap<>();
         twitter4j.Status testStatus = new Twitter4jStatusImpl();
 
@@ -53,23 +52,23 @@ public class CacheUpTest {
         testCacheMap.putIfAbsent(testKey2, new CacheStatus(new Date(testDate.getTime() - timeDiffFiveMin), newStatus));
         testCacheMap.putIfAbsent(testKey1, new CacheStatus(testDate, newStatus));
 
-        cacheUp.setCacheStatusHashMap(testCacheMap);
+        CacheUp.setCacheStatusHashMap(testCacheMap);
 
     }
 
     @After
     public void resetMock() {
 
-        cacheUp.setCacheStatusHashMap(originalHashMap);
-        cacheUp.setCleanCache(originalRunnable);
+        CacheUp.setCacheStatusHashMap(originalHashMap);
+        CacheUp.setCleanCache(originalRunnable);
 
     }
 
     @Test
     public void cleanCacheTest() {
 
-        cacheUp.setCleanCache(new RunnableCache(testDate, testInterval));
-        cacheUp.getCleanCache().run();
+        CacheUp.setCleanCache(new RunnableCache(testDate, testInterval));
+        CacheUp.getCleanCache().run();
 
         Assert.assertTrue(testCacheMap.keySet().contains(testKey1));
         Assert.assertFalse(testCacheMap.keySet().contains(testKey2));

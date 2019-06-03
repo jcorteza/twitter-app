@@ -8,32 +8,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public final class CacheUp {
+public class CacheUp {
     // interval 1 week
     public static final long CLEAN_UP_INTERVAL = 7 * 24 * 60 * 60 * 1000;
-    private HashMap<String, CacheStatus> cacheStatusHashMap = new HashMap<>();
-    private List<Status> cacheStatusList = new ArrayList<>();
-    private Runnable cleanCache = new RunnableCache();
-    private static CacheUp instance = new CacheUp();
+    private static HashMap<String, CacheStatus> cacheStatusHashMap = new HashMap<>();
+    private static List<Status> cacheStatusList = new ArrayList<>();
+    private static Runnable cleanCache = new RunnableCache();
 
-
-    private CacheUp() {
-        // private creator
-    }
-
-    public static CacheUp getInstance() {
-        return instance;
-    }
-
-    public HashMap<String, CacheStatus> getCacheStatusHashMap() {
+    public static HashMap<String, CacheStatus> getCacheStatusHashMap() {
         return cacheStatusHashMap;
     }
 
-    public List<Status> getCacheStatusList() {
+    public static List<Status> getCacheStatusList() {
         return cacheStatusList;
     }
 
-    public void addStatusToCache(Status status) {
+    public static void addStatusToCache(Status status) {
         String cacheStatusKey = new StringBuilder()
                 .append(status.getCreatedAt())
                 .append("-")
@@ -47,15 +37,15 @@ public final class CacheUp {
         );
     }
 
-    public void setCacheStatusHashMap(HashMap<String, CacheStatus> hashMap) {
+    public static void setCacheStatusHashMap(HashMap<String, CacheStatus> hashMap) {
         cacheStatusHashMap = hashMap;
     }
 
-    public Runnable getCleanCache() {
-        return cleanCache;
+    public static void setCleanCache(Runnable runnable) {
+        cleanCache = runnable;
     }
 
-    public void setCleanCache(Runnable runnable) {
-        cleanCache = runnable;
+    public static Runnable getCleanCache() {
+        return cleanCache;
     }
 }

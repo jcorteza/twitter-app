@@ -90,6 +90,33 @@ public class TwitterServiceTest {
 
     }
 
+   /* @Test
+    public void getHomeTimelineFilteredSuccess() {
+
+        testStatusText = "Tweet";
+
+        try {
+
+            when(mockFactory.getHomeTimeline()).thenReturn(twResponse);
+
+            try {
+
+                Assert.assertEquals(exampleStatus.getText(), twSingleton.getHomeTimelineFilteredByKeyword(testStatusText).get(0).getMessage());
+
+            } catch (TwitterServiceException twitterServiceException) {
+
+                Assert.fail("Unit test failed to TwitterServiceException");
+
+            }
+
+        } catch (TwitterException twittterException) {
+
+            Assert.fail("Unit test failed due to TwitterException.");
+
+        }
+
+    }*/
+
     @Test
     public void getFactoryTest() {
 
