@@ -17,6 +17,6 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
         TwitterService.getInstance().setTWFactory(configuration.twitter4jConfigurationBuild().build());
 
-        environment.jersey().register(new MainResource());
+        //environment.jersey().register(new MainResource());
     }
 }
