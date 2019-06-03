@@ -24,8 +24,7 @@ public class MainResource {
     private final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private final TwitterService twitterService;
 
-    @Inject
-    public MainResource(TwitterService twitterService) {
+    @Inject public MainResource(TwitterService twitterService) {
         this.twitterService = twitterService;
     }
 
