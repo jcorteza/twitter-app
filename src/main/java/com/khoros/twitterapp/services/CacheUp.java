@@ -8,22 +8,31 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class CacheUp {
-    // interval 1 week
+public final class CacheUp {
+    // clean up interval 1 week
     public static final long CLEAN_UP_INTERVAL = 7 * 24 * 60 * 60 * 1000;
-    private static HashMap<String, CacheStatus> cacheStatusHashMap = new HashMap<>();
-    private static List<Status> cacheStatusList = new ArrayList<>();
-    private static Runnable cleanCache = new RunnableCache();
+    private HashMap<String, CacheStatus> cacheStatusHashMap = new HashMap<>();
+    private List<Status> cacheStatusList = new ArrayList<>();
+    private Runnable cleanCache = new RunnableCache();
+    private static CacheUp instance = new CacheUp();
 
-    public static HashMap<String, CacheStatus> getCacheStatusHashMap() {
+    private CacheUp() {
+        //private constructor
+    }
+
+    public static CacheUp getInstance() {
+        return instance;
+    }
+
+    public HashMap<String, CacheStatus> getCacheStatusHashMap() {
         return cacheStatusHashMap;
     }
 
-    public static List<Status> getCacheStatusList() {
+    public List<Status> getCacheStatusList() {
         return cacheStatusList;
     }
 
-    public static void addStatusToCache(Status status) {
+    public void addStatusToCache(Status status) {
         String cacheStatusKey = new StringBuilder()
                 .append(status.getCreatedAt())
                 .append("-")
@@ -37,15 +46,15 @@ public class CacheUp {
         );
     }
 
-    public static void setCacheStatusHashMap(HashMap<String, CacheStatus> hashMap) {
+    public void setCacheStatusHashMap(HashMap<String, CacheStatus> hashMap) {
         cacheStatusHashMap = hashMap;
     }
 
-    public static void setCleanCache(Runnable runnable) {
+    public void setCleanCache(Runnable runnable) {
         cleanCache = runnable;
     }
 
-    public static Runnable getCleanCache() {
+    public Runnable getCleanCache() {
         return cleanCache;
     }
 }

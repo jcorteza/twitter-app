@@ -9,24 +9,21 @@ import java.util.Set;
 
 public class RunnableCache implements Runnable {
 
-    public Date now;
     public long interval;
 
-
-    public RunnableCache(Date date, long interval) {
-        now = date;
+    public RunnableCache(long interval) {
         this.interval = interval;
     }
 
     public RunnableCache() {
-        now = new Date();
         interval = CacheUp.CLEAN_UP_INTERVAL;
     }
 
     @Override
     public void run() {
-        Set<Map.Entry<String, CacheStatus>> cachStatusSet = CacheUp.getCacheStatusHashMap().entrySet();
 
+        Date now = new Date();
+        Set<Map.Entry<String, CacheStatus>> cachStatusSet = CacheUp.getInstance().getCacheStatusHashMap().entrySet();
 
         for(Iterator<Map.Entry<String, CacheStatus>> i = cachStatusSet.iterator(); i.hasNext();) {
             Map.Entry<String, CacheStatus> cacheStatusEntry = i.next();

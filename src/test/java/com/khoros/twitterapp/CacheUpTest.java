@@ -15,33 +15,32 @@ import java.util.HashMap;
 
 public class CacheUpTest {
 
+    private CacheUp cacheUp = CacheUp.getInstance();
     private HashMap<String, CacheStatus> testCacheMap;
     private HashMap<String, CacheStatus> originalHashMap;
     private Runnable originalRunnable;
     private long testInterval;
-    private Date testDate;
+    private User newUser;
+    private Status newStatus;
     private String testKey1;
     private String testKey2;
 
     @Before
     public void setup() {
 
-
-        originalRunnable = CacheUp.getCleanCache();
-        // 5 minute interval for testing
+        originalRunnable = cacheUp.getCleanCache();
+        // test interval for clean up — 5 minutes
         testInterval = 300000;
-        testDate = new Date();
-        long timeDiffFiveMin = 5 * 60 * 1000;
-        originalHashMap = CacheUp.getCacheStatusHashMap();
+        originalHashMap = cacheUp.getCacheStatusHashMap();
         testCacheMap = new HashMap<>();
         twitter4j.Status testStatus = new Twitter4jStatusImpl();
 
-        User newUser = new User();
+        newUser = new User();
         newUser.setTwHandle(testStatus.getUser().getScreenName());
         newUser.setName(testStatus.getUser().getName());
         newUser.setProfileImageUrl(testStatus.getUser().getProfileImageURL());
 
-        Status newStatus = new Status();
+        newStatus = new Status();
         newStatus.setMessage(testStatus.getText());
         newStatus.setUser(newUser);
         newStatus.setCreatedAt(testStatus.getCreatedAt());
@@ -49,26 +48,28 @@ public class CacheUpTest {
         testKey1 = "test1";
         testKey2 = "test2";
 
-        testCacheMap.putIfAbsent(testKey2, new CacheStatus(new Date(testDate.getTime() - timeDiffFiveMin), newStatus));
-        testCacheMap.putIfAbsent(testKey1, new CacheStatus(testDate, newStatus));
-
-        CacheUp.setCacheStatusHashMap(testCacheMap);
-
     }
 
     @After
     public void resetMock() {
 
-        CacheUp.setCacheStatusHashMap(originalHashMap);
-        CacheUp.setCleanCache(originalRunnable);
+        cacheUp.setCacheStatusHashMap(originalHashMap);
+        cacheUp.setCleanCache(originalRunnable);
 
     }
 
     @Test
     public void cleanCacheTest() {
 
-        CacheUp.setCleanCache(new RunnableCache(testDate, testInterval));
-        CacheUp.getCleanCache().run();
+        Date testDate = new Date();
+        long timeDiff10Min = 10 * 60 * 1000;
+
+        testCacheMap.putIfAbsent(testKey2, new CacheStatus(new Date(testDate.getTime() - timeDiff10Min), newStatus));
+        testCacheMap.putIfAbsent(testKey1, new CacheStatus(testDate, newStatus));
+
+        cacheUp.setCacheStatusHashMap(testCacheMap);
+        cacheUp.setCleanCache(new RunnableCache(testInterval));
+        cacheUp.getCleanCache().run();
 
         Assert.assertTrue(testCacheMap.keySet().contains(testKey1));
         Assert.assertFalse(testCacheMap.keySet().contains(testKey2));

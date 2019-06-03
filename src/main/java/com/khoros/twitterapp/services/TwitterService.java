@@ -90,6 +90,8 @@ public final class TwitterService {
 
     public Optional<List<Status>> getHomeTimelineFilteredByKeyword(String keyword) throws TwitterServiceException {
 
+        CacheUp cacheUp = CacheUp.getInstance();
+
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
         try {
@@ -117,10 +119,10 @@ public final class TwitterService {
                                         .append(originalStatus.getText())
                                         .toString();
 
-                                if(CacheUp.getCacheStatusHashMap().containsKey(cacheStatusKey)) {
+                                if(cacheUp.getCacheStatusHashMap().containsKey(cacheStatusKey)) {
 
-                                    CacheUp.getCacheStatusList().add(
-                                            CacheUp.getCacheStatusHashMap().get(cacheStatusKey).getStatus()
+                                    cacheUp.getCacheStatusList().add(
+                                            cacheUp.getCacheStatusHashMap().get(cacheStatusKey).getStatus()
                                     );
 
                                     return false;
@@ -135,15 +137,15 @@ public final class TwitterService {
 
                                 Status newStatusObject = createNewStatusObject(thisStatus);
 
-                                CacheUp.addStatusToCache(newStatusObject);
+                                cacheUp.addStatusToCache(newStatusObject);
                                 return newStatusObject;
 
                             })
                             .collect(Collectors.toList())
                     )
                     .map(filteredList -> {
-                        filteredList.addAll(CacheUp.getCacheStatusList());
-                        CacheUp.getCacheStatusList().clear();
+                        filteredList.addAll(cacheUp.getCacheStatusList());
+                        cacheUp.getCacheStatusList().clear();
                         return filteredList;
                     });
 
