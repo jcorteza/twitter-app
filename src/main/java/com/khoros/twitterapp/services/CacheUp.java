@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class CacheUp {
-    // interval 1 week
+    // clean up interval 1 week
     public static final long CLEAN_UP_INTERVAL = 7 * 24 * 60 * 60 * 1000;
     private HashMap<String, CacheStatus> cacheStatusHashMap = new HashMap<>();
     private List<Status> cacheStatusList = new ArrayList<>();

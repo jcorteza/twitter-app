@@ -26,6 +26,6 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
 
         ScheduledFuture<?> executorService = Executors
                 .newScheduledThreadPool(1)
-                .scheduleWithFixedDelay(CacheUp.cleanCache, 0, 5, TimeUnit.MINUTES);
+                .scheduleWithFixedDelay(CacheUp.getInstance().getCleanCache(), 0, 5, TimeUnit.MINUTES);
     }
 }
