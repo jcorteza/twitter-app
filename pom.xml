@@ -16,15 +16,14 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.build.mainClass>com.khoros.twitterapp.TwitterApp</project.build.mainClass>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <junit.version>4.11</junit.version>
     <org.twitter4j.version>[4.0,)</org.twitter4j.version>
     <dropwizard.version>1.3.9</dropwizard.version>
     <mockito.version>2.27.0</mockito.version>
     <slf4j.version>1.7.26</slf4j.version>
     <logback.version>1.2.3</logback.version>
-    <dagger2.version>2.23</dagger2.version>
   </properties>
 
   <dependencies>
@@ -66,17 +65,6 @@
       <artifactId>logback-classic</artifactId>
       <version>${logback.version}</version>
     </dependency>
-    <dependency>
-        <groupId>com.google.dagger</groupId>
-        <artifactId>dagger</artifactId>
-        <version>${dagger2.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>com.google.dagger</groupId>
-        <artifactId>dagger-compiler</artifactId>
-        <version>${dagger2.version}</version>
-        <scope>provided</scope>
-    </dependency>
   </dependencies>
 
   <build>
@@ -94,15 +82,6 @@
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
-          <configuration>
-              <annotationProcessorPaths>
-                  <path>
-                      <groupId>com.google.dagger</groupId>
-                      <artifactId>dagger-compiler</artifactId>
-                      <version>${dagger2.version}</version>
-                  </path>
-              </annotationProcessorPaths>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>

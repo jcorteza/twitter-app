@@ -1,5 +1,8 @@
 package com.khoros.twitterapp;
 
+import com.khoros.twitterapp.resources.MainResource;
+import com.khoros.twitterapp.services.TwitterService;
+
 import io.dropwizard.Application;
 import io.dropwizard.setup.Environment;
 
@@ -12,15 +15,8 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
 
-        TwitterFactoryComponent twComponent = DaggerTwitterFactoryComponent.builder()
-                .twitterFactoryModule(
-                        new TwitterFactoryModule(configuration.twitter4jConfigurationBuild())
-                )
-                .build();
-        ResourceComponent resourceComponent = DaggerResourceComponent.builder()
-                .twitterFactoryComponent(twComponent)
-                .build();
+        TwitterService.getInstance().setTWFactory(configuration.twitter4jConfigurationBuild().build());
 
-        environment.jersey().register(resourceComponent.mainResource());
+        environment.jersey().register(new MainResource());
     }
 }

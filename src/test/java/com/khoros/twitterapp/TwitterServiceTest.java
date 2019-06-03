@@ -3,19 +3,22 @@ package com.khoros.twitterapp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.models.Status;
 
-import com.khoros.twitterapp.services.TwitterServiceException;
+import static org.mockito.Mockito.*;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.khoros.twitterapp.services.TwitterServiceException;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
 import twitter4j.*;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
+
 import java.util.List;
 import java.util.Optional;
 
 public class TwitterServiceTest {
 
+    // private Configuration originalConfig;
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
@@ -25,8 +28,9 @@ public class TwitterServiceTest {
     @Before
     public void setup() {
 
+        twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
-        twSingleton = new TwitterService(mockFactory);
+        twSingleton.setTWFactory(mockFactory);
         testStatusText = "Tweet Test";
         twResponse = new ResponseImplTest<twitter4j.Status>();
         exampleStatus = new Twitter4jStatusImpl();
@@ -83,6 +87,58 @@ public class TwitterServiceTest {
         Assert.assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
         Assert.assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
         Assert.assertEquals(exampleStatus.getUser().getProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
+
+    }
+
+   /* @Test
+    public void getHomeTimelineFilteredSuccess() {
+
+        testStatusText = "Tweet";
+
+        try {
+
+            when(mockFactory.getHomeTimeline()).thenReturn(twResponse);
+
+            try {
+
+                Assert.assertEquals(exampleStatus.getText(), twSingleton.getHomeTimelineFilteredByKeyword(testStatusText).get(0).getMessage());
+
+            } catch (TwitterServiceException twitterServiceException) {
+
+                Assert.fail("Unit test failed to TwitterServiceException");
+
+            }
+
+        } catch (TwitterException twittterException) {
+
+            Assert.fail("Unit test failed due to TwitterException.");
+
+        }
+
+    }*/
+
+    @Test
+    public void getFactoryTest() {
+
+        Assert.assertEquals(mockFactory, TwitterService.getInstance().getTwitterFactory());
+
+    }
+
+
+    @Test
+    public void setTWFactoryTestConfig() {
+
+        ConfigurationBuilder testCB = new ConfigurationBuilder();
+        Configuration testConfig = testCB.setDebugEnabled(true)
+                .setOAuthAccessToken("authorizationToken")
+                .setOAuthAccessTokenSecret("authorizationTokenSecret")
+                .setOAuthConsumerKey("authorizationConsumerKey")
+                .setOAuthConsumerSecret("authorizationConsumerSecret")
+                .build();
+        twSingleton.setTWFactory(testConfig);
+
+        Assert.assertEquals(new TwitterFactory(testConfig).getInstance(), TwitterService.getInstance().getTwitterFactory());
+        Assert.assertEquals(testConfig, TwitterService.getInstance().getTwitterFactory().getConfiguration());
 
     }
 
