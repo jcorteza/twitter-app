@@ -4,7 +4,6 @@ import com.khoros.twitterapp.models.CacheStatus;
 import com.khoros.twitterapp.models.Status;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,15 +31,15 @@ public final class CacheUp {
         return cacheStatusList;
     }
 
-    public void addStatusToCache(Status status) {
+    public void addStatusToCache(twitter4j.Status status) {
         String cacheStatusKey = new StringBuilder()
                 .append(status.getCreatedAt())
                 .append("-")
-                .append(status.getUser().getTwHandle())
+                .append(status.getUser().getScreenName())
                 .toString();
         cacheStatusHashMap.putIfAbsent(
                 cacheStatusKey,
-                new CacheStatus(new Date(), status)
+                new CacheStatus(status)
         );
     }
 
