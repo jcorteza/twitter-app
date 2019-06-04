@@ -3,6 +3,7 @@ package com.khoros.twitterapp.services;
 import twitter4j.Status;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class CacheUp {
@@ -22,8 +23,8 @@ public final class CacheUp {
         return cacheSet;
     }
 
-    public void addStatusToCache(twitter4j.Status status) {
-        cacheSet.add(status);
+    public void addStatusesToCache(List<Status> statusList) {
+        statusList.forEach(status -> cacheSet.add(status));
     }
 
     public void setCacheSet(Set<Status> cacheSet) {
