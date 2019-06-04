@@ -15,7 +15,6 @@ public final class CacheUp {
     public static final long CLEAN_UP_INTERVAL = 7 * 24 * 60 * 60 * 1000;
     private HashMap<String, CacheStatus> cacheStatusHashMap = new HashMap<>();
     private Set<Status> cacheStatusSet = new HashSet<>();
-    private Runnable cleanCache = new RunnableCache();
     private static CacheUp instance = new CacheUp();
 
     private CacheUp() {
@@ -69,13 +68,5 @@ public final class CacheUp {
 
     public void setCacheStatusHashMap(HashMap<String, CacheStatus> hashMap) {
         cacheStatusHashMap = hashMap;
-    }
-
-    public void setCleanCache(Runnable runnable) {
-        cleanCache = runnable;
-    }
-
-    public Runnable getCleanCache() {
-        return cleanCache;
     }
 }
