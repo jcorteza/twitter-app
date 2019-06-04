@@ -40,6 +40,7 @@ public class TwitterServiceTest {
         twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
         twSingleton.setTWFactory(mockFactory);
+        twSingleton.setCacheUp(cacheUp);
         testStatusText = "Tweet Test";
         twResponse = new ResponseImplTest<>();
         exampleStatus = new Twitter4jStatusImpl();
@@ -109,7 +110,6 @@ public class TwitterServiceTest {
     public void getCachedTimelineTest() {
 
         Set<twitter4j.Status> testSet = new HashSet<>();
-        Iterator<twitter4j.Status> iterator = testSet.iterator();
         Optional<List<Status>> testList = null;
 
         for (int i = 0; i < 3; i++) {

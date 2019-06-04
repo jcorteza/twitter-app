@@ -1,6 +1,7 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.resources.MainResource;
+import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
 import com.khoros.twitterapp.models.Status;
@@ -15,11 +16,13 @@ import twitter4j.ResponseList;
 import twitter4j.TwitterException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class MainResourceTest {
 
+    private CacheUp cacheUp;
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private MainResource mainResource;
@@ -36,9 +39,11 @@ public class MainResourceTest {
     @Before
     public void setup() {
 
+        cacheUp = mock(CacheUp.class);
         twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
         twSingleton.setTWFactory(mockFactory);
+        twSingleton.setCacheUp(cacheUp);
         mainResource = new MainResource();
         exampleText = "Tweet Test";
         exceptionText = "Testing TwitterException.";
@@ -168,6 +173,7 @@ public class MainResourceTest {
     @Test
     public void getHomeTimelineTestFilteredException() throws TwitterServiceException {
 
+        when(cacheUp.getCacheSet()).thenReturn(new HashSet<>());
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         Assert.assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());
