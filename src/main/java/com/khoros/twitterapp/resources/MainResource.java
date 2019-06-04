@@ -6,9 +6,9 @@ import com.khoros.twitterapp.services.TwitterServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.ws.rs.Path;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.POST;
 import javax.ws.rs.GET;
@@ -22,7 +22,12 @@ import javax.ws.rs.core.Response;
 public class MainResource {
 
     private final Logger logger = LoggerFactory.getLogger(MainResource.class);
-    private TwitterService twitterService = TwitterService.getInstance();
+    private final TwitterService twitterService;
+
+    @Inject
+    public MainResource(TwitterService twitterService) {
+        this.twitterService = twitterService;
+    }
 
     @Path("/tweet")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

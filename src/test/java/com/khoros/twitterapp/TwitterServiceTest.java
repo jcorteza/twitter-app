@@ -1,32 +1,27 @@
 package com.khoros.twitterapp;
 
-import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
+import com.khoros.twitterapp.services.TwitterServiceException;
+import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.models.Status;
 
-import static org.mockito.Mockito.*;
 
-import com.khoros.twitterapp.services.TwitterServiceException;
-import org.junit.After;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
-import org.mockito.InjectMocks;
 import twitter4j.*;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public class TwitterServiceTest {
 
-    // private Configuration originalConfig;
     private CacheUp cacheUp;
-    @InjectMocks private TwitterService twSingleton;
+    private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
     private ResponseList<twitter4j.Status> twResponse;
@@ -36,10 +31,9 @@ public class TwitterServiceTest {
     @Before
     public void setup() {
 
-        cacheUp = mock(CacheUp.class);
-        twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
-        twSingleton.setTWFactory(mockFactory);
+        twSingleton = new TwitterService(mockFactory);
+        cacheUp = mock(CacheUp.class);
         twSingleton.setCacheUp(cacheUp);
         testStatusText = "Tweet Test";
         twResponse = new ResponseImplTest<>();
@@ -47,11 +41,6 @@ public class TwitterServiceTest {
         twResponse.add(exampleStatus);
         originalCacheSet = cacheUp.getCacheSet();
 
-    }
-
-    @After
-    public void resetCacheUp() {
-        reset(cacheUp);
     }
 
     @Test
@@ -133,7 +122,7 @@ public class TwitterServiceTest {
     @Test
     public void getFactoryTest() {
 
-        Assert.assertEquals(mockFactory, TwitterService.getInstance().getTwitterFactory());
+        Assert.assertEquals(mockFactory, twSingleton.getTwitterFactory());
 
     }
 
@@ -145,5 +134,4 @@ public class TwitterServiceTest {
 
         Assert.assertEquals(testCacheUp.getCacheSet(), twSingleton.getCacheUp().getCacheSet());
     }
-
 }

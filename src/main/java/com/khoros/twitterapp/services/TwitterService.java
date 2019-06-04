@@ -7,16 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.Configuration;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
-public final class TwitterService {
+public class TwitterService {
 
     private final Logger logger = LoggerFactory.getLogger(TwitterService.class);
 
@@ -24,16 +23,13 @@ public final class TwitterService {
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
-    private static final TwitterService INSTANCE = new TwitterService();
-    private static Twitter twitterFactory;
     private CacheUp cacheUp;
+    public Twitter twitterFactory;
 
-    private TwitterService() {
-        // hidden constructor
-    }
-
-    public static TwitterService getInstance() {
-        return INSTANCE;
+    @Inject
+    public TwitterService(Twitter twitterFactory) {
+        this.twitterFactory = twitterFactory;
+        this.cacheUp = new CacheUp();
     }
 
     public Optional<Status> updateStatus(String statusText) throws TwitterServiceException {
@@ -145,10 +141,6 @@ public final class TwitterService {
 
         this.cacheUp = cacheUp;
 
-    }
-
-    public void setCacheUp() {
-        setCacheUp(new CacheUp());
     }
 
     public CacheUp getCacheUp() {

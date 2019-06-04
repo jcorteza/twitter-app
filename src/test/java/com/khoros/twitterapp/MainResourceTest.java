@@ -7,10 +7,11 @@ import com.khoros.twitterapp.services.TwitterServiceException;
 import com.khoros.twitterapp.models.Status;
 import com.khoros.twitterapp.models.User;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.junit.Before;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Assert;
 import twitter4j.Twitter;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
@@ -39,12 +40,11 @@ public class MainResourceTest {
     @Before
     public void setup() {
 
-        cacheUp = mock(CacheUp.class);
-        twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
-        twSingleton.setTWFactory(mockFactory);
+        twSingleton = new TwitterService(mockFactory);
+        mainResource = new MainResource(twSingleton);
+        cacheUp = mock(CacheUp.class);
         twSingleton.setCacheUp(cacheUp);
-        mainResource = new MainResource();
         exampleText = "Tweet Test";
         exceptionText = "Testing TwitterException.";
         exampleTwitterFeed = new ResponseImplTest<>();
