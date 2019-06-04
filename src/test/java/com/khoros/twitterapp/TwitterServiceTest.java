@@ -1,5 +1,6 @@
 package com.khoros.twitterapp;
 
+import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.models.Status;
 
@@ -13,6 +14,7 @@ import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
+import javax.validation.constraints.AssertTrue;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,32 +92,23 @@ public class TwitterServiceTest {
 
     }
 
-   /* @Test
-    public void getHomeTimelineFilteredSuccess() {
+    @Test
+    public void getHomeTimelineCacheTest() {
 
-        testStatusText = "Tweet";
+        private HashMap<String, CacheStatus> testCacheMap;
 
-        try {
 
-            when(mockFactory.getHomeTimeline()).thenReturn(twResponse);
+        for(int i = 0; i < 50; i++) {
 
-            try {
-
-                Assert.assertEquals(exampleStatus.getText(), twSingleton.getHomeTimelineFilteredByKeyword(testStatusText).get(0).getMessage());
-
-            } catch (TwitterServiceException twitterServiceException) {
-
-                Assert.fail("Unit test failed to TwitterServiceException");
-
-            }
-
-        } catch (TwitterException twittterException) {
-
-            Assert.fail("Unit test failed due to TwitterException.");
+            CacheUp.getInstance().addStatusToCache(new Twitter4jStatusImpl());
 
         }
 
-    }*/
+        when(CacheUp.getInstance().getCacheStatusHashMap()).thenReturn()
+
+        Assert.assertTrue(CacheUp.getInstance().getCacheStatusHashMap().size() == 50);
+        Assert.assertEquals(twSingleton.getHomeTimeline());
+    }
 
     @Test
     public void getFactoryTest() {
