@@ -121,7 +121,17 @@ public class TwitterService {
 
             optionalList =  Optional.of(
                     cacheSet.stream()
-                            .map(cacheStatus -> createNewStatusObject(cacheStatus))
+                            .filter(originalStatus -> {
+
+                                if (StringUtils.isEmpty(keyword)) {
+
+                                    return true;
+
+                                } else {
+
+                                    return originalStatus.getText().contains(keyword);
+                                }
+                            }).map(cacheStatus -> createNewStatusObject(cacheStatus))
                             .collect(Collectors.toList())
             );
 
