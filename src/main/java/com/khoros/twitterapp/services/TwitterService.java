@@ -151,6 +151,10 @@ public final class TwitterService {
         setCacheUp(new CacheUp());
     }
 
+    public CacheUp getCacheUp() {
+        return cacheUp;
+    }
+
     public Twitter getTwitterFactory() {
 
         return twitterFactory;

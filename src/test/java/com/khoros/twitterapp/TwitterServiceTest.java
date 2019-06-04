@@ -137,4 +137,13 @@ public class TwitterServiceTest {
 
     }
 
+    @Test
+    public void setCacheUpTest() {
+
+        CacheUp testCacheUp = new CacheUp();
+        twSingleton.setCacheUp(testCacheUp);
+
+        Assert.assertEquals(testCacheUp.getCacheSet(), twSingleton.getCacheUp().getCacheSet());
+    }
+
 }
