@@ -9,15 +9,6 @@ import java.util.Set;
 public final class CacheUp {
     // clean up interval 1 week
     private Set<Status> cacheSet = new HashSet<>();
-    private static CacheUp instance = new CacheUp();
-
-    private CacheUp() {
-        //private constructor
-    }
-
-    public static CacheUp getInstance() {
-        return instance;
-    }
 
     public Set<Status> getCacheSet() {
         return cacheSet;
