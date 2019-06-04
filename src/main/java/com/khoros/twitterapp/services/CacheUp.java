@@ -37,8 +37,6 @@ public final class CacheUp {
                 .append(status.getCreatedAt())
                 .append("-")
                 .append(status.getUser().getTwHandle())
-                .append("-")
-                .append(status.getMessage())
                 .toString();
         cacheStatusHashMap.putIfAbsent(
                 cacheStatusKey,

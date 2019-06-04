@@ -115,8 +115,6 @@ public final class TwitterService {
                                         .append(originalStatus.getCreatedAt())
                                         .append("-")
                                         .append(originalStatus.getUser().getScreenName())
-                                        .append("-")
-                                        .append(originalStatus.getText())
                                         .toString();
 
                                 if(cacheUp.getCacheStatusHashMap().containsKey(cacheStatusKey)) {
