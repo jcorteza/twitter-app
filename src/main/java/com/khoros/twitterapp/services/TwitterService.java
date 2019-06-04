@@ -97,14 +97,13 @@ public final class TwitterService {
 
         Set<twitter4j.Status> cacheSet = cacheUp.getCacheStatusSet();
 
-        if(cacheSet.size() < 50) {
+        if(cacheSet.isEmpty()) {
 
             try {
 
                 return Optional.ofNullable(twitterFactory.getHomeTimeline())
                         .map(list -> {
                             list.forEach((twitterAPIStatus -> cacheUp.addStatusToCache(twitterAPIStatus)));
-                            list.addAll(cacheSet);
                             return list.stream()
                                     .filter(originalStatus -> {
 

@@ -1,11 +1,14 @@
 package com.khoros.twitterapp;
 
+import com.khoros.twitterapp.models.CacheStatus;
+import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.models.Status;
 
 import static org.mockito.Mockito.*;
 
 import com.khoros.twitterapp.services.TwitterServiceException;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
@@ -13,6 +16,8 @@ import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +29,7 @@ public class TwitterServiceTest {
     private String testStatusText;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
+    HashMap<String, CacheStatus> originalCacheMap;
 
     @Before
     public void setup() {
@@ -35,7 +41,13 @@ public class TwitterServiceTest {
         twResponse = new ResponseImplTest<twitter4j.Status>();
         exampleStatus = new Twitter4jStatusImpl();
         twResponse.add(exampleStatus);
+        originalCacheMap = CacheUp.getInstance().getCacheStatusHashMap();
 
+    }
+
+    @After
+    public void resetCacheUp() {
+        CacheUp.getInstance().setCacheStatusHashMap(originalCacheMap);
     }
 
     @Test
@@ -90,32 +102,31 @@ public class TwitterServiceTest {
 
     }
 
-   /* @Test
-    public void getHomeTimelineFilteredSuccess() {
+    @Test
+    public void getCachedTimelineTest() {
 
-        testStatusText = "Tweet";
+        HashMap<String, CacheStatus> testCacheMap = new HashMap<>();
+        Set<twitter4j.Status> testSet = new HashSet<>();
+        Optional<List<Status>> testList;
 
-        try {
-
-            when(mockFactory.getHomeTimeline()).thenReturn(twResponse);
-
-            try {
-
-                Assert.assertEquals(exampleStatus.getText(), twSingleton.getHomeTimelineFilteredByKeyword(testStatusText).get(0).getMessage());
-
-            } catch (TwitterServiceException twitterServiceException) {
-
-                Assert.fail("Unit test failed to TwitterServiceException");
-
-            }
-
-        } catch (TwitterException twittterException) {
-
-            Assert.fail("Unit test failed due to TwitterException.");
-
+        for (int i = 0; i < 50; i++) {
+            testCacheMap.put("testKey" + i, new CacheStatus(new Twitter4jStatusImpl()));
         }
 
-    }*/
+        CacheUp.getInstance().setCacheStatusHashMap(testCacheMap);
+        try {
+
+            testList = twSingleton.getHomeTimeline();
+
+        } catch(TwitterServiceException e) {
+
+            Assert.fail("TwitterService unit test failed due to TwitterServiceException.");
+
+        }
+        Status testStatus1 =
+
+        Assert.assertEquals(, twSingleton.c);
+    }
 
     @Test
     public void getFactoryTest() {
