@@ -1,9 +1,10 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.services.TwitterService;
+import com.khoros.twitterapp.services.TwitterServiceException;
+import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.models.Status;
 
-import com.khoros.twitterapp.services.TwitterServiceException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,26 +12,34 @@ import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
 import twitter4j.*;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class TwitterServiceTest {
 
+    private CacheUp cacheUp;
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
+    private Set<twitter4j.Status> originalCacheSet;
 
     @Before
     public void setup() {
 
         mockFactory = mock(Twitter.class);
         twSingleton = new TwitterService(mockFactory);
+        cacheUp = mock(CacheUp.class);
+        twSingleton.setCacheUp(cacheUp);
         testStatusText = "Tweet Test";
-        twResponse = new ResponseImplTest<twitter4j.Status>();
+        twResponse = new ResponseImplTest<>();
         exampleStatus = new Twitter4jStatusImpl();
         twResponse.add(exampleStatus);
+        originalCacheSet = cacheUp.getCacheSet();
 
     }
 
@@ -86,4 +95,43 @@ public class TwitterServiceTest {
 
     }
 
+    @Test
+    public void getCachedTimelineTest() {
+
+        Set<twitter4j.Status> testSet = new HashSet<>();
+        Optional<List<Status>> testList = null;
+
+        for (int i = 0; i < 3; i++) {
+            testSet.add(new Twitter4jStatusImpl());
+        }
+
+        try {
+
+            when(cacheUp.getCacheSet()).thenReturn(testSet);
+            testList = twSingleton.getHomeTimeline();
+
+        } catch(TwitterServiceException e) {
+
+            Assert.fail("TwitterService unit test failed due to TwitterServiceException.");
+
+        }
+
+        Assert.assertTrue(testList.get().size() == 3);
+    }
+
+    @Test
+    public void getFactoryTest() {
+
+        Assert.assertEquals(mockFactory, twSingleton.getTwitterFactory());
+
+    }
+
+    @Test
+    public void setCacheUpTest() {
+
+        CacheUp testCacheUp = new CacheUp();
+        twSingleton.setCacheUp(testCacheUp);
+
+        Assert.assertEquals(testCacheUp.getCacheSet(), twSingleton.getCacheUp().getCacheSet());
+    }
 }

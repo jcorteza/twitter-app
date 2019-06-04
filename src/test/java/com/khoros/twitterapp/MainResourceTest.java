@@ -1,6 +1,7 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.resources.MainResource;
+import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
 import com.khoros.twitterapp.models.Status;
@@ -16,11 +17,13 @@ import twitter4j.ResponseList;
 import twitter4j.TwitterException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class MainResourceTest {
 
+    private CacheUp cacheUp;
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private MainResource mainResource;
@@ -40,6 +43,8 @@ public class MainResourceTest {
         mockFactory = mock(Twitter.class);
         twSingleton = new TwitterService(mockFactory);
         mainResource = new MainResource(twSingleton);
+        cacheUp = mock(CacheUp.class);
+        twSingleton.setCacheUp(cacheUp);
         exampleText = "Tweet Test";
         exceptionText = "Testing TwitterException.";
         exampleTwitterFeed = new ResponseImplTest<>();
@@ -138,16 +143,6 @@ public class MainResourceTest {
     @Test
     public void getHomeTimelineTestException() throws TwitterServiceException {
 
-        try {
-
-            when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
-
-        } catch (TwitterException e) {
-
-            Assert.fail("Unit test failed due to Twitter Exception.");
-
-        }
-
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         Assert.assertEquals(500, mainResource.getHomeTimeline().getStatus());
@@ -178,18 +173,12 @@ public class MainResourceTest {
     @Test
     public void getHomeTimelineTestFilteredException() throws TwitterServiceException {
 
-        try {
-
-            when(mockFactory.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
-
-        } catch (TwitterException e) {
-
-            throw new TwitterServiceException("test", e);
-
-        }
+        when(cacheUp.getCacheSet()).thenReturn(new HashSet<>());
+        when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         Assert.assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());
         Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
+
     }
 
 }

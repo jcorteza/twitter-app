@@ -9,8 +9,10 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
@@ -22,11 +24,13 @@ public class TwitterService {
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
+    private CacheUp cacheUp;
     public Twitter twitterFactory;
 
     @Inject
     public TwitterService(Twitter twitterFactory) {
         this.twitterFactory = twitterFactory;
+        this.cacheUp = new CacheUp();
     }
 
     public Optional<Status> updateStatus(String statusText) throws TwitterServiceException {
@@ -47,33 +51,26 @@ public class TwitterService {
 
         } else {
 
+            Optional<Status> responseOptional = null;
+
             try {
 
-                return Optional.ofNullable(twitterFactory.updateStatus(statusText))
+                responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
                         .map(s -> createNewStatusObject(s));
+
+                cacheUp.getCacheSet().clear();
+                Optional.ofNullable(twitterFactory.getHomeTimeline())
+                        .ifPresent(list -> cacheUp.addStatusesToCache(list));
 
             } catch (TwitterException twitterException) {
 
                 logger.info("Twitter status update aborted. Twitter Exception thrown.");
 
-                if (twitterException.isErrorMessageAvailable()) {
-
-                    logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
-                            twitterException.getErrorMessage(),
-                            twitterException.getExceptionCode(),
-                            twitterException);
-
-                } else {
-
-                    logger.error("Unknown Twitter Exception — Exception Code: {}",
-                            twitterException.getExceptionCode(),
-                            twitterException);
-
-                }
-
-                throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+                handleTwitterException(twitterException);
 
             }
+
+            return responseOptional;
         }
     }
 
@@ -87,53 +84,68 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        try {
+        Set<twitter4j.Status> cacheSet = cacheUp.getCacheSet();
+        Optional<List<twitter4j.Status>> optionalList = null;
 
-            return Optional.ofNullable(twitterFactory.getHomeTimeline())
-                    .map(list ->
-                        list.stream()
-                            .filter(originalStatus -> {
+        if(cacheSet.isEmpty()) {
 
-                                if (StringUtils.isEmpty(keyword)) {
+            try {
 
-                                    return true;
+                optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
+                optionalList.ifPresent((list) -> cacheUp.addStatusesToCache(list));
 
-                                } else {
+            } catch (TwitterException twitterException) {
 
-                                    return originalStatus.getText().contains(keyword);
-                                }
-                            })
-                            .map(thisStatus -> createNewStatusObject(thisStatus))
-                            .collect(Collectors.toList())
-                    );
+                logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
 
-
-        } catch (TwitterException twitterException) {
-
-            logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
-
-            if (twitterException.isErrorMessageAvailable()) {
-
-                logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
-                        twitterException.getErrorMessage(),
-                        twitterException.getExceptionCode(),
-                        twitterException);
-
-            } else {
-
-                logger.error("Unknown Twitter Exception — Exception Code: {}",
-                        twitterException.getExceptionCode(),
-                        twitterException);
+                handleTwitterException(twitterException);
 
             }
 
-            throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+        } else {
+
+            List<twitter4j.Status> responseList = new ArrayList<>();
+            responseList.addAll(cacheSet);
+            optionalList = Optional.ofNullable(responseList);
 
         }
 
+        return optionalList
+                .map(list -> list.stream()
+                      .filter(originalStatus -> {
+
+                          if (StringUtils.isEmpty(keyword)) {
+
+                              return true;
+
+                          } else {
+
+                              return originalStatus.getText().contains(keyword);
+                          }
+                      })
+                      .map(thisStatus -> createNewStatusObject(thisStatus))
+                      .collect(Collectors.toList())
+                );
+
     }
 
-    private Status createNewStatusObject(twitter4j.Status originalStatus) {
+    public void setCacheUp(CacheUp cacheUp) {
+
+        this.cacheUp = cacheUp;
+
+    }
+
+    public CacheUp getCacheUp() {
+        return cacheUp;
+    }
+
+    public Twitter getTwitterFactory() {
+
+        return twitterFactory;
+
+    }
+
+    public Status createNewStatusObject(twitter4j.Status originalStatus) {
 
         User newUser = new User();
         newUser.setTwHandle(originalStatus.getUser().getScreenName());
@@ -146,6 +158,27 @@ public class TwitterService {
         newStatus.setCreatedAt(originalStatus.getCreatedAt());
 
         return newStatus;
+
+    }
+
+    private void handleTwitterException(TwitterException e) throws TwitterServiceException {
+
+        if (e.isErrorMessageAvailable()) {
+
+            logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
+                    e.getErrorMessage(),
+                    e.getExceptionCode(),
+                    e);
+
+        } else {
+
+            logger.error("Unknown Twitter Exception — Exception Code: {}",
+                    e.getExceptionCode(),
+                    e);
+
+        }
+
+        throw new TwitterServiceException("Twitter Exception thrown.", e);
 
     }
 }
