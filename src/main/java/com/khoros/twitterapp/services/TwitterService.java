@@ -9,6 +9,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -84,30 +85,14 @@ public class TwitterService {
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
         Set<twitter4j.Status> cacheSet = cacheUp.getCacheSet();
-        Optional<List<Status>> optionalList = null;
+        Optional<List<twitter4j.Status>> optionalList = null;
 
         if(cacheSet.isEmpty()) {
 
             try {
 
-                optionalList =  Optional.ofNullable(twitterFactory.getHomeTimeline())
-                        .map(list -> {
-                            cacheUp.addStatusesToCache(list);
-                            return list.stream()
-                                    .filter(originalStatus -> {
-
-                                        if (StringUtils.isEmpty(keyword)) {
-
-                                            return true;
-
-                                        } else {
-
-                                            return originalStatus.getText().contains(keyword);
-                                        }
-                                    })
-                                    .map(thisStatus -> createNewStatusObject(thisStatus))
-                                    .collect(Collectors.toList());
-                        });
+                optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
+                optionalList.ifPresent((list) -> cacheUp.addStatusesToCache(list));
 
             } catch (TwitterException twitterException) {
 
@@ -119,31 +104,28 @@ public class TwitterService {
 
         } else {
 
-            optionalList =  Optional.of(
-                    cacheSet.stream()
-                            .filter(originalStatus -> {
-
-                                if (StringUtils.isEmpty(keyword)) {
-
-                                    return true;
-
-                                } else {
-
-                                    return originalStatus.getText().contains(keyword);
-                                }
-                            }).map(cacheStatus -> createNewStatusObject(cacheStatus))
-                            .collect(Collectors.toList())
-            );
+            List<twitter4j.Status> responseList = new ArrayList<>();
+            responseList.addAll(cacheSet);
+            optionalList = Optional.ofNullable(responseList);
 
         }
 
-        return optionalList;
+        return optionalList
+                .map(list -> list.stream()
+                      .filter(originalStatus -> {
 
-    }
+                          if (StringUtils.isEmpty(keyword)) {
 
-    public void setTWFactory(Twitter factory) {
+                              return true;
 
-        twitterFactory = factory;
+                          } else {
+
+                              return originalStatus.getText().contains(keyword);
+                          }
+                      })
+                      .map(thisStatus -> createNewStatusObject(thisStatus))
+                      .collect(Collectors.toList())
+                );
 
     }
 
