@@ -145,7 +145,7 @@ public final class TwitterService {
 
         } else {
 
-            return Optional.ofNullable(
+            return Optional.of(
                     cacheSet.stream()
                             .map(cacheStatus -> createNewStatusObject(cacheStatus))
                             .collect(Collectors.toList())
