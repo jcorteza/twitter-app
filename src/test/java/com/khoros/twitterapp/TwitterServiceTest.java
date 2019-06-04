@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.Assert;
+import org.mockito.InjectMocks;
 import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
@@ -24,30 +25,32 @@ import java.util.Set;
 public class TwitterServiceTest {
 
     // private Configuration originalConfig;
-    private TwitterService twSingleton;
+    private CacheUp cacheUp;
+    @InjectMocks private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
-    Set<twitter4j.Status> originalCacheSet;
+    private Set<twitter4j.Status> originalCacheSet;
 
     @Before
     public void setup() {
 
+        cacheUp = mock(CacheUp.class);
         twSingleton = TwitterService.getInstance();
         mockFactory = mock(Twitter.class);
         twSingleton.setTWFactory(mockFactory);
         testStatusText = "Tweet Test";
-        twResponse = new ResponseImplTest<twitter4j.Status>();
+        twResponse = new ResponseImplTest<>();
         exampleStatus = new Twitter4jStatusImpl();
         twResponse.add(exampleStatus);
-        originalCacheSet = CacheUp.getInstance().getCacheSet();
+        originalCacheSet = cacheUp.getCacheSet();
 
     }
 
     @After
     public void resetCacheUp() {
-        CacheUp.getInstance().setCacheSet(originalCacheSet);
+        reset(cacheUp);
     }
 
     @Test
@@ -105,7 +108,7 @@ public class TwitterServiceTest {
     @Test
     public void getCachedTimelineTest() {
 
-        Set<twitter4j.Status> testSet = new HashSet<twitter4j.Status>();
+        Set<twitter4j.Status> testSet = new HashSet<>();
         Iterator<twitter4j.Status> iterator = testSet.iterator();
         Optional<List<Status>> testList = null;
 
@@ -113,9 +116,9 @@ public class TwitterServiceTest {
             testSet.add(new Twitter4jStatusImpl());
         }
 
-        CacheUp.getInstance().setCacheSet(testSet);
         try {
 
+            when(cacheUp.getCacheSet()).thenReturn(testSet);
             testList = twSingleton.getHomeTimeline();
 
         } catch(TwitterServiceException e) {
@@ -124,35 +127,13 @@ public class TwitterServiceTest {
 
         }
 
-        Status testStatus1 = twSingleton.createNewStatusObject(iterator.next());
-        Status testStatus2 = twSingleton.createNewStatusObject(iterator.next());
-
-        Assert.assertTrue(testList.get().contains(testStatus1));
-        Assert.assertTrue(testList.get().contains(testStatus2));
+        Assert.assertTrue(testList.get().size() == 3);
     }
 
     @Test
     public void getFactoryTest() {
 
         Assert.assertEquals(mockFactory, TwitterService.getInstance().getTwitterFactory());
-
-    }
-
-
-    @Test
-    public void setTWFactoryTestConfig() {
-
-        ConfigurationBuilder testCB = new ConfigurationBuilder();
-        Configuration testConfig = testCB.setDebugEnabled(true)
-                .setOAuthAccessToken("authorizationToken")
-                .setOAuthAccessTokenSecret("authorizationTokenSecret")
-                .setOAuthConsumerKey("authorizationConsumerKey")
-                .setOAuthConsumerSecret("authorizationConsumerSecret")
-                .build();
-        twSingleton.setTWFactory(testConfig);
-
-        Assert.assertEquals(new TwitterFactory(testConfig).getInstance(), TwitterService.getInstance().getTwitterFactory());
-        Assert.assertEquals(testConfig, TwitterService.getInstance().getTwitterFactory().getConfiguration());
 
     }
 

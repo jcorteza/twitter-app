@@ -26,7 +26,7 @@ public final class TwitterService {
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     private static final TwitterService INSTANCE = new TwitterService();
     private static Twitter twitterFactory;
-    private CacheUp cacheUp = CacheUp.getInstance();
+    private CacheUp cacheUp = new CacheUp();
 
     private TwitterService() {
         // hidden constructor
@@ -132,12 +132,6 @@ public final class TwitterService {
         }
 
         return optionalList;
-
-    }
-
-    public void setTWFactory(Configuration newConfiguration) {
-
-        twitterFactory = new TwitterFactory(newConfiguration).getInstance();
 
     }
 

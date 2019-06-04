@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class CacheUp {
+public class CacheUp {
     // clean up interval 1 week
     private Set<Status> cacheSet = new HashSet<>();
 
@@ -18,7 +18,4 @@ public final class CacheUp {
         statusList.forEach(status -> cacheSet.add(status));
     }
 
-    public void setCacheSet(Set<Status> cacheSet) {
-        this.cacheSet = cacheSet;
-    }
 }
