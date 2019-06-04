@@ -32,7 +32,7 @@ public final class CacheUp {
     public Set<Status> getCacheStatusSet() {
 
         Date now = new Date();
-        Set<Map.Entry<String, CacheStatus>> cacheStatusEntries = CacheUp.getInstance().getCacheStatusHashMap().entrySet();
+        Set<Map.Entry<String, CacheStatus>> cacheStatusEntries = getCacheStatusHashMap().entrySet();
 
         cacheStatusSet.clear();
 
