@@ -138,16 +138,6 @@ public class MainResourceTest {
     @Test
     public void getHomeTimelineTestException() throws TwitterServiceException {
 
-        try {
-
-            when(mockFactory.getHomeTimeline()).thenReturn(exampleTwitterFeed);
-
-        } catch (TwitterException e) {
-
-            Assert.fail("Unit test failed due to Twitter Exception.");
-
-        }
-
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         Assert.assertEquals(500, mainResource.getHomeTimeline().getStatus());
