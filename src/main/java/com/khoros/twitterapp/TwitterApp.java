@@ -23,9 +23,6 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
         TwitterService.getInstance().setTWFactory(configuration.twitter4jConfigurationBuild().build());
 
         environment.jersey().register(new MainResource());
-
-        /*ScheduledFuture<?> executorService = Executors
-                .newScheduledThreadPool(1)
-                .scheduleWithFixedDelay(CacheUp.getInstance().getCleanCache(), 0, 5, TimeUnit.MINUTES);*/
+        
     }
 }
