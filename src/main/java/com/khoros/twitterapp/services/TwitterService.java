@@ -95,11 +95,11 @@ public final class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        try {
+        Set<twitter4j.Status> cacheSet = cacheUp.getCacheStatusSet();
 
-            Set<twitter4j.Status> cacheSet = cacheUp.getCacheStatusSet();
+        if(cacheSet.size() < 50) {
 
-            if(cacheSet.size() < 50) {
+            try {
 
                 return Optional.ofNullable(twitterFactory.getHomeTimeline())
                         .map(list -> {
@@ -120,37 +120,36 @@ public final class TwitterService {
                                     .map(thisStatus -> createNewStatusObject(thisStatus))
                                     .collect(Collectors.toList());
                         });
+            } catch (TwitterException twitterException) {
 
-            } else {
+                logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
 
-                return Optional.ofNullable(
-                        cacheSet.stream()
-                                .map(cacheStatus -> createNewStatusObject(cacheStatus))
-                                .collect(Collectors.toList())
-                );
+                if (twitterException.isErrorMessageAvailable()) {
 
-            }
+                    logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
+                            twitterException.getErrorMessage(),
+                            twitterException.getExceptionCode(),
+                            twitterException);
 
-        } catch (TwitterException twitterException) {
+                } else {
 
-            logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
+                    logger.error("Unknown Twitter Exception — Exception Code: {}",
+                            twitterException.getExceptionCode(),
+                            twitterException);
 
-            if (twitterException.isErrorMessageAvailable()) {
+                }
 
-                logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
-                        twitterException.getErrorMessage(),
-                        twitterException.getExceptionCode(),
-                        twitterException);
-
-            } else {
-
-                logger.error("Unknown Twitter Exception — Exception Code: {}",
-                        twitterException.getExceptionCode(),
-                        twitterException);
+                throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
 
             }
 
-            throw new TwitterServiceException("Twitter Exception thrown.", twitterException);
+        } else {
+
+            return Optional.ofNullable(
+                    cacheSet.stream()
+                            .map(cacheStatus -> createNewStatusObject(cacheStatus))
+                            .collect(Collectors.toList())
+            );
 
         }
 
