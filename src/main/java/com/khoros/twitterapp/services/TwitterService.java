@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class TwitterService {
@@ -96,57 +97,39 @@ public final class TwitterService {
 
         try {
 
-            return Optional.ofNullable(twitterFactory.getHomeTimeline())
-                    .map(list ->
-                        list.stream()
-                            .filter(originalStatus -> {
+            Set<twitter4j.Status> cacheSet = cacheUp.getCacheStatusSet();
 
-                                if (StringUtils.isEmpty(keyword)) {
+            if(cacheSet.size() < 50) {
 
-                                    return true;
+                return Optional.ofNullable(twitterFactory.getHomeTimeline())
+                        .map(list -> {
+                            list.forEach((twitterAPIStatus -> cacheUp.addStatusToCache(twitterAPIStatus)));
+                            list.addAll(cacheSet);
+                            return list.stream()
+                                    .filter(originalStatus -> {
 
-                                } else {
+                                        if (StringUtils.isEmpty(keyword)) {
 
-                                    return originalStatus.getText().contains(keyword);
-                                }
-                            })
-                            .filter(originalStatus -> {
-                                String cacheStatusKey = new StringBuilder()
-                                        .append(originalStatus.getCreatedAt())
-                                        .append("-")
-                                        .append(originalStatus.getUser().getScreenName())
-                                        .toString();
+                                            return true;
 
-                                if(cacheUp.getCacheStatusHashMap().containsKey(cacheStatusKey)) {
+                                        } else {
 
-                                    cacheUp.getCacheStatusList().add(
-                                            cacheUp.getCacheStatusHashMap().get(cacheStatusKey).getStatus()
-                                    );
+                                            return originalStatus.getText().contains(keyword);
+                                        }
+                                    })
+                                    .map(thisStatus -> createNewStatusObject(thisStatus))
+                                    .collect(Collectors.toList());
+                        });
 
-                                    return false;
+            } else {
 
-                                } else {
-                                    // return status if cache does NOT contain key
-                                    return true;
+                return Optional.ofNullable(
+                        cacheSet.stream()
+                                .map(cacheStatus -> createNewStatusObject(cacheStatus))
+                                .collect(Collectors.toList())
+                );
 
-                                }
-                            })
-                            .map(thisStatus -> {
-
-                                Status newStatusObject = createNewStatusObject(thisStatus);
-
-                                cacheUp.addStatusToCache(newStatusObject);
-                                return newStatusObject;
-
-                            })
-                            .collect(Collectors.toList())
-                    )
-                    .map(filteredList -> {
-                        filteredList.addAll(cacheUp.getCacheStatusList());
-                        cacheUp.getCacheStatusList().clear();
-                        return filteredList;
-                    });
-
+            }
 
         } catch (TwitterException twitterException) {
 
