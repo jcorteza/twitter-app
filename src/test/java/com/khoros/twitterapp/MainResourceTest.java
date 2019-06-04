@@ -166,20 +166,13 @@ public class MainResourceTest {
     }
 
     @Test
-    public void getHomeTimelineTestFilteredException() throws TwitterServiceException {
+    public void getHomeTimelineTestFilteredException() throws TwitterException {
 
-        try {
-
-            when(mockFactory.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
-
-        } catch (TwitterException e) {
-
-            throw new TwitterServiceException("test", e);
-
-        }
+        when(mockFactory.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         Assert.assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());
         Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
+        
     }
 
 }
