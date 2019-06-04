@@ -1,6 +1,5 @@
 package com.khoros.twitterapp;
 
-import com.khoros.twitterapp.models.CacheStatus;
 import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.models.Status;
@@ -16,10 +15,11 @@ import twitter4j.*;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class TwitterServiceTest {
 
@@ -29,7 +29,7 @@ public class TwitterServiceTest {
     private String testStatusText;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
-    HashMap<String, CacheStatus> originalCacheMap;
+    Set<twitter4j.Status> originalCacheSet;
 
     @Before
     public void setup() {
@@ -41,13 +41,13 @@ public class TwitterServiceTest {
         twResponse = new ResponseImplTest<twitter4j.Status>();
         exampleStatus = new Twitter4jStatusImpl();
         twResponse.add(exampleStatus);
-        originalCacheMap = CacheUp.getInstance().getCacheStatusHashMap();
+        originalCacheSet = CacheUp.getInstance().getCacheSet();
 
     }
 
     @After
     public void resetCacheUp() {
-        CacheUp.getInstance().setCacheStatusHashMap(originalCacheMap);
+        CacheUp.getInstance().setCacheSet(originalCacheSet);
     }
 
     @Test
@@ -105,15 +105,15 @@ public class TwitterServiceTest {
     @Test
     public void getCachedTimelineTest() {
 
-        HashMap<String, CacheStatus> testCacheMap = new HashMap<>();
-        Set<twitter4j.Status> testSet = new HashSet<>();
-        Optional<List<Status>> testList;
+        Set<twitter4j.Status> testSet = new HashSet<twitter4j.Status>();
+        Iterator<twitter4j.Status> iterator = testSet.iterator();
+        Optional<List<Status>> testList = null;
 
-        for (int i = 0; i < 50; i++) {
-            testCacheMap.put("testKey" + i, new CacheStatus(new Twitter4jStatusImpl()));
+        for (int i = 0; i < 3; i++) {
+            testSet.add(new Twitter4jStatusImpl());
         }
 
-        CacheUp.getInstance().setCacheStatusHashMap(testCacheMap);
+        CacheUp.getInstance().setCacheSet(testSet);
         try {
 
             testList = twSingleton.getHomeTimeline();
@@ -123,9 +123,12 @@ public class TwitterServiceTest {
             Assert.fail("TwitterService unit test failed due to TwitterServiceException.");
 
         }
-        Status testStatus1 =
 
-        Assert.assertEquals(, twSingleton.c);
+        Status testStatus1 = twSingleton.createNewStatusObject(iterator.next());
+        Status testStatus2 = twSingleton.createNewStatusObject(iterator.next());
+
+        Assert.assertTrue(testList.get().contains(testStatus1));
+        Assert.assertTrue(testList.get().contains(testStatus2));
     }
 
     @Test

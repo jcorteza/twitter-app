@@ -153,7 +153,7 @@ public final class TwitterService {
 
     }
 
-    private Status createNewStatusObject(twitter4j.Status originalStatus) {
+    public Status createNewStatusObject(twitter4j.Status originalStatus) {
 
         User newUser = new User();
         newUser.setTwHandle(originalStatus.getUser().getScreenName());
