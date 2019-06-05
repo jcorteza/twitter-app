@@ -23,6 +23,8 @@ public class MainResource {
 
     private final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private final TwitterService twitterService;
+    private final String headerACAO = "Access-Control-Allow-Origin";
+    private final String origin = "http://localhost:9000";
 
     @Inject
     public MainResource(TwitterService twitterService) {
@@ -43,6 +45,7 @@ public class MainResource {
             return twitterService.updateStatus(statusText)
                     .map(newStatus -> Response
                             .status(Response.Status.CREATED)
+                            .header(headerACAO,origin)
                             .entity(newStatus)
                             .build())
                     .orElse(Response
@@ -70,6 +73,7 @@ public class MainResource {
             return twitterService.getHomeTimeline()
                     .map(feedResponse -> Response
                             .status(Response.Status.OK)
+                            .header(headerACAO, origin)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
@@ -99,6 +103,7 @@ public class MainResource {
             return twitterService.getHomeTimelineFilteredByKeyword(keyword)
                     .map(feedResponse -> Response
                             .status(Response.Status.OK)
+                            .header(headerACAO,origin)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
