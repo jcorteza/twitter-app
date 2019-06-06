@@ -24,9 +24,9 @@ public class TwitterServiceTest {
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
+    private String testUrl;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
-    private Set<twitter4j.Status> originalCacheSet;
 
     @Before
     public void setup() {
@@ -38,8 +38,13 @@ public class TwitterServiceTest {
         testStatusText = "Tweet Test";
         twResponse = new ResponseImplTest<>();
         exampleStatus = new Twitter4jStatusImpl();
+        testUrl = new StringBuilder()
+            .append("https://twitter.com/")
+            .append(exampleStatus.getUser().getScreenName())
+            .append("/status/")
+            .append(exampleStatus.getId())
+            .toString();
         twResponse.add(exampleStatus);
-        originalCacheSet = cacheUp.getCacheSet();
 
     }
 
@@ -68,6 +73,7 @@ public class TwitterServiceTest {
         Assert.assertEquals(exampleStatus.getUser().getProfileImageURL(), serviceResponse.get().getUser().getProfileImageUrl());
         Assert.assertEquals(exampleStatus.getUser().getScreenName(), serviceResponse.get().getUser().getTwHandle());
         Assert.assertEquals(exampleStatus.getUser().getName(), serviceResponse.get().getUser().getName());
+        Assert.assertEquals(testUrl, serviceResponse.get().getPostUrl());
 
     }
 
@@ -92,6 +98,7 @@ public class TwitterServiceTest {
         Assert.assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
         Assert.assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
         Assert.assertEquals(exampleStatus.getUser().getProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
+        Assert.assertEquals(testUrl, responseList.get().get(0).getPostUrl());
 
     }
 
