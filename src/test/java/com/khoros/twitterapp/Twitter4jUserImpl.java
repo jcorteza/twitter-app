@@ -38,7 +38,7 @@ public class Twitter4jUserImpl implements User {
     }
 
     public String getProfileImageURL() {
-        return "http://www.google.com/image";
+        return null;
     }
 
     public String getBiggerProfileImageURL() {
@@ -54,7 +54,7 @@ public class Twitter4jUserImpl implements User {
     }
 
     public String get400x400ProfileImageURL() {
-        return null;
+        return "http://www.google.com/image";
     }
 
     public String getProfileImageURLHttps() {

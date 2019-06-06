@@ -70,7 +70,7 @@ public class TwitterServiceTest {
 
         Assert.assertEquals(exampleStatus.getText(), serviceResponse.get().getMessage());
         Assert.assertEquals(exampleStatus.getCreatedAt(), serviceResponse.get().getCreatedAt());
-        Assert.assertEquals(exampleStatus.getUser().getProfileImageURL(), serviceResponse.get().getUser().getProfileImageUrl());
+        Assert.assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), serviceResponse.get().getUser().getProfileImageUrl());
         Assert.assertEquals(exampleStatus.getUser().getScreenName(), serviceResponse.get().getUser().getTwHandle());
         Assert.assertEquals(exampleStatus.getUser().getName(), serviceResponse.get().getUser().getName());
         Assert.assertEquals(testUrl, serviceResponse.get().getPostUrl());
@@ -97,7 +97,7 @@ public class TwitterServiceTest {
         Assert.assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
         Assert.assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
         Assert.assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
-        Assert.assertEquals(exampleStatus.getUser().getProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
+        Assert.assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
         Assert.assertEquals(testUrl, responseList.get().get(0).getPostUrl());
 
     }
