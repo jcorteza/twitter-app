@@ -148,14 +148,22 @@ public class TwitterService {
     public Status createNewStatusObject(twitter4j.Status originalStatus) {
 
         User newUser = new User();
-        newUser.setTwHandle(originalStatus.getUser().getScreenName());
+        String handle = originalStatus.getUser().getScreenName();
+        newUser.setTwHandle(handle);
         newUser.setName(originalStatus.getUser().getName());
         newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
 
         Status newStatus = new com.khoros.twitterapp.models.Status();
+        String url = new StringBuilder()
+                .append("https://twitter.com/")
+                .append(handle)
+                .append("/status/")
+                .append(originalStatus.getId())
+                .toString();
         newStatus.setMessage(originalStatus.getText());
         newStatus.setUser(newUser);
         newStatus.setCreatedAt(originalStatus.getCreatedAt());
+        newStatus.setPostUrl(url);
 
         return newStatus;
 
