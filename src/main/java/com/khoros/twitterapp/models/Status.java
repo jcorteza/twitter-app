@@ -10,6 +10,8 @@ public class Status {
 
     private Date createdAt;
 
+    private String postUrl;
+
     public void setMessage(String message) {
 
         this.message = message;
@@ -44,5 +46,13 @@ public class Status {
 
         return createdAt;
         
+    }
+
+    public void setPostUrl(String postUrl) {
+        this.postUrl = postUrl;
+    }
+
+    public String getPostUrl() {
+        return postUrl;
     }
 }
