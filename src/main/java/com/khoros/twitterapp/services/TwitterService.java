@@ -151,7 +151,7 @@ public class TwitterService {
         String handle = originalStatus.getUser().getScreenName();
         newUser.setTwHandle(handle);
         newUser.setName(originalStatus.getUser().getName());
-        newUser.setProfileImageUrl(originalStatus.getUser().getProfileImageURL());
+        newUser.setProfileImageUrl(originalStatus.getUser().get400x400ProfileImageURL());
 
         Status newStatus = new com.khoros.twitterapp.models.Status();
         String url = new StringBuilder()
