@@ -129,6 +129,13 @@ public class TwitterService {
 
     }
 
+    public Optional<List<Status>> getUserTimeline() throws TwitterServiceException {
+
+        logger.info("Attempting to retrieve user timeline through Twittter API.");
+
+
+    }
+
     public void setCacheUp(CacheUp cacheUp) {
 
         this.cacheUp = cacheUp;
