@@ -82,17 +82,38 @@ public class TwitterService {
 
     public Optional<List<Status>> getHomeTimelineFilteredByKeyword(String keyword) throws TwitterServiceException {
 
+        return getFilteredTimeline("home", keyword);
+    }
+
+    public Optional<List<Status>> getUserTimeline() throws TwitterServiceException {
+
+        return getFilteredTimeline("user", null);
+    }
+
+    public Optional<List<Status>> getFilteredTimeline(String timelineType, String keyword) throws TwitterServiceException {
+
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        Set<twitter4j.Status> cacheSet = cacheUp.getHomeTimelineSet();
+        Set<twitter4j.Status> cacheSet = (timelineType == "home")?
+                cacheUp.getHomeTimelineSet() :
+                cacheUp.getUserTimelineSet();
         Optional<List<twitter4j.Status>> optionalList = null;
 
         if(cacheSet.isEmpty()) {
 
             try {
 
-                optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
-                optionalList.ifPresent((list) -> cacheUp.addToHomeTimelineSet(list));
+                if(timelineType == "home") {
+
+                    optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
+                    optionalList.ifPresent((list) -> cacheUp.addToHomeTimelineSet(list));
+
+                } else if (timelineType == "user"){
+
+                    optionalList = Optional.ofNullable(twitterFactory.getUserTimeline());
+                    optionalList.ifPresent((list) -> cacheUp.addToUserTimelineSet(list));
+
+                }
 
             } catch (TwitterException twitterException) {
 
@@ -126,13 +147,6 @@ public class TwitterService {
                       .map(thisStatus -> createNewStatusObject(thisStatus))
                       .collect(Collectors.toList())
                 );
-
-    }
-
-    public Optional<List<Status>> getUserTimeline() throws TwitterServiceException {
-
-        logger.info("Attempting to retrieve user timeline through Twittter API.");
-
 
     }
 
