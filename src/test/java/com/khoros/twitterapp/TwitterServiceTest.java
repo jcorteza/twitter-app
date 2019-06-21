@@ -103,6 +103,31 @@ public class TwitterServiceTest {
     }
 
     @Test
+    public void getUserTimelineTestSuccess() {
+
+        Optional<List<Status>> responseList = Optional.empty();
+
+        try {
+
+            when(mockFactory.getUserTimeline()).thenReturn(twResponse);
+            responseList = twSingleton.getUserTimeline();
+
+        } catch (Exception e) {
+
+            Assert.fail("Test failed due to Twitter Exception");
+
+        }
+
+        Assert.assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
+        Assert.assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
+        Assert.assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
+        Assert.assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
+        Assert.assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
+        Assert.assertEquals(testUrl, responseList.get().get(0).getPostUrl());
+
+    }
+
+    @Test
     public void getCachedTimelineTest() {
 
         Set<twitter4j.Status> testSet = new HashSet<>();
