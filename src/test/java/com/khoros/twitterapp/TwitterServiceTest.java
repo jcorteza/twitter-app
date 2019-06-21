@@ -114,7 +114,7 @@ public class TwitterServiceTest {
 
         try {
 
-            when(cacheUp.getCacheSet()).thenReturn(testSet);
+            when(cacheUp.getHomeTimelineSet()).thenReturn(testSet);
             testList = twSingleton.getHomeTimeline();
 
         } catch(TwitterServiceException e) {
@@ -139,6 +139,6 @@ public class TwitterServiceTest {
         CacheUp testCacheUp = new CacheUp();
         twSingleton.setCacheUp(testCacheUp);
 
-        Assert.assertEquals(testCacheUp.getCacheSet(), twSingleton.getCacheUp().getCacheSet());
+        Assert.assertEquals(testCacheUp.getHomeTimelineSet(), twSingleton.getCacheUp().getHomeTimelineSet());
     }
 }

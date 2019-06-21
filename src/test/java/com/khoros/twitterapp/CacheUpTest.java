@@ -21,14 +21,14 @@ public class CacheUpTest {
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
-         testCacheUp.addStatusesToCache(testList);
+         testCacheUp.addToHomeTimelineSet(testList);
     }
 
     @Test
     public void addStatusToCacheTest() {
 
-        Assert.assertTrue(testCacheUp.getCacheSet().contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getCacheSet().contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getCacheSet().contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getHomeTimelineSet().contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getHomeTimelineSet().contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getHomeTimelineSet().contains(testList.get(2)));
     }
 }
