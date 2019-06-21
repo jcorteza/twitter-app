@@ -121,6 +121,34 @@ public class MainResource {
 
     }
 
+    @Path("/user-timeline")
+    @GET
+    public Response getUserTimeline() {
+
+        logger.info("Accessing Twitter Service getUserTimeline feature.");
+
+        try {
+
+            return twitterService.getUserTimeline()
+                    .map(feedResponse -> Response
+                            .status(Response.Status.OK)
+                            .header(headerACAO, origin)
+                            .entity(feedResponse)
+                            .build())
+                    .orElse(Response
+                            .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .entity(TwitterService.GENERAL_ERR_MSG)
+                            .build());
+
+        } catch (TwitterServiceException twServiceException) {
+
+            logger.info("Twitter Service process aborted. Twitter Service Exception thrown.");
+
+            return handleException(twServiceException);
+        }
+
+    }
+
     private Response handleException(TwitterServiceException exception) {
 
         if (exception.getCause() == null) {
