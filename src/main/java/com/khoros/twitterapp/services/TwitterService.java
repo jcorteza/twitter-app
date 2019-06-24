@@ -76,19 +76,65 @@ public class TwitterService {
 
     public Optional<List<Status>> getHomeTimeline() throws TwitterServiceException {
 
-        return getHomeTimelineFilteredByKeyword(null);
+        return getFilteredHomeTimeline(null);
 
     }
 
-    public Optional<List<Status>> getHomeTimelineFilteredByKeyword(String keyword) throws TwitterServiceException {
+    public Optional<List<Status>> getFilteredHomeTimeline(String keyword) throws TwitterServiceException {
 
-        return getFilteredTimeline("home", keyword);
+        logger.info("Attempting to retrieve home timeline through Twitter API.");
+
+        Set<twitter4j.Status> cacheSet = cacheUp.getHomeTimelineSet();
+        Optional<List<twitter4j.Status>> optionalList = null;
+
+        if(cacheSet.isEmpty()) {
+
+            try {
+
+                    optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
+                    optionalList.ifPresent((list) -> cacheUp.addToHomeTimelineSet(list));
+
+            } catch (TwitterException twitterException) {
+
+                logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
+
+                handleTwitterException(twitterException);
+
+            }
+
+        } else {
+
+            List<twitter4j.Status> responseList = new ArrayList<>();
+            responseList.addAll(cacheSet);
+            optionalList = Optional.ofNullable(responseList);
+
+        }
+
+        return optionalList
+                .map(list -> list.stream()
+                        .filter(originalStatus -> {
+
+                            if (StringUtils.isEmpty(keyword)) {
+
+                                return true;
+
+                            } else {
+
+                                return originalStatus.getText().contains(keyword);
+                            }
+                        })
+                        .map(thisStatus -> createNewStatusObject(thisStatus))
+                        .collect(Collectors.toList())
+                );
+
     }
 
-    public Optional<List<Status>> getUserTimeline() throws TwitterServiceException {
-
-        return getFilteredTimeline("user", null);
-    }
+//    public Optional<List<Status>> getUserTimeline() throws TwitterServiceException {
+//
+//        logger.info("Attempting to retrieve user timeline through Twitter API.");
+//
+//
+//    }
 
     public Optional<List<Status>> getFilteredTimeline(String timelineType, String keyword) throws TwitterServiceException {
 
