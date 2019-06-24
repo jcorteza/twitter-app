@@ -96,11 +96,11 @@ public class TwitterService {
             try {
 
                     optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
-                    optionalList.ifPresent((list) -> cacheUp.addStatusToCache(CacheSetType.HOME, list));
+                    optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.HOME, list));
 
             } catch (TwitterException twitterException) {
 
-                logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
+                logger.info("Home timeline retrieval aborted. Twitter Exception thrown.");
 
                 handleTwitterException(twitterException);
 
@@ -133,41 +133,23 @@ public class TwitterService {
 
     }
 
-//    public Optional<List<Status>> getUserTimeline() throws TwitterServiceException {
-//
-//        logger.info("Attempting to retrieve user timeline through Twitter API.");
-//
-//
-//    }
+    public Optional<List<Status>> getUserTimeline() throws TwitterServiceException {
 
-    public Optional<List<Status>> getFilteredTimeline(String timelineType, String keyword) throws TwitterServiceException {
+        logger.info("Attempting to retrieve user timeline through Twitter API.");
 
-        logger.info("Attempting to retrieve home timeline through Twitter API.");
-
-        Set<twitter4j.Status> cacheSet = (timelineType == "home")?
-                cacheUp.getHomeTimelineSet() :
-                cacheUp.getUserTimelineSet();
+        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineSet(CacheSetType.USER);
         Optional<List<twitter4j.Status>> optionalList = null;
 
         if(cacheSet.isEmpty()) {
 
             try {
 
-                if(timelineType == "home") {
-
-                    optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
-                    optionalList.ifPresent((list) -> cacheUp.addToHomeTimelineSet(list));
-
-                } else if (timelineType == "user"){
-
-                    optionalList = Optional.ofNullable(twitterFactory.getUserTimeline());
-                    optionalList.ifPresent((list) -> cacheUp.addToUserTimelineSet(list));
-
-                }
+                optionalList = Optional.ofNullable(twitterFactory.getUserTimeline());
+                optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.USER,list));
 
             } catch (TwitterException twitterException) {
 
-                logger.info("Timeline retrieval aborted. Twitter Exception thrown.");
+                logger.info("User timeline retrieval aborted. Twitter Exception thrown.");
 
                 handleTwitterException(twitterException);
 
@@ -183,19 +165,8 @@ public class TwitterService {
 
         return optionalList
                 .map(list -> list.stream()
-                      .filter(originalStatus -> {
-
-                          if (StringUtils.isEmpty(keyword)) {
-
-                              return true;
-
-                          } else {
-
-                              return originalStatus.getText().contains(keyword);
-                          }
-                      })
-                      .map(thisStatus -> createNewStatusObject(thisStatus))
-                      .collect(Collectors.toList())
+                        .map(originalStatus -> createNewStatusObject(originalStatus))
+                        .collect(Collectors.toList())
                 );
 
     }
