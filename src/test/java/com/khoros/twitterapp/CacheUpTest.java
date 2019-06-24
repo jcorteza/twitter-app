@@ -1,6 +1,7 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.services.CacheUp;
+import com.khoros.twitterapp.services.TwitterService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,24 +22,20 @@ public class CacheUpTest {
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
-         testCacheUp.addToHomeTimelineSet(testList);
-         testCacheUp.addToUserTimelineSet(testList);
+         testCacheUp.addStatusToCache(TwitterService.CacheSetType.HOME, testList);
+         testCacheUp.addStatusToCache(TwitterService.CacheSetType.USER, testList);
 
     }
 
     @Test
-    public void addToHomeTimelineSetTest() {
+    public void addStatusToCacheTest() {
 
-        Assert.assertTrue(testCacheUp.getHomeTimelineSet().contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getHomeTimelineSet().contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getHomeTimelineSet().contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.HOME).contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.HOME).contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.HOME).contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.USER).contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.USER).contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.USER).contains(testList.get(2)));
     }
 
-    @Test
-    public void addToUserTimelineSetTest() {
-
-        Assert.assertTrue(testCacheUp.getUserTimelineSet().contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getUserTimelineSet().contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getUserTimelineSet().contains(testList.get(2)));
-    }
 }
