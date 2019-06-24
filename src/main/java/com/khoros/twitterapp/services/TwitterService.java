@@ -88,7 +88,7 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        Set<twitter4j.Status> cacheSet = cacheUp.getHomeTimelineSet();
+        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineSet(CacheSetType.HOME);
         Optional<List<twitter4j.Status>> optionalList = null;
 
         if(cacheSet.isEmpty()) {
@@ -96,7 +96,7 @@ public class TwitterService {
             try {
 
                     optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
-                    optionalList.ifPresent((list) -> cacheUp.addToHomeTimelineSet(list));
+                    optionalList.ifPresent((list) -> cacheUp.addStatusToCache(CacheSetType.HOME, list));
 
             } catch (TwitterException twitterException) {
 
