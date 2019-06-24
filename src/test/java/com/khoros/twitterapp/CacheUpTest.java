@@ -30,12 +30,12 @@ public class CacheUpTest {
     @Test
     public void addStatusToCacheTest() {
 
-        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.HOME).contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.HOME).contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.HOME).contains(testList.get(2)));
-        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.USER).contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.USER).contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getTimelineSet(TwitterService.CacheSetType.USER).contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.HOME).contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.HOME).contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.HOME).contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.USER).contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.USER).contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.USER).contains(testList.get(2)));
     }
 
 }

@@ -16,7 +16,7 @@ public class CacheUp {
         cacheMap.put(TwitterService.CacheSetType.USER, initialSet);
     }
 
-    public Set<Status> getTimelineSet(TwitterService.CacheSetType setType) {
+    public Set<Status> getTimelineCache(TwitterService.CacheSetType setType) {
         return cacheMap.get(setType);
     }
 

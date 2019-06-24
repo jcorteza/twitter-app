@@ -173,7 +173,7 @@ public class MainResourceTest {
     @Test
     public void getHomeTimelineTestFilteredException() throws TwitterServiceException {
 
-        when(cacheUp.getTimelineSet(TwitterService.CacheSetType.HOME)).thenReturn(new HashSet<>());
+        when(cacheUp.getTimelineCache(TwitterService.CacheSetType.HOME)).thenReturn(new HashSet<>());
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         Assert.assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());

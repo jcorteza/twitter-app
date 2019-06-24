@@ -10,7 +10,6 @@ import twitter4j.TwitterException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -60,7 +59,7 @@ public class TwitterService {
                 responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
                         .map(s -> createNewStatusObject(s));
 
-                cacheUp.getTimelineSet(CacheSetType.HOME).clear();
+                cacheUp.getTimelineCache(CacheSetType.HOME).clear();
                 Optional.ofNullable(twitterFactory.getHomeTimeline())
                         .ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.HOME,list));
                 Optional.ofNullable(twitterFactory.getUserTimeline())
@@ -88,7 +87,7 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineSet(CacheSetType.HOME);
+        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineCache(CacheSetType.HOME);
         Optional<List<twitter4j.Status>> optionalList = null;
 
         if(cacheSet.isEmpty()) {
@@ -137,7 +136,7 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve user timeline through Twitter API.");
 
-        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineSet(CacheSetType.USER);
+        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineCache(CacheSetType.USER);
         Optional<List<twitter4j.Status>> optionalList = null;
 
         if(cacheSet.isEmpty()) {
