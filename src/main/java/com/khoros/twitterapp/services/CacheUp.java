@@ -3,23 +3,36 @@ package com.khoros.twitterapp.services;
 import twitter4j.Status;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class CacheUp {
-//    private Set<Status> homeTimelineSet = new HashSet<>();
-//    private Set<Status> userTimelineSet = new HashSet<>();
-    private HashMap<String, Set<Status>> cacheMap = new HashMap<>();
+    private HashMap<TwitterService.CacheSetType, Set<Status>> cacheMap = new HashMap<>();
 
-    public Set<Status> getTimelineSet(String setType) {
+    public Set<Status> getTimelineSet(TwitterService.CacheSetType setType) {
         return cacheMap.get(setType);
     }
 
-    public void addStatusToCache(String setType, List<Status> statusList) {
-        Set<Status> currentSet = cacheMap.get(setType);
+    public void addStatusToCache(TwitterService.CacheSetType setType, List<Status> statusList) {
 
-        statusList.forEach(status -> currentSet.add(status));
-        cacheMap.replace(setType,currentSet);
+        Set<Status> currentSet;
+
+        if(cacheMap.containsKey(setType)) {
+
+            currentSet = cacheMap.get(setType);
+
+            statusList.forEach(status -> currentSet.add(status));
+            cacheMap.replace(setType,currentSet);
+
+        } else {
+
+            currentSet = new HashSet<>();
+
+            statusList.forEach(status -> currentSet.add(status));
+            cacheMap.put(setType, currentSet);
+        }
+
     }
 
 }

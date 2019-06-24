@@ -10,6 +10,7 @@ import twitter4j.TwitterException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -24,8 +25,9 @@ public class TwitterService {
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
-    private CacheUp cacheUp;
     public Twitter twitterFactory;
+    public enum CacheSetType { HOME, USER };
+    private CacheUp cacheUp;
 
     @Inject
     public TwitterService(Twitter twitterFactory) {
