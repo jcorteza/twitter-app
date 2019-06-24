@@ -60,9 +60,11 @@ public class TwitterService {
                 responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
                         .map(s -> createNewStatusObject(s));
 
-                cacheUp.getHomeTimelineSet().clear();
+                cacheUp.getTimelineSet(CacheSetType.HOME).clear();
                 Optional.ofNullable(twitterFactory.getHomeTimeline())
-                        .ifPresent(list -> cacheUp.addToHomeTimelineSet(list));
+                        .ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.HOME,list));
+                Optional.ofNullable(twitterFactory.getUserTimeline())
+                        .ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.USER, list));
 
             } catch (TwitterException twitterException) {
 
