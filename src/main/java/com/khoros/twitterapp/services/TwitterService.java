@@ -59,8 +59,7 @@ public class TwitterService {
                 responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
                         .map(s -> createNewStatusObject(s));
 
-                cacheUp.getTimelineCache(CacheListType.HOME).clear();
-                cacheUp.getTimelineCache(CacheListType.USER).clear();
+                cacheUp.getTimelineCache().clear();
 
             } catch (TwitterException twitterException) {
 
@@ -84,15 +83,18 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        List<twitter4j.Status> cacheList = cacheUp.getTimelineCache(CacheListType.HOME);
         Optional<List<twitter4j.Status>> optionalList = null;
 
-        if(cacheList.isEmpty()) {
+        if(cacheUp.getTimelineCache().containsKey(CacheListType.HOME)) {
+
+            optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.HOME));
+
+        } else {
 
             try {
 
-                    optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
-                    optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheListType.HOME, list));
+                optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
+                optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheListType.HOME, list));
 
             } catch (TwitterException twitterException) {
 
@@ -101,12 +103,6 @@ public class TwitterService {
                 handleTwitterException(twitterException);
 
             }
-
-        } else {
-
-            List<twitter4j.Status> responseList = new ArrayList<>();
-            responseList.addAll(cacheList);
-            optionalList = Optional.ofNullable(responseList);
 
         }
 
@@ -133,10 +129,13 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve user timeline through Twitter API.");
 
-        List<twitter4j.Status> cacheList = cacheUp.getTimelineCache(CacheListType.USER);
         Optional<List<twitter4j.Status>> optionalList = null;
 
-        if(cacheList.isEmpty()) {
+        if(cacheUp.getTimelineCache().containsKey(CacheListType.USER)) {
+
+            optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.USER));
+
+        } else {
 
             try {
 
@@ -150,12 +149,6 @@ public class TwitterService {
                 handleTwitterException(twitterException);
 
             }
-
-        } else {
-
-            List<twitter4j.Status> responseList = new ArrayList<>();
-            responseList.addAll(cacheList);
-            optionalList = Optional.ofNullable(responseList);
 
         }
 
