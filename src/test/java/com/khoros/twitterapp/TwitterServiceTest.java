@@ -13,10 +13,10 @@ import org.junit.Before;
 import org.junit.Assert;
 import twitter4j.*;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class TwitterServiceTest {
 
@@ -130,17 +130,21 @@ public class TwitterServiceTest {
     @Test
     public void getCachedTimelineTest() {
 
-        Set<twitter4j.Status> testSet = new HashSet<>();
-        Optional<List<Status>> testList = null;
+        List<twitter4j.Status> testList = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            testSet.add(new Twitter4jStatusImpl());
+            testList.add(new Twitter4jStatusImpl());
         }
+
+        HashMap<TwitterService.CacheListType, List<twitter4j.Status>> testHashMap = new HashMap<>();
+        Optional<List<Status>> testResponse = null;
+
+        testHashMap.put(TwitterService.CacheListType.HOME, testList);
 
         try {
 
-            when(cacheUp.getTimelineCache(TwitterService.CacheSetType.HOME)).thenReturn(testSet);
-            testList = twSingleton.getHomeTimeline();
+            when(cacheUp.getTimelineCache()).thenReturn(testHashMap);
+            testResponse = twSingleton.getHomeTimeline();
 
         } catch(TwitterServiceException e) {
 
@@ -148,7 +152,7 @@ public class TwitterServiceTest {
 
         }
 
-        Assert.assertTrue(testList.get().size() == 3);
+        Assert.assertTrue(testResponse.get().size() == 3);
     }
 
     @Test
@@ -164,6 +168,6 @@ public class TwitterServiceTest {
         CacheUp testCacheUp = new CacheUp();
         twSingleton.setCacheUp(testCacheUp);
 
-        Assert.assertEquals(testCacheUp.getTimelineCache(TwitterService.CacheSetType.HOME), twSingleton.getCacheUp().getTimelineCache(TwitterService.CacheSetType.HOME));
+        Assert.assertEquals(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.HOME), twSingleton.getCacheUp().getTimelineCache().get(TwitterService.CacheListType.HOME));
     }
 }

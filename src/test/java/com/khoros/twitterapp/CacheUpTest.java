@@ -22,20 +22,20 @@ public class CacheUpTest {
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
-         testCacheUp.addStatusToCache(TwitterService.CacheSetType.HOME, testList);
-         testCacheUp.addStatusToCache(TwitterService.CacheSetType.USER, testList);
+         testCacheUp.addStatusToCache(TwitterService.CacheListType.HOME, testList);
+         testCacheUp.addStatusToCache(TwitterService.CacheListType.USER, testList);
 
     }
 
     @Test
     public void addStatusToCacheTest() {
 
-        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.HOME).contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.HOME).contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.HOME).contains(testList.get(2)));
-        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.USER).contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.USER).contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getTimelineCache(TwitterService.CacheSetType.USER).contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.HOME).contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.HOME).contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.HOME).contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.USER).contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.USER).contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.USER).contains(testList.get(2)));
     }
 
 }
