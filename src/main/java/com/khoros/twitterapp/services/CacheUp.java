@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Set;
 
 public class CacheUp {
-    private Set<Status> initialSet = new HashSet<>();
     private HashMap<TwitterService.CacheSetType, Set<Status>> cacheMap = new HashMap<>();
 
     public CacheUp() {
-        cacheMap.put(TwitterService.CacheSetType.HOME, initialSet);
-        cacheMap.put(TwitterService.CacheSetType.USER, initialSet);
+        cacheMap.put(TwitterService.CacheSetType.HOME, new HashSet<>());
+        cacheMap.put(TwitterService.CacheSetType.USER, new HashSet<>());
     }
 
     public Set<Status> getTimelineCache(TwitterService.CacheSetType setType) {
+        System.out.println(setType);
         return cacheMap.get(setType);
     }
 
@@ -25,7 +25,7 @@ public class CacheUp {
         Set<Status> currentSet = cacheMap.get(setType);
 
         statusList.forEach(status -> currentSet.add(status));
-        cacheMap.replace(setType,currentSet);
+        cacheMap.replace(setType, currentSet);
 
     }
 
