@@ -24,7 +24,7 @@ public class CacheUp {
 
         Set<Status> currentSet = cacheMap.get(setType);
 
-        statusList.forEach(status -> currentSet.add(status));
+        currentSet.addAll(statusList);
         cacheMap.replace(setType, currentSet);
 
     }
