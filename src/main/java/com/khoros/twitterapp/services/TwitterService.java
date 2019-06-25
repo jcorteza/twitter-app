@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 
@@ -25,7 +25,7 @@ public class TwitterService {
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
-    public enum CacheSetType { HOME, USER };
+    public enum CacheListType { HOME, USER };
     private CacheUp cacheUp;
 
     @Inject
@@ -59,11 +59,8 @@ public class TwitterService {
                 responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
                         .map(s -> createNewStatusObject(s));
 
-                cacheUp.getTimelineCache(CacheSetType.HOME).clear();
-                Optional.ofNullable(twitterFactory.getHomeTimeline())
-                        .ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.HOME,list));
-                Optional.ofNullable(twitterFactory.getUserTimeline())
-                        .ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.USER, list));
+                cacheUp.getTimelineCache(CacheListType.HOME).clear();
+                cacheUp.getTimelineCache(CacheListType.USER).clear();
 
             } catch (TwitterException twitterException) {
 
@@ -87,15 +84,15 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineCache(CacheSetType.HOME);
+        List<twitter4j.Status> cacheList = cacheUp.getTimelineCache(CacheListType.HOME);
         Optional<List<twitter4j.Status>> optionalList = null;
 
-        if(cacheSet.isEmpty()) {
+        if(cacheList.isEmpty()) {
 
             try {
 
                     optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
-                    optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.HOME, list));
+                    optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheListType.HOME, list));
 
             } catch (TwitterException twitterException) {
 
@@ -108,7 +105,7 @@ public class TwitterService {
         } else {
 
             List<twitter4j.Status> responseList = new ArrayList<>();
-            responseList.addAll(cacheSet);
+            responseList.addAll(cacheList);
             optionalList = Optional.ofNullable(responseList);
 
         }
@@ -136,15 +133,15 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve user timeline through Twitter API.");
 
-        Set<twitter4j.Status> cacheSet = cacheUp.getTimelineCache(CacheSetType.USER);
+        List<twitter4j.Status> cacheList = cacheUp.getTimelineCache(CacheListType.USER);
         Optional<List<twitter4j.Status>> optionalList = null;
 
-        if(cacheSet.isEmpty()) {
+        if(cacheList.isEmpty()) {
 
             try {
 
                 optionalList = Optional.ofNullable(twitterFactory.getUserTimeline());
-                optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheSetType.USER,list));
+                optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheListType.USER,list));
 
             } catch (TwitterException twitterException) {
 
@@ -157,7 +154,7 @@ public class TwitterService {
         } else {
 
             List<twitter4j.Status> responseList = new ArrayList<>();
-            responseList.addAll(cacheSet);
+            responseList.addAll(cacheList);
             optionalList = Optional.ofNullable(responseList);
 
         }

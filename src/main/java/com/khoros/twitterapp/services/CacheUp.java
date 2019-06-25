@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CacheUp {
-    private HashMap<TwitterService.CacheSetType, List<Status>> cacheMap = new HashMap<>();
+    private HashMap<TwitterService.CacheListType, List<Status>> cacheMap = new HashMap<>();
 
-    public List<Status> getTimelineCache(TwitterService.CacheSetType setType) {
+    public List<Status> getTimelineCache(TwitterService.CacheListType setType) {
         return cacheMap.get(setType);
     }
 
-    public void addStatusToCache(TwitterService.CacheSetType setType, List<Status> statusList) {
+    public void addStatusToCache(TwitterService.CacheListType setType, List<Status> statusList) {
 
         cacheMap.put(setType, statusList);
 
