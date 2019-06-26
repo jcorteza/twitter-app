@@ -6,17 +6,19 @@ import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.models.Status;
 
 
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.Assert;
 import twitter4j.*;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class TwitterServiceTest {
 
@@ -60,27 +62,27 @@ public class TwitterServiceTest {
 
         } catch (TwitterException e) {
 
-            Assert.fail("Test failed due to Twitter Exception");
+            fail("Test failed due to Twitter Exception");
 
         } catch (TwitterServiceException e) {
 
-            Assert.fail("Test failed due to Twitter Service Exception.");
+            fail("Test failed due to Twitter Service Exception.");
 
         }
 
-        Assert.assertEquals(exampleStatus.getText(), serviceResponse.get().getMessage());
-        Assert.assertEquals(exampleStatus.getCreatedAt(), serviceResponse.get().getCreatedAt());
-        Assert.assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), serviceResponse.get().getUser().getProfileImageUrl());
-        Assert.assertEquals(exampleStatus.getUser().getScreenName(), serviceResponse.get().getUser().getTwHandle());
-        Assert.assertEquals(exampleStatus.getUser().getName(), serviceResponse.get().getUser().getName());
-        Assert.assertEquals(testUrl, serviceResponse.get().getPostUrl());
+        assertEquals(exampleStatus.getText(), serviceResponse.get().getMessage());
+        assertEquals(exampleStatus.getCreatedAt(), serviceResponse.get().getCreatedAt());
+        assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), serviceResponse.get().getUser().getProfileImageUrl());
+        assertEquals(exampleStatus.getUser().getScreenName(), serviceResponse.get().getUser().getTwHandle());
+        assertEquals(exampleStatus.getUser().getName(), serviceResponse.get().getUser().getName());
+        assertEquals(testUrl, serviceResponse.get().getPostUrl());
 
     }
 
     @Test
     public void getHomeTimelineTestSuccess() {
 
-        Optional<List<Status>> responseList = Optional.empty();
+        Optional<List<Status>> responseList = null;
 
         try {
 
@@ -89,47 +91,76 @@ public class TwitterServiceTest {
 
         } catch (Exception e) {
 
-            Assert.fail("Test failed due to Twitter Exception");
+            fail("Test failed due to Twitter Exception");
 
         }
 
-        Assert.assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
-        Assert.assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
-        Assert.assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
-        Assert.assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
-        Assert.assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
-        Assert.assertEquals(testUrl, responseList.get().get(0).getPostUrl());
+        assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
+        assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
+        assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
+        assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
+        assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
+        assertEquals(testUrl, responseList.get().get(0).getPostUrl());
+
+    }
+
+    @Test
+    public void getUserTimelineTestSuccess() {
+
+        Optional<List<Status>> responseList = Optional.empty();
+
+        try {
+
+            when(mockFactory.getUserTimeline()).thenReturn(twResponse);
+            responseList = twSingleton.getUserTimeline();
+
+        } catch (Exception e) {
+
+            fail("Test failed due to Twitter Exception");
+
+        }
+
+        assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
+        assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
+        assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
+        assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
+        assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
+        assertEquals(testUrl, responseList.get().get(0).getPostUrl());
 
     }
 
     @Test
     public void getCachedTimelineTest() {
 
-        Set<twitter4j.Status> testSet = new HashSet<>();
-        Optional<List<Status>> testList = null;
+        List<twitter4j.Status> testList = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            testSet.add(new Twitter4jStatusImpl());
+            testList.add(new Twitter4jStatusImpl());
         }
+
+        HashMap<String, List<twitter4j.Status>> testHashMap = new HashMap<>();
+        Optional<List<Status>> testResponse = null;
+
+        testHashMap.put("home", testList);
 
         try {
 
-            when(cacheUp.getCacheSet()).thenReturn(testSet);
-            testList = twSingleton.getHomeTimeline();
+            when(cacheUp.getTimelineCache()).thenReturn(testHashMap);
+            testResponse = twSingleton.getHomeTimeline();
 
         } catch(TwitterServiceException e) {
 
-            Assert.fail("TwitterService unit test failed due to TwitterServiceException.");
+            fail("TwitterService unit test failed due to TwitterServiceException.");
 
         }
 
-        Assert.assertTrue(testList.get().size() == 3);
+        assertTrue(testResponse.get().size() == 3);
     }
 
     @Test
     public void getFactoryTest() {
 
-        Assert.assertEquals(mockFactory, twSingleton.getTwitterFactory());
+        assertEquals(mockFactory, twSingleton.getTwitterFactory());
 
     }
 
@@ -139,6 +170,6 @@ public class TwitterServiceTest {
         CacheUp testCacheUp = new CacheUp();
         twSingleton.setCacheUp(testCacheUp);
 
-        Assert.assertEquals(testCacheUp.getCacheSet(), twSingleton.getCacheUp().getCacheSet());
+        assertEquals(testCacheUp.getTimelineCache().get("home"), twSingleton.getCacheUp().getTimelineCache().get("home"));
     }
 }

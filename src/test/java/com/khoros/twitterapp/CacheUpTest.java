@@ -1,6 +1,7 @@
 package com.khoros.twitterapp;
 
 import com.khoros.twitterapp.services.CacheUp;
+import com.khoros.twitterapp.services.TwitterService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +22,20 @@ public class CacheUpTest {
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
          testList.add(new Twitter4jStatusImpl());
-         testCacheUp.addStatusesToCache(testList);
+         testCacheUp.addStatusToCache("home", testList);
+         testCacheUp.addStatusToCache("user", testList);
+
     }
 
     @Test
     public void addStatusToCacheTest() {
 
-        Assert.assertTrue(testCacheUp.getCacheSet().contains(testList.get(0)));
-        Assert.assertTrue(testCacheUp.getCacheSet().contains(testList.get(1)));
-        Assert.assertTrue(testCacheUp.getCacheSet().contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get("home").contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get("home").contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get("home").contains(testList.get(2)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get("user").contains(testList.get(0)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get("user").contains(testList.get(1)));
+        Assert.assertTrue(testCacheUp.getTimelineCache().get("user").contains(testList.get(2)));
     }
+
 }

@@ -17,7 +17,7 @@ import twitter4j.ResponseList;
 import twitter4j.TwitterException;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
@@ -86,23 +86,9 @@ public class MainResourceTest {
     @Test
     public void postStatusUpdateTestException() throws TwitterServiceException {
 
-        try {
+        Assert.assertEquals(403, mainResource.postStatusUpdate("").getStatus());
+        Assert.assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate("").getEntity());
 
-            twitter4j.Status testStatus = new Twitter4jStatusImpl();
-            when(mockFactory.updateStatus(exampleText)).thenReturn(testStatus);
-
-        } catch (TwitterException e) {
-
-            Assert.fail("Unit test failed due to Twitter Exception.");
-
-        }
-
-        when(twSingleton.updateStatus(exampleText)).thenThrow(
-                new TwitterException(exceptionText)
-        );
-
-        Assert.assertEquals(500, mainResource.postStatusUpdate(exampleText).getStatus());
-        Assert.assertEquals(exceptionText, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
     @Test
@@ -173,7 +159,7 @@ public class MainResourceTest {
     @Test
     public void getHomeTimelineTestFilteredException() throws TwitterServiceException {
 
-        when(cacheUp.getCacheSet()).thenReturn(new HashSet<>());
+        when(cacheUp.getTimelineCache()).thenReturn(new HashMap<>());
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         Assert.assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());
