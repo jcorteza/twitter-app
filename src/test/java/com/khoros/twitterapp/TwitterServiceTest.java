@@ -138,10 +138,10 @@ public class TwitterServiceTest {
             testList.add(new Twitter4jStatusImpl());
         }
 
-        HashMap<TwitterService.CacheListType, List<twitter4j.Status>> testHashMap = new HashMap<>();
+        HashMap<String, List<twitter4j.Status>> testHashMap = new HashMap<>();
         Optional<List<Status>> testResponse = null;
 
-        testHashMap.put(TwitterService.CacheListType.HOME, testList);
+        testHashMap.put("home", testList);
 
         try {
 
@@ -170,6 +170,6 @@ public class TwitterServiceTest {
         CacheUp testCacheUp = new CacheUp();
         twSingleton.setCacheUp(testCacheUp);
 
-        assertEquals(testCacheUp.getTimelineCache().get(TwitterService.CacheListType.HOME), twSingleton.getCacheUp().getTimelineCache().get(TwitterService.CacheListType.HOME));
+        assertEquals(testCacheUp.getTimelineCache().get("home"), twSingleton.getCacheUp().getTimelineCache().get("home"));
     }
 }

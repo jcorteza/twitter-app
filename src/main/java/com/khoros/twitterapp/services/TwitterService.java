@@ -23,7 +23,6 @@ public class TwitterService {
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
-    public enum CacheListType { HOME, USER };
     private CacheUp cacheUp;
 
     @Inject
@@ -81,14 +80,14 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.HOME));
+        Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get("home"));
 
         if(optionalList.equals(Optional.empty())) {
 
             try {
 
                 optionalList = Optional.ofNullable(twitterFactory.getHomeTimeline());
-                optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheListType.HOME, list));
+                optionalList.ifPresent(list -> cacheUp.addStatusToCache("home", list));
 
             } catch (TwitterException twitterException) {
 
@@ -123,14 +122,14 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve user timeline through Twitter API.");
 
-        Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.USER));
+        Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get("user"));
 
         if(optionalList.equals(Optional.empty())) {
 
             try {
 
                 optionalList = Optional.ofNullable(twitterFactory.getUserTimeline());
-                optionalList.ifPresent(list -> cacheUp.addStatusToCache(CacheListType.USER,list));
+                optionalList.ifPresent(list -> cacheUp.addStatusToCache("user",list));
 
             } catch (TwitterException twitterException) {
 
