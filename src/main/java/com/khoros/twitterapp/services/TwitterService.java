@@ -82,7 +82,7 @@ public class TwitterService {
 
         Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get("home"));
 
-        if(optionalList.equals(Optional.empty())) {
+        if(optionalList.isEmpty()) {
 
             try {
 
@@ -124,7 +124,7 @@ public class TwitterService {
 
         Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get("user"));
 
-        if(optionalList.equals(Optional.empty())) {
+        if(optionalList.isEmpty()) {
 
             try {
 
