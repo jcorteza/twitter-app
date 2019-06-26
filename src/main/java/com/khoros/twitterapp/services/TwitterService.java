@@ -81,13 +81,9 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve home timeline through Twitter API.");
 
-        Optional<List<twitter4j.Status>> optionalList = null;
+        Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.HOME));
 
-        if(cacheUp.getTimelineCache().containsKey(CacheListType.HOME)) {
-
-            optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.HOME));
-
-        } else {
+        if(optionalList == null) {
 
             try {
 
@@ -127,13 +123,9 @@ public class TwitterService {
 
         logger.info("Attempting to retrieve user timeline through Twitter API.");
 
-        Optional<List<twitter4j.Status>> optionalList = null;
+        Optional<List<twitter4j.Status>> optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.USER));
 
-        if(cacheUp.getTimelineCache().containsKey(CacheListType.USER)) {
-
-            optionalList = Optional.ofNullable(cacheUp.getTimelineCache().get(CacheListType.USER));
-
-        } else {
+        if(optionalList == null) {
 
             try {
 
