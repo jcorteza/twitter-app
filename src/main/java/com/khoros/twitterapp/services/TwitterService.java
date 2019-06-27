@@ -109,7 +109,7 @@ public class TwitterService {
 
                             } else {
 
-                                return originalStatus.getText().contains(keyword);
+                                return originalStatus.getText().toLowerCase().contains(keyword.toLowerCase());
                             }
                         })
                         .map(thisStatus -> createNewStatusObject(thisStatus))
