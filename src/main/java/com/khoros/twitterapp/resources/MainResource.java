@@ -50,6 +50,7 @@ public class MainResource {
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
@@ -78,6 +79,7 @@ public class MainResource {
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
@@ -108,6 +110,7 @@ public class MainResource {
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
@@ -137,6 +140,7 @@ public class MainResource {
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
+                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
