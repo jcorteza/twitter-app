@@ -149,6 +149,11 @@ public class TwitterService {
 
     }
 
+    public Optional<Status> replyToTweet() {
+
+        Optional<Status>
+    }
+
     public void setCacheUp(CacheUp cacheUp) {
 
         this.cacheUp = cacheUp;
