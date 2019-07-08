@@ -58,7 +58,7 @@ public class MainResource {
 
             logger.info("Twitter Service process, updateStatus, aborted. Twitter Service Excpetion thrown.");
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
         }
 
     }
@@ -87,7 +87,7 @@ public class MainResource {
 
             logger.info("Twitter Service process, getHomeTimeline, aborted. Twitter Service Exception thrown." );
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
 
         }
 
@@ -118,7 +118,7 @@ public class MainResource {
 
             logger.info("Twitter Service process, getFilteredHomeTimeline, aborted. Twitter Service Exception thrown." );
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
 
         }
 
@@ -148,7 +148,7 @@ public class MainResource {
 
             logger.info("Twitter Service processk, getUserTimeline, aborted. Twitter Service Exception thrown.");
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
         }
 
     }
@@ -178,11 +178,11 @@ public class MainResource {
 
             logger.info("Twitter Service process, replyToTweet, aborted. Twitter Service Excpetion thrown.");
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
         }
     }
 
-    private Response handleException(TwitterServiceException exception) {
+    private Response createExceptionResponseObject(TwitterServiceException exception) {
 
         if (exception.getCause() == null) {
 
