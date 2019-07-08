@@ -8,6 +8,7 @@ import com.khoros.twitterapp.models.Status;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -150,6 +151,36 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getUser().getScreenName(), exampleNewStatus.getUser().getTwHandle());
         assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), exampleNewStatus.getUser().getProfileImageUrl());
         assertEquals(exampleStatus.getId(), exampleNewStatus.getStatusID());
+
+    }
+
+    @Test
+    public void verifyTextLengthTestEmpty() {
+
+        try {
+            twSingleton.updateStatus(null);
+            fail("Expected a TwitterServiceException to be thrown.");
+        } catch (TwitterServiceException twServiceException){
+            assertEquals(twServiceException.getMessage(), TwitterService.NO_TWEET_TEXT_MSG);
+        }
+
+    }
+
+    @Test
+    public void verifyTextLengthTestTooLong() {
+
+        StringBuilder sb = new StringBuilder();
+
+        for(int i = 0; i < 10; i++) {
+            sb.append("abcdefghijklmnopqrstuvwxyzabc");
+        }
+
+        try {
+            twSingleton.updateStatus(sb.toString());
+            fail("Expected a TwitterServiceException to be thrown.");
+        } catch (TwitterServiceException twServiceException){
+            assertEquals(twServiceException.getMessage(), TwitterService.TWEET_TOO_LONG_MSG);
+        }
 
     }
 
