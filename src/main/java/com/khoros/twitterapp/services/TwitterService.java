@@ -35,39 +35,27 @@ public class TwitterService {
 
         logger.info("Attempting to update status through Twitter API.");
 
-        if (StringUtils.isEmpty(statusText)) {
+        verifyTextLength(statusText);
 
-            logger.info("Twitter status update unsuccessful.");
+        Optional<Status> responseOptional;
 
-            throw new TwitterServiceException(TwitterService.NO_TWEET_TEXT_MSG);
+        try {
 
-        } else if (statusText.length() > TwitterService.MAX_TWEET_LENGTH) {
+            responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
+                    .map(s -> createNewStatusObject(s));
 
-            logger.info("Twitter status update unsuccessful.");
+            cacheUp.getTimelineCache().clear();
 
-            throw new TwitterServiceException(TwitterService.TWEET_TOO_LONG_MSG);
+        } catch (TwitterException twitterException) {
 
-        } else {
+            logger.info("Twitter status update aborted. Twitter Exception thrown.");
 
-            Optional<Status> responseOptional = null;
+            throw handleTwitterException(twitterException);
 
-            try {
-
-                responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
-                        .map(s -> createNewStatusObject(s));
-
-                cacheUp.getTimelineCache().clear();
-
-            } catch (TwitterException twitterException) {
-
-                logger.info("Twitter status update aborted. Twitter Exception thrown.");
-
-                throw handleTwitterException(twitterException);
-
-            }
-
-            return responseOptional;
         }
+
+        return responseOptional;
+
     }
 
     public Optional<List<Status>> getHomeTimeline() throws TwitterServiceException {
@@ -151,7 +139,11 @@ public class TwitterService {
 
     public Optional<Status> replyToTweet(String statusText, long inReplyToID) throws TwitterServiceException {
 
-        Optional<Status> newStatus = Optional.empty();
+        logger.info("Attempting to reply to status through Twitter API.");
+
+        verifyTextLength(statusText);
+
+        Optional<Status> newStatus;
         twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
         statusUpdate.setInReplyToStatusId(inReplyToID);
 
@@ -161,6 +153,8 @@ public class TwitterService {
                     .map(status -> createNewStatusObject(status));
 
         } catch (TwitterException twitterException) {
+
+            logger.info("Twitter replyToTweet aborted. Twitter Exception thrown.");
 
             throw handleTwitterException(twitterException);
 
@@ -201,6 +195,26 @@ public class TwitterService {
         newStatus.setStatusID(originalStatus.getId());
 
         return newStatus;
+
+    }
+
+    private void verifyTextLength(String statusText) throws TwitterServiceException {
+
+        logger.info("Verify length of new status text.");
+
+        if (StringUtils.isEmpty(statusText)) {
+
+            logger.info("Twitter status update unsuccessful.");
+
+            throw new TwitterServiceException(TwitterService.NO_TWEET_TEXT_MSG);
+
+        } else if (statusText.length() > TwitterService.MAX_TWEET_LENGTH) {
+
+            logger.info("Twitter status update unsuccessful.");
+
+            throw new TwitterServiceException(TwitterService.TWEET_TOO_LONG_MSG);
+
+        }
 
     }
 
