@@ -26,7 +26,6 @@ public class TwitterServiceTest {
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
-    private String testUrl;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
 
@@ -40,12 +39,6 @@ public class TwitterServiceTest {
         testStatusText = "Tweet Test";
         twResponse = new ResponseImplTest<>();
         exampleStatus = new Twitter4jStatusImpl();
-        testUrl = new StringBuilder()
-            .append("https://twitter.com/")
-            .append(exampleStatus.getUser().getScreenName())
-            .append("/status/")
-            .append(exampleStatus.getId())
-            .toString();
         twResponse.add(exampleStatus);
 
     }
@@ -75,7 +68,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), serviceResponse.get().getUser().getProfileImageUrl());
         assertEquals(exampleStatus.getUser().getScreenName(), serviceResponse.get().getUser().getTwHandle());
         assertEquals(exampleStatus.getUser().getName(), serviceResponse.get().getUser().getName());
-        assertEquals(testUrl, serviceResponse.get().getPostUrl());
+        assertEquals(exampleStatus.getId(), serviceResponse.get().getStatusID());
 
     }
 
@@ -100,7 +93,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
         assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
         assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
-        assertEquals(testUrl, responseList.get().get(0).getPostUrl());
+        assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
 
     }
 
@@ -125,7 +118,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getUser().getName(), responseList.get().get(0).getUser().getName());
         assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
         assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
-        assertEquals(testUrl, responseList.get().get(0).getPostUrl());
+        assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
 
     }
 
