@@ -13,7 +13,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.ResponseList;
@@ -87,7 +86,7 @@ public class MainResourceTest {
     }
 
     @Test
-    public void postStatusUpdateTestException() throws TwitterServiceException {
+    public void postStatusUpdateTestException() {
 
         assertEquals(403, mainResource.postStatusUpdate("").getStatus());
         assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate("").getEntity());
@@ -189,6 +188,19 @@ public class MainResourceTest {
 
         assertEquals(201, mainResource.replyToTweet(exampleText, testID).getStatus());
         assertEquals(twitterStatus.getText(), response.getMessage());
+    }
+
+    @Test
+    public void replyToTweetError() throws TwitterException {
+        long testID = 999999;
+        StatusUpdate testUpdate = new StatusUpdate(exampleText);
+        testUpdate.setInReplyToStatusId(testID);
+
+        when(mockFactory.updateStatus(testUpdate)).thenThrow(new TwitterException(exceptionText));
+
+        assertEquals(500, mainResource.replyToTweet(exampleText, testID).getStatus());
+        assertEquals(exceptionText, mainResource.replyToTweet(exampleText, testID).getEntity());
+
     }
 
 }
