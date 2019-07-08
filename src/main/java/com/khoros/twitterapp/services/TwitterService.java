@@ -152,6 +152,8 @@ public class TwitterService {
             newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
                     .map(status -> createNewStatusObject(status));
 
+            cacheUp.getTimelineCache().clear();
+
         } catch (TwitterException twitterException) {
 
             logger.info("Twitter replyToTweet aborted. Twitter Exception thrown.");
