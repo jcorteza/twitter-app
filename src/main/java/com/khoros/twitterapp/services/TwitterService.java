@@ -149,9 +149,25 @@ public class TwitterService {
 
     }
 
-    public Optional<Status> replyToTweet() {
+    public Optional<Status> replyToTweet(String statusText, long inReplyToId) throws TwitterServiceException {
 
-        Optional<Status>
+        Optional<Status> newStatus = Optional.empty();
+        twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
+        statusUpdate.setInReplyToStatusId(inReplyToId);
+
+        try {
+
+            newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
+                    .map(status -> createNewStatusObject(status));
+
+        } catch (TwitterException twitterException) {
+
+            handleTwitterException(twitterException);
+
+        }
+
+        return newStatus;
+
     }
 
     public void setCacheUp(CacheUp cacheUp) {
