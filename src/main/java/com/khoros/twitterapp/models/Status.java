@@ -14,13 +14,13 @@ public class Status {
 
     private String postUrl;
 
-    private void setStatusID(long id) {
+    public void setStatusID(long id) {
 
         this.statusID = id;
 
     }
 
-    private long getStatusID() {
+    public long getStatusID() {
 
         return statusID;
 
