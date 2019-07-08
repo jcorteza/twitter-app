@@ -149,11 +149,11 @@ public class TwitterService {
 
     }
 
-    public Optional<Status> replyToTweet(String statusText, long inReplyToId) throws TwitterServiceException {
+    public Optional<Status> replyToTweet(String statusText, long inReplyToID) throws TwitterServiceException {
 
         Optional<Status> newStatus = Optional.empty();
         twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
-        statusUpdate.setInReplyToStatusId(inReplyToId);
+        statusUpdate.setInReplyToStatusId(inReplyToID);
 
         try {
 

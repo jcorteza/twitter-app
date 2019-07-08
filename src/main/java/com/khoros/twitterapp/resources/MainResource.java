@@ -153,6 +153,35 @@ public class MainResource {
 
     }
 
+    @Path("/reply-to-tweet")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @POST
+    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") long inReplyToID) {
+
+        logger.info("Accessing Twitter Service replyToTweet feauture.");
+
+        try {
+
+            return twitterService.replyToTweet(statusText.trim(), inReplyToID)
+                    .map(newStatus -> Response
+                        .status(Response.Status.CREATED)
+                        .header(headerACAO, origin)
+                        .entity(newStatus)
+                        .build())
+                    .orElse(Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .header(headerACAO, origin)
+                        .entity(TwitterService.GENERAL_ERR_MSG)
+                        .build());
+
+        } catch (TwitterServiceException twServiceException) {
+
+            logger.info("Twitter Service process, replyToTweet, aborted. Twitter Service Excpetion thrown.");
+
+            return handleException(twServiceException);
+        }
+    }
+
     private Response handleException(TwitterServiceException exception) {
 
         if (exception.getCause() == null) {
