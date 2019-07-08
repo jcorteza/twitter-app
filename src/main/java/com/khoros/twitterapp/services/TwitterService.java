@@ -62,7 +62,7 @@ public class TwitterService {
 
                 logger.info("Twitter status update aborted. Twitter Exception thrown.");
 
-                handleTwitterException(twitterException);
+                throw handleTwitterException(twitterException);
 
             }
 
@@ -93,7 +93,7 @@ public class TwitterService {
 
                 logger.info("Home timeline retrieval aborted. Twitter Exception thrown.");
 
-                handleTwitterException(twitterException);
+                throw handleTwitterException(twitterException);
 
             }
 
@@ -135,7 +135,7 @@ public class TwitterService {
 
                 logger.info("User timeline retrieval aborted. Twitter Exception thrown.");
 
-                handleTwitterException(twitterException);
+                throw handleTwitterException(twitterException);
 
             }
 
@@ -162,7 +162,7 @@ public class TwitterService {
 
         } catch (TwitterException twitterException) {
 
-            handleTwitterException(twitterException);
+            throw handleTwitterException(twitterException);
 
         }
 
@@ -204,7 +204,7 @@ public class TwitterService {
 
     }
 
-    private void handleTwitterException(TwitterException e) throws TwitterServiceException {
+    private TwitterServiceException handleTwitterException(TwitterException e) {
 
         if (e.isErrorMessageAvailable()) {
 
@@ -221,7 +221,7 @@ public class TwitterService {
 
         }
 
-        throw new TwitterServiceException("Twitter Exception thrown.", e);
+        return new TwitterServiceException("Twitter Exception thrown.", e);
 
     }
 }
