@@ -55,7 +55,7 @@ public class TwitterServiceTest {
 
         } catch (TwitterException e) {
 
-            fail("Test failed due to Twitter Exception");
+            fail("Test failed due to Twitter Exception.");
 
         } catch (TwitterServiceException e) {
 
@@ -119,6 +119,46 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getUser().getScreenName(), responseList.get().get(0).getUser().getTwHandle());
         assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), responseList.get().get(0).getUser().getProfileImageUrl());
         assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
+
+    }
+
+    @Test
+    public void replyToTweetTestSuccess() {
+
+        Optional<Status> response = Optional.empty();
+        twitter4j.StatusUpdate testUpdate = new twitter4j.StatusUpdate(testStatusText);
+
+        try {
+
+            when(mockFactory.updateStatus(testUpdate)).thenReturn(exampleStatus);
+            response = twSingleton.replyToTweet(testStatusText, 999999);
+
+        } catch (TwitterException e) {
+
+            fail("Test failed due to Twitter Exception.");
+
+        } catch (TwitterServiceException e) {
+
+            fail("Test failed due to Twitter Service Exception.");
+        }
+
+        assertEquals(exampleStatus.getText(), response.get().getMessage());
+        assertEquals(exampleStatus.getCreatedAt(), response.get().getCreatedAt());
+        assertEquals(exampleStatus.getId(), response.get().getStatusID());
+
+    }
+
+    @Test
+    public void createNewStatusObjectTest() {
+
+        Status exampleNewStatus = twSingleton.createNewStatusObject(exampleStatus);
+
+        assertEquals(exampleStatus.getText(), exampleNewStatus.getMessage());
+        assertEquals(exampleStatus.getCreatedAt(), exampleNewStatus.getCreatedAt());
+        assertEquals(exampleStatus.getUser().getName(), exampleNewStatus.getUser().getName());
+        assertEquals(exampleStatus.getUser().getScreenName(), exampleNewStatus.getUser().getTwHandle());
+        assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), exampleNewStatus.getUser().getProfileImageUrl());
+        assertEquals(exampleStatus.getId(), exampleNewStatus.getStatusID());
 
     }
 
