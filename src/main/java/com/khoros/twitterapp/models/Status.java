@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class Status {
 
+    private long statusID;
+
     private String message;
 
     private User user;
@@ -11,6 +13,18 @@ public class Status {
     private Date createdAt;
 
     private String postUrl;
+
+    private void setStatusID(long id) {
+
+        this.statusID = id;
+
+    }
+
+    private long getStatusID() {
+
+        return statusID;
+
+    }
 
     public void setMessage(String message) {
 
