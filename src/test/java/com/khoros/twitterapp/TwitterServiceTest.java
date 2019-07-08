@@ -8,10 +8,12 @@ import com.khoros.twitterapp.models.Status;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+
+import org.junit.After;
 import org.junit.Test;
 import org.junit.Before;
 import twitter4j.*;
@@ -42,6 +44,11 @@ public class TwitterServiceTest {
         exampleStatus = new Twitter4jStatusImpl();
         twResponse.add(exampleStatus);
 
+    }
+
+    @After
+    public void resetTesting() {
+        reset(mockFactory, cacheUp);
     }
 
     @Test
@@ -118,12 +125,14 @@ public class TwitterServiceTest {
     public void replyToTweetTestSuccess() {
 
         Optional<Status> response = Optional.empty();
+        long testID = 999999;
         twitter4j.StatusUpdate testUpdate = new twitter4j.StatusUpdate(testStatusText);
+        testUpdate.setInReplyToStatusId(testID);
 
         try {
 
             when(mockFactory.updateStatus(testUpdate)).thenReturn(exampleStatus);
-            response = twSingleton.replyToTweet(testStatusText, 999999);
+            response = twSingleton.replyToTweet(testStatusText, testID);
 
         } catch (TwitterException e) {
 
@@ -158,10 +167,14 @@ public class TwitterServiceTest {
     public void verifyTextLengthTestEmpty() {
 
         try {
+
             twSingleton.updateStatus(null);
             fail("Expected a TwitterServiceException to be thrown.");
+
         } catch (TwitterServiceException twServiceException){
+
             assertEquals(twServiceException.getMessage(), TwitterService.NO_TWEET_TEXT_MSG);
+
         }
 
     }
@@ -176,12 +189,59 @@ public class TwitterServiceTest {
         }
 
         try {
+
             twSingleton.updateStatus(sb.toString());
             fail("Expected a TwitterServiceException to be thrown.");
+
         } catch (TwitterServiceException twServiceException){
+
             assertEquals(twServiceException.getMessage(), TwitterService.TWEET_TOO_LONG_MSG);
+
         }
 
+    }
+
+    @Test
+    public void handleTwitterExceptionTestWithMessage() throws TwitterException {
+
+        long testID = 999999;
+        StatusUpdate testUpdate = new StatusUpdate(testStatusText);
+        testUpdate.setInReplyToStatusId(testID);
+
+        try {
+
+            when(mockFactory
+                    .updateStatus(testUpdate))
+                    .thenThrow(new TwitterException("Test Exception"));
+            twSingleton.replyToTweet(testStatusText, testID);
+            fail("Expected a TwitterServiceException to be thrown.");
+
+        } catch (TwitterServiceException twServiceException) {
+
+            assertEquals(twServiceException.getCause().getMessage(), "Test Exception");
+        }
+    }
+
+    @Test
+    public void handleTwitterExceptionTestNoMessage() throws TwitterException {
+
+        long testID = 999999;
+        StatusUpdate testUpdate = new StatusUpdate(testStatusText);
+        testUpdate.setInReplyToStatusId(testID);
+        TwitterException testException = new TwitterException("");
+
+        try {
+
+            when(mockFactory
+                    .updateStatus(testUpdate))
+                    .thenThrow(testException);
+            twSingleton.replyToTweet(testStatusText, testID);
+            fail("Expected a TwitterServiceException to be thrown.");
+
+        } catch (TwitterServiceException twServiceException) {
+
+            assertEquals(twServiceException.getCause(), testException);
+        }
     }
 
     @Test

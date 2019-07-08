@@ -7,11 +7,14 @@ import com.khoros.twitterapp.services.TwitterServiceException;
 import com.khoros.twitterapp.models.Status;
 import com.khoros.twitterapp.models.User;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
 import twitter4j.ResponseList;
 import twitter4j.TwitterException;
@@ -75,19 +78,19 @@ public class MainResourceTest {
 
         } catch (TwitterException e) {
 
-            Assert.fail("Test failed due to Twitter Exception.");
+            fail("Test failed due to Twitter Exception.");
 
         }
 
-        Assert.assertEquals(201, mainResource.postStatusUpdate(exampleText).getStatus());
-        Assert.assertEquals(twitterStatus.getText(), statusResponse.getMessage());
+        assertEquals(201, mainResource.postStatusUpdate(exampleText).getStatus());
+        assertEquals(twitterStatus.getText(), statusResponse.getMessage());
     }
 
     @Test
     public void postStatusUpdateTestException() throws TwitterServiceException {
 
-        Assert.assertEquals(403, mainResource.postStatusUpdate("").getStatus());
-        Assert.assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate("").getEntity());
+        assertEquals(403, mainResource.postStatusUpdate("").getStatus());
+        assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate("").getEntity());
 
     }
 
@@ -95,16 +98,16 @@ public class MainResourceTest {
     public void statusLengthZeroTest() {
         exampleText = "";
 
-        Assert.assertEquals(403, mainResource.postStatusUpdate(exampleText).getStatus());
-        Assert.assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
+        assertEquals(403, mainResource.postStatusUpdate(exampleText).getStatus());
+        assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
     @Test
     public void statusLengthLongTest() {
         exampleText = StringUtils.repeat("a", TwitterService.MAX_TWEET_LENGTH + 1);
 
-        Assert.assertEquals(403, mainResource.postStatusUpdate(exampleText).getStatus());
-        Assert.assertEquals(TwitterService.TWEET_TOO_LONG_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
+        assertEquals(403, mainResource.postStatusUpdate(exampleText).getStatus());
+        assertEquals(TwitterService.TWEET_TOO_LONG_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
     @Test
@@ -117,12 +120,12 @@ public class MainResourceTest {
 
         } catch (TwitterException e) {
 
-            Assert.fail("Test failed due to Twitter Exception.");
+            fail("Test failed due to Twitter Exception.");
 
         }
 
-        Assert.assertEquals(200, mainResource.getHomeTimeline().getStatus());
-        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
+        assertEquals(200, mainResource.getHomeTimeline().getStatus());
+        assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
 
     }
 
@@ -131,8 +134,8 @@ public class MainResourceTest {
 
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
-        Assert.assertEquals(500, mainResource.getHomeTimeline().getStatus());
-        Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
+        assertEquals(500, mainResource.getHomeTimeline().getStatus());
+        assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
     }
 
     @Test
@@ -147,12 +150,12 @@ public class MainResourceTest {
 
         } catch (TwitterException e) {
 
-            Assert.fail("Test failed due to Twitter Exception.");
+            fail("Test failed due to Twitter Exception.");
 
         }
 
-        Assert.assertEquals(200, mainResource.getFilteredTimeline(exampleText).getStatus());
-        Assert.assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
+        assertEquals(200, mainResource.getFilteredTimeline(exampleText).getStatus());
+        assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
 
     }
 
@@ -162,9 +165,30 @@ public class MainResourceTest {
         when(cacheUp.getTimelineCache()).thenReturn(new HashMap<>());
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
-        Assert.assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());
-        Assert.assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
+        assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());
+        assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
 
+    }
+
+    @Test
+    public void replyToTweetTestSuccess() {
+        long testID = 999999;
+        StatusUpdate testUpdate = new StatusUpdate(exampleText);
+        testUpdate.setInReplyToStatusId(testID);
+        Status response = null;
+
+        try {
+
+            when(mockFactory.updateStatus(testUpdate)).thenReturn(twitterStatus);
+            response = (Status) mainResource.replyToTweet(exampleText, testID).getEntity();
+
+        } catch (TwitterException e) {
+
+            fail("Test failed due to TwitterException.");
+        }
+
+        assertEquals(201, mainResource.replyToTweet(exampleText, testID).getStatus());
+        assertEquals(twitterStatus.getText(), response.getMessage());
     }
 
 }
