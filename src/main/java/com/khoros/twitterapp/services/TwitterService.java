@@ -37,14 +37,14 @@ public class TwitterService {
 
         verifyTextLength(statusText);
 
-        Optional<Status> responseOptional;
-
         try {
 
-            responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
+            cacheUp.getTimelineCache().clear();
+
+            Optional<Status> responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
                     .map(s -> createNewStatusObject(s));
 
-            cacheUp.getTimelineCache().clear();
+            return responseOptional;
 
         } catch (TwitterException twitterException) {
 
@@ -53,8 +53,6 @@ public class TwitterService {
             throw handleTwitterException(twitterException);
 
         }
-
-        return responseOptional;
 
     }
 
@@ -143,16 +141,18 @@ public class TwitterService {
 
         verifyTextLength(statusText);
 
-        Optional<Status> newStatus;
         twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
         statusUpdate.setInReplyToStatusId(inReplyToID);
 
         try {
 
-            newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
+            Optional<Status> newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
                     .map(status -> createNewStatusObject(status));
 
             cacheUp.getTimelineCache().clear();
+
+            return newStatus;
+
 
         } catch (TwitterException twitterException) {
 
@@ -161,8 +161,6 @@ public class TwitterService {
             throw handleTwitterException(twitterException);
 
         }
-
-        return newStatus;
 
     }
 
@@ -173,7 +171,9 @@ public class TwitterService {
     }
 
     public CacheUp getCacheUp() {
+
         return cacheUp;
+
     }
 
     public Twitter getTwitterFactory() {
