@@ -48,7 +48,7 @@ public class TwitterService {
 
         } catch (TwitterException twitterException) {
 
-            logger.info("Twitter status update aborted. Twitter Exception thrown.");
+            logger.info("TwitterService status update aborted. Twitter Exception thrown.");
 
             throw handleTwitterException(twitterException);
 
@@ -77,7 +77,7 @@ public class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                logger.info("Home timeline retrieval aborted. Twitter Exception thrown.");
+                logger.info("TwitterService home timeline retrieval aborted. Twitter Exception thrown.");
 
                 throw handleTwitterException(twitterException);
 
@@ -119,7 +119,7 @@ public class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                logger.info("User timeline retrieval aborted. Twitter Exception thrown.");
+                logger.info("TwitterService user timeline retrieval aborted. Twitter Exception thrown.");
 
                 throw handleTwitterException(twitterException);
 
@@ -158,7 +158,7 @@ public class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                logger.info("Twitter replyToTweet aborted. Twitter Exception thrown.");
+                logger.info("TwitterService replyToTweet aborted. Twitter Exception thrown.");
 
                 throw handleTwitterException(twitterException);
 
@@ -166,7 +166,7 @@ public class TwitterService {
 
         } catch (NumberFormatException numberFormatException) {
 
-            logger.info("Twitter replyToTweet aborted. NumberFormatException thrown.");
+            logger.info("TwitterService replyToTweet aborted. NumberFormatException thrown.");
 
             throw new TwitterServiceException(
                     "inReplyToID was not a parseable long type.",

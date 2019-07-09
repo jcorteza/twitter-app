@@ -56,7 +56,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service process, updateStatus, aborted. Twitter Service Excpetion thrown.");
+            logger.info("MainResource process, postStatusUpdate, aborted. Twitter Service Excpetion thrown.");
 
             return createExceptionResponseObject(twServiceException);
         }
@@ -85,7 +85,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service process, getHomeTimeline, aborted. Twitter Service Exception thrown." );
+            logger.info("MainResource process, getHomeTimeline, aborted. Twitter Service Exception thrown." );
 
             return createExceptionResponseObject(twServiceException);
 
@@ -116,7 +116,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service process, getFilteredHomeTimeline, aborted. Twitter Service Exception thrown." );
+            logger.info("MainResource process, getFilteredTimeline, aborted. Twitter Service Exception thrown." );
 
             return createExceptionResponseObject(twServiceException);
 
@@ -146,7 +146,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service processk, getUserTimeline, aborted. Twitter Service Exception thrown.");
+            logger.info("MainResource process, getUserTimeline, aborted. Twitter Service Exception thrown.");
 
             return createExceptionResponseObject(twServiceException);
         }
@@ -176,7 +176,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service process, replyToTweet, aborted. Twitter Service Excpetion thrown.");
+            logger.info("MainResource process, replyToTweet, aborted. Twitter Service Excpetion thrown.");
 
             return createExceptionResponseObject(twServiceException);
         }
@@ -197,9 +197,8 @@ public class MainResource {
 
         } else {
 
-            logger.error("Twitter Service Exception — Error Cause: {}: {}",
-                    exception.getCause().toString(),
-                    exception.getCause().getMessage(),
+            logger.error("Twitter Service Exception — Error Cause: {}",
+                    exception.getCause().getClass().getSimpleName(),
                     exception);
 
             return Response
