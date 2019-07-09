@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.ws.rs.core.Response;
+
 public class MainResourceTest {
 
     private CacheUp cacheUp;
@@ -81,14 +83,14 @@ public class MainResourceTest {
 
         }
 
-        assertEquals(201, mainResource.postStatusUpdate(exampleText).getStatus());
+        assertEquals(Response.Status.CREATED.getStatusCode(), mainResource.postStatusUpdate(exampleText).getStatusInfo().getStatusCode());
         assertEquals(twitterStatus.getText(), statusResponse.getMessage());
     }
 
     @Test
     public void postStatusUpdateTestException() {
 
-        assertEquals(403, mainResource.postStatusUpdate("").getStatus());
+        assertEquals(Response.Status.FORBIDDEN.getStatusCode(), mainResource.postStatusUpdate("").getStatusInfo().getStatusCode());
         assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate("").getEntity());
 
     }
@@ -97,7 +99,7 @@ public class MainResourceTest {
     public void statusLengthZeroTest() {
         exampleText = "";
 
-        assertEquals(403, mainResource.postStatusUpdate(exampleText).getStatus());
+        assertEquals(Response.Status.FORBIDDEN.getStatusCode(), mainResource.postStatusUpdate(exampleText).getStatusInfo().getStatusCode());
         assertEquals(TwitterService.NO_TWEET_TEXT_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
@@ -105,7 +107,7 @@ public class MainResourceTest {
     public void statusLengthLongTest() {
         exampleText = StringUtils.repeat("a", TwitterService.MAX_TWEET_LENGTH + 1);
 
-        assertEquals(403, mainResource.postStatusUpdate(exampleText).getStatus());
+        assertEquals(Response.Status.FORBIDDEN.getStatusCode(), mainResource.postStatusUpdate(exampleText).getStatusInfo().getStatusCode());
         assertEquals(TwitterService.TWEET_TOO_LONG_MSG, mainResource.postStatusUpdate(exampleText).getEntity());
     }
 
@@ -123,7 +125,7 @@ public class MainResourceTest {
 
         }
 
-        assertEquals(200, mainResource.getHomeTimeline().getStatus());
+        assertEquals(Response.Status.OK.getStatusCode(), mainResource.getHomeTimeline().getStatusInfo().getStatusCode());
         assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
 
     }
@@ -133,7 +135,7 @@ public class MainResourceTest {
 
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
-        assertEquals(500, mainResource.getHomeTimeline().getStatus());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.getHomeTimeline().getStatusInfo().getStatusCode());
         assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
     }
 
@@ -153,7 +155,7 @@ public class MainResourceTest {
 
         }
 
-        assertEquals(200, mainResource.getFilteredTimeline(exampleText).getStatus());
+        assertEquals(Response.Status.OK.getStatusCode(), mainResource.getFilteredTimeline(exampleText).getStatusInfo().getStatusCode());
         assertEquals(twServiceResponse.get(0).getMessage(), responseList.get(0).getMessage());
 
     }
@@ -164,7 +166,7 @@ public class MainResourceTest {
         when(cacheUp.getTimelineCache()).thenReturn(new HashMap<>());
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
-        assertEquals(500, mainResource.getFilteredTimeline(exampleText).getStatus());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.getFilteredTimeline(exampleText).getStatusInfo().getStatusCode());
         assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
 
     }
@@ -186,7 +188,7 @@ public class MainResourceTest {
             fail("Test failed due to TwitterException.");
         }
 
-        assertEquals(201, mainResource.replyToTweet(exampleText, testID).getStatus());
+        assertEquals(Response.Status.CREATED.getStatusCode(), mainResource.replyToTweet(exampleText, testID).getStatusInfo().getStatusCode());
         assertEquals(twitterStatus.getText(), response.getMessage());
     }
 
@@ -198,7 +200,7 @@ public class MainResourceTest {
 
         when(mockFactory.updateStatus(testUpdate)).thenThrow(new TwitterException(exceptionText));
 
-        assertEquals(500, mainResource.replyToTweet(exampleText, testID).getStatus());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.replyToTweet(exampleText, testID).getStatusInfo().getStatusCode());
         assertEquals(exceptionText, mainResource.replyToTweet(exampleText, testID).getEntity());
 
     }
