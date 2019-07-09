@@ -137,7 +137,7 @@ public class MainResourceTest {
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.getHomeTimeline().getStatusInfo().getStatusCode());
-        assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
+        assertEquals(TwitterService.TW_ERR_MSG, mainResource.getHomeTimeline().getEntity());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class MainResourceTest {
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.getFilteredTimeline(exampleText).getStatusInfo().getStatusCode());
-        assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
+        assertEquals(TwitterService.TW_ERR_MSG, mainResource.getHomeTimeline().getEntity());
 
     }
 
@@ -198,7 +198,7 @@ public class MainResourceTest {
             Response testResponse = mainResource.getUserTimeline();
 
             assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), testResponse.getStatusInfo().getStatusCode());
-            assertEquals(exceptionText, testResponse.getEntity());
+            assertEquals(TwitterService.TW_ERR_MSG, testResponse.getEntity());
 
     }
 
@@ -229,10 +229,21 @@ public class MainResourceTest {
         StatusUpdate testUpdate = new StatusUpdate(exampleText);
         testUpdate.setInReplyToStatusId(Long.parseLong(testID));
 
-        when(mockFactory.updateStatus(testUpdate)).thenThrow(new TwitterException(exceptionText));
+        when(mockFactory.updateStatus(testUpdate)).thenThrow(new TwitterException(""));
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.replyToTweet(exampleText, testID).getStatusInfo().getStatusCode());
-        assertEquals(exceptionText, mainResource.replyToTweet(exampleText, testID).getEntity());
+        assertEquals(TwitterService.TW_ERR_MSG, mainResource.replyToTweet(exampleText, testID).getEntity());
+
+    }
+
+    @Test
+    public void replyToTypeError() throws TwitterException {
+
+        String testID = "999999???";
+        Response testResponse = mainResource.replyToTweet(exampleText, testID);
+
+        assertEquals(Response.Status.FORBIDDEN.getStatusCode(), testResponse.getStatus());
+        assertEquals(TwitterService.ID_TYPE_ERR_MSG, testResponse.getEntity());
 
     }
 
