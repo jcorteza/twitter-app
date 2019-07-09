@@ -204,9 +204,9 @@ public class MainResourceTest {
 
     @Test
     public void replyToTweetTestSuccess() {
-        long testID = 999999;
+        String testID = "999999";
         StatusUpdate testUpdate = new StatusUpdate(exampleText);
-        testUpdate.setInReplyToStatusId(testID);
+        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
         Status response = null;
 
         try {
@@ -225,9 +225,9 @@ public class MainResourceTest {
 
     @Test
     public void replyToTweetError() throws TwitterException {
-        long testID = 999999;
+        String testID = "999999";
         StatusUpdate testUpdate = new StatusUpdate(exampleText);
-        testUpdate.setInReplyToStatusId(testID);
+        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
 
         when(mockFactory.updateStatus(testUpdate)).thenThrow(new TwitterException(exceptionText));
 

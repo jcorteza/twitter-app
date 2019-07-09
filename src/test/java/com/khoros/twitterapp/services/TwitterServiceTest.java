@@ -172,9 +172,9 @@ public class TwitterServiceTest {
     public void replyToTweetTestSuccess() {
 
         Optional<Status> response = Optional.empty();
-        long testID = 999999;
+        String testID = "999999";
         twitter4j.StatusUpdate testUpdate = new twitter4j.StatusUpdate(testStatusText);
-        testUpdate.setInReplyToStatusId(testID);
+        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
 
         try {
 
@@ -253,9 +253,9 @@ public class TwitterServiceTest {
     @Test
     public void handleTwitterExceptionTestWithMessage() throws TwitterException {
 
-        long testID = 999999;
+        String testID = "999999";
         StatusUpdate testUpdate = new StatusUpdate(testStatusText);
-        testUpdate.setInReplyToStatusId(testID);
+        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
 
         try {
 
@@ -274,9 +274,9 @@ public class TwitterServiceTest {
     @Test
     public void handleTwitterExceptionTestNoMessage() throws TwitterException {
 
-        long testID = 999999;
+        String testID = "999999";
         StatusUpdate testUpdate = new StatusUpdate(testStatusText);
-        testUpdate.setInReplyToStatusId(testID);
+        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
 
         try {
 
