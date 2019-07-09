@@ -57,7 +57,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("MainResource process, postStatusUpdate, aborted. Twitter Service Excpetion thrown.");
+            logger.info("MainResource process, postStatusUpdate, aborted. TwitterServiceExcpetion thrown.");
 
             return createExceptionResponseObject(twServiceException);
         }
@@ -86,7 +86,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("MainResource process, getHomeTimeline, aborted. Twitter Service Exception thrown." );
+            logger.info("MainResource process, getHomeTimeline, aborted. TwitterServiceException thrown." );
 
             return createExceptionResponseObject(twServiceException);
 
@@ -117,7 +117,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("MainResource process, getFilteredTimeline, aborted. Twitter Service Exception thrown." );
+            logger.info("MainResource process, getFilteredTimeline, aborted. TwitterServiceException thrown." );
 
             return createExceptionResponseObject(twServiceException);
 
@@ -147,7 +147,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("MainResource process, getUserTimeline, aborted. Twitter Service Exception thrown.");
+            logger.info("MainResource process, getUserTimeline, aborted. TwitterServiceException thrown.");
 
             return createExceptionResponseObject(twServiceException);
         }
@@ -157,7 +157,7 @@ public class MainResource {
     @Path("/reply")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @POST
-    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") String inReplyToID) {
+    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") long inReplyToID) {
 
         logger.info("Accessing Twitter Service replyToTweet feature.");
 
@@ -177,7 +177,7 @@ public class MainResource {
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("MainResource process, replyToTweet, aborted. Twitter Service Excpetion thrown.");
+            logger.info("MainResource process, replyToTweet, aborted. TwitterServiceExcpetion thrown.");
 
             return createExceptionResponseObject(twServiceException);
         }
@@ -202,15 +202,6 @@ public class MainResource {
                     exception.getCause().getClass().getSimpleName(),
                     exception.getCause().getMessage(),
                     exception);
-
-            if(exception.getCause().getClass().getSimpleName().equals("NumberFormatException")) {
-
-                return Response
-                        .status(Response.Status.FORBIDDEN)
-                        .entity(exception.getMessage())
-                        .build();
-
-            }
 
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)

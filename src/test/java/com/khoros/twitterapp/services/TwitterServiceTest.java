@@ -172,9 +172,9 @@ public class TwitterServiceTest {
     public void replyToTweetTestSuccess() {
 
         Optional<Status> response = Optional.empty();
-        String testID = "999999";
+        long testID = 999999;
         twitter4j.StatusUpdate testUpdate = new twitter4j.StatusUpdate(testStatusText);
-        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
+        testUpdate.setInReplyToStatusId(testID);
 
         try {
 
@@ -197,23 +197,23 @@ public class TwitterServiceTest {
 
     }
 
-    @Test
-    public void replyToTweetTestTypeError() {
-
-        try {
-
-            String testID = "999999???";
-            twSingleton.replyToTweet(testStatusText, testID);
-
-            fail("Expected a TwitterServiceException to be thrown.");
-
-        } catch (TwitterServiceException e) {
-
-            assertEquals(TwitterService.ID_TYPE_ERR_MSG, e.getMessage());
-            assertEquals(NumberFormatException.class, e.getCause().getClass());
-
-        }
-    }
+//    @Test
+//    public void replyToTweetTestTypeError() {
+//
+//        try {
+//
+//            Optional<long> testId = Optional.ofNullable();
+//            twSingleton.replyToTweet(testStatusText, testID);
+//
+//            fail("Expected a TwitterServiceException to be thrown.");
+//
+//        } catch (TwitterServiceException e) {
+//
+//            assertEquals(TwitterService.ID_TYPE_ERR_MSG, e.getMessage());
+//            assertEquals(NumberFormatException.class, e.getCause().getClass());
+//
+//        }
+//    }
 
     @Test
     public void createNewStatusObjectTest() {
@@ -271,9 +271,9 @@ public class TwitterServiceTest {
     @Test
     public void handleTwitterExceptionTestWithMessage() throws TwitterException {
 
-        String testID = "999999";
+        long testID = 999999;
         StatusUpdate testUpdate = new StatusUpdate(testStatusText);
-        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
+        testUpdate.setInReplyToStatusId(testID);
 
         try {
 
@@ -292,9 +292,9 @@ public class TwitterServiceTest {
     @Test
     public void handleTwitterExceptionTestNoMessage() throws TwitterException {
 
-        String testID = "999999";
+        long testID = 999999;
         StatusUpdate testUpdate = new StatusUpdate(testStatusText);
-        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
+        testUpdate.setInReplyToStatusId(testID);
 
         try {
 

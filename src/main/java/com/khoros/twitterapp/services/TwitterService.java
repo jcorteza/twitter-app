@@ -20,7 +20,7 @@ public class TwitterService {
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
-    public static final String ID_TYPE_ERR_MSG = "Wrong type for inReplyTo value. Must be a number.";
+    public static final String ID_ERR_MSG = "No value entered for inReplyTo.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
@@ -136,46 +136,35 @@ public class TwitterService {
 
     }
 
-    public Optional<Status> replyToTweet(String statusText, String inReplyToID) throws TwitterServiceException {
+    public Optional<Status> replyToTweet(String statusText, long inReplyToID) throws TwitterServiceException {
 
         logger.info("Attempting to reply to status through Twitter API.");
 
         verifyTextLength(statusText);
+//        if (Long.valueOf(inReplyToID).equals(null)) {
+//
+//            throw new TwitterServiceException(ID_ERR_MSG);
+//
+//        }
+
+        twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
+        statusUpdate.setInReplyToStatusId(inReplyToID);
 
         try {
 
-            twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
-            statusUpdate.setInReplyToStatusId(Long.parseLong(inReplyToID.trim()));
+            Optional<Status> newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
+                    .map(status -> createNewStatusObject(status));
 
-            try {
+            cacheUp.getTimelineCache().clear();
 
-                Optional<Status> newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
-                        .map(status -> createNewStatusObject(status));
-
-                cacheUp.getTimelineCache().clear();
-
-                return newStatus;
+            return newStatus;
 
 
-            } catch (TwitterException twitterException) {
+        } catch (TwitterException twitterException) {
 
-                logger.info("TwitterService replyToTweet aborted. Twitter Exception thrown.");
+            logger.info("TwitterService replyToTweet aborted. Twitter Exception thrown.");
 
-                throw handleTwitterException(twitterException);
-
-            }
-
-        } catch (NumberFormatException numberFormatException) {
-
-            logger.info("TwitterService replyToTweet aborted. NumberFormatException thrown.");
-            logger.error("NumberFormatException thrown: {}",
-                    numberFormatException.getMessage(),
-                    numberFormatException);
-
-            throw new TwitterServiceException(
-                    ID_TYPE_ERR_MSG,
-                    numberFormatException
-            );
+            throw handleTwitterException(twitterException);
 
         }
 
