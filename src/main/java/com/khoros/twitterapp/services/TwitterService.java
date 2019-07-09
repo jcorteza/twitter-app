@@ -135,30 +135,43 @@ public class TwitterService {
 
     }
 
-    public Optional<Status> replyToTweet(String statusText, long inReplyToID) throws TwitterServiceException {
+    public Optional<Status> replyToTweet(String statusText, String inReplyToID) throws TwitterServiceException {
 
         logger.info("Attempting to reply to status through Twitter API.");
 
         verifyTextLength(statusText);
 
-        twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
-        statusUpdate.setInReplyToStatusId(inReplyToID);
-
         try {
 
-            Optional<Status> newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
-                    .map(status -> createNewStatusObject(status));
+            twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
+            statusUpdate.setInReplyToStatusId(Long.parseLong(inReplyToID.trim()));
 
-            cacheUp.getTimelineCache().clear();
+            try {
 
-            return newStatus;
+                Optional<Status> newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
+                        .map(status -> createNewStatusObject(status));
+
+                cacheUp.getTimelineCache().clear();
+
+                return newStatus;
 
 
-        } catch (TwitterException twitterException) {
+            } catch (TwitterException twitterException) {
 
-            logger.info("Twitter replyToTweet aborted. Twitter Exception thrown.");
+                logger.info("Twitter replyToTweet aborted. Twitter Exception thrown.");
 
-            throw handleTwitterException(twitterException);
+                throw handleTwitterException(twitterException);
+
+            }
+
+        } catch (NumberFormatException numberFormatException) {
+
+            logger.info("Twitter replyToTweet aborted. NumberFormatException occured during Long.parse of inReplyToID.");
+
+            throw new TwitterServiceException(
+                    "inReplyToID was not a parseable long type.",
+                    numberFormatException
+            );
 
         }
 
