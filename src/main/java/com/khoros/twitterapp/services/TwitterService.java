@@ -202,7 +202,7 @@ public class TwitterService {
 
     private void verifyTextLength(String statusText) throws TwitterServiceException {
 
-        logger.info("Verify length of new status text.");
+        logger.info("Verifying length of new status text.");
 
         if (StringUtils.isEmpty(statusText)) {
 
@@ -217,6 +217,8 @@ public class TwitterService {
             throw new TwitterServiceException(TwitterService.TWEET_TOO_LONG_MSG);
 
         }
+
+        logger.info("Text passed length verification.");
 
     }
 

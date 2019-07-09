@@ -184,8 +184,8 @@ public class TwitterServiceTest {
 
         StringBuilder sb = new StringBuilder();
 
-        for(int i = 0; i < 10; i++) {
-            sb.append("abcdefghijklmnopqrstuvwxyzabc");
+        for(int i = 0; i <= TwitterService.MAX_TWEET_LENGTH; i++) {
+            sb.append("a");
         }
 
         try {
