@@ -166,7 +166,7 @@ public class TwitterService {
 
         } catch (NumberFormatException numberFormatException) {
 
-            logger.info("Twitter replyToTweet aborted. NumberFormatException occured during Long.parse of inReplyToID.");
+            logger.info("Twitter replyToTweet aborted. NumberFormatException thrown.");
 
             throw new TwitterServiceException(
                     "inReplyToID was not a parseable long type.",

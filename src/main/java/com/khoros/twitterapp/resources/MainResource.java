@@ -24,7 +24,7 @@ public class MainResource {
     private final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private final TwitterService twitterService;
     private final String headerACAO = "Access-Control-Allow-Origin";
-    private final String origin = "http://localhost:9000";
+    private final String origin = "*";
 
     @Inject
     public MainResource(TwitterService twitterService) {
@@ -197,7 +197,8 @@ public class MainResource {
 
         } else {
 
-            logger.error("Twitter Service Exception — Error Cause: {}",
+            logger.error("Twitter Service Exception — Error Cause: {}: {}",
+                    exception.getCause().toString(),
                     exception.getCause().getMessage(),
                     exception);
 
