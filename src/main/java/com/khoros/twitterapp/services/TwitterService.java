@@ -20,6 +20,8 @@ public class TwitterService {
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
+    public static final String TW_ERR_MSG = "TwitterException thrown.";
+    public static final String ID_TYPE_ERR_MSG = "NumberFormatException thrown during replyToTweet.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
@@ -167,9 +169,12 @@ public class TwitterService {
         } catch (NumberFormatException numberFormatException) {
 
             logger.info("TwitterService replyToTweet aborted. NumberFormatException thrown.");
+            logger.error("NumberFormatException thrown: {}",
+                    numberFormatException.getMessage(),
+                    numberFormatException);
 
             throw new TwitterServiceException(
-                    "inReplyToID was not a parseable long type.",
+                    "NumberFormatException thrown during replyToTweet.",
                     numberFormatException
             );
 
@@ -246,20 +251,20 @@ public class TwitterService {
 
         if (!e.getMessage().isEmpty()) {
 
-            logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
+            logger.error("TwitterException thrown — Error Message: {} — Exception Code: {}",
                     e.getMessage(),
                     e.getExceptionCode(),
                     e);
 
         } else {
 
-            logger.error("Unknown Twitter Exception — Exception Code: {}",
+            logger.error("Unknown TwitterException thrown — Exception Code: {}",
                     e.getExceptionCode(),
                     e);
 
         }
 
-        return new TwitterServiceException("Twitter Exception thrown.", e);
+        return new TwitterServiceException(TW_ERR_MSG, e);
 
     }
 }

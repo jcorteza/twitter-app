@@ -186,7 +186,7 @@ public class MainResource {
 
         if (exception.getCause() == null) {
 
-            logger.error("Twitter Service Exception — Error Message: {}",
+            logger.error("TwitterServiceException — Error Message: {}",
                     exception.getMessage(),
                     exception);
 
@@ -197,13 +197,23 @@ public class MainResource {
 
         } else {
 
-            logger.error("Twitter Service Exception — Error Cause: {}",
+            logger.error("TwitterServiceException — Error Cause: {}: {}",
                     exception.getCause().getClass().getSimpleName(),
+                    exception.getCause().getMessage(),
                     exception);
+
+            if(exception.getCause().getClass().getSimpleName().equals("NumberFormatException")) {
+
+                return Response
+                        .status(Response.Status.FORBIDDEN)
+                        .entity(exception.getMessage())
+                        .build();
+
+            }
 
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(exception.getCause().getMessage())
+                    .entity(exception.getMessage())
                     .build();
 
         }
