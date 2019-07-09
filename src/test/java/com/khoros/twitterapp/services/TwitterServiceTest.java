@@ -198,6 +198,24 @@ public class TwitterServiceTest {
     }
 
     @Test
+    public void replyToTweetTestTypeError() {
+
+        try {
+
+            String testID = "999999???";
+            twSingleton.replyToTweet(testStatusText, testID);
+
+            fail("Expected a TwitterServiceException to be thrown.");
+
+        } catch (TwitterServiceException e) {
+
+            assertEquals("inReplyToID was not a parseable long type.", e.getMessage());
+            assertEquals(NumberFormatException.class, e.getCause().getClass());
+
+        }
+    }
+
+    @Test
     public void createNewStatusObjectTest() {
 
         Status exampleNewStatus = twSingleton.createNewStatusObject(exampleStatus);
