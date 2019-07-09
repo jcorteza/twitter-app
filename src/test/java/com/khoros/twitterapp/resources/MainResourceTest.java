@@ -224,7 +224,7 @@ public class MainResourceTest {
     }
 
     @Test
-    public void replyToTweetError() throws TwitterException {
+    public void replyToTweetTestTwitterException() throws TwitterException {
         String testID = "999999";
         StatusUpdate testUpdate = new StatusUpdate(exampleText);
         testUpdate.setInReplyToStatusId(Long.parseLong(testID));
@@ -237,7 +237,7 @@ public class MainResourceTest {
     }
 
     @Test
-    public void replyToTypeError() throws TwitterException {
+    public void replyToTweetTestTypeError() throws TwitterException {
 
         String testID = "999999???";
         Response testResponse = mainResource.replyToTweet(exampleText, testID);
