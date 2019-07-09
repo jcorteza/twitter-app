@@ -224,10 +224,10 @@ public class TwitterService {
 
     private TwitterServiceException handleTwitterException(TwitterException e) {
 
-        if (e.isErrorMessageAvailable()) {
+        if (!e.getMessage().isEmpty()) {
 
             logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
-                    e.getErrorMessage(),
+                    e.getMessage(),
                     e.getExceptionCode(),
                     e);
 

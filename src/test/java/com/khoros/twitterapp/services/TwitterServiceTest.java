@@ -143,11 +143,18 @@ public class TwitterServiceTest {
     }
 
     @Test
-    public void getUserTimelineTestError() {
+    public void getUserTimelineTestError() throws TwitterException {
 
         try {
 
-            when(mockFactory.getUserTimeline()).thenThrow()
+            when(mockFactory.getUserTimeline()).thenThrow(testExceptionWithoutMessage);
+            twSingleton.getUserTimeline();
+
+            fail("Expected TwitterServiceException to be thrown.");
+
+        } catch (TwitterServiceException e) {
+
+            assertEquals(e.getCause(), testExceptionWithoutMessage);
         }
     }
 
@@ -248,7 +255,7 @@ public class TwitterServiceTest {
 
         } catch (TwitterServiceException twServiceException) {
 
-            assertEquals(twServiceException.getCause().getMessage(), testEceptionWithmessage.getErrorMessage());
+            assertEquals(twServiceException.getCause().getMessage(), testEceptionWithmessage.getMessage());
         }
     }
 

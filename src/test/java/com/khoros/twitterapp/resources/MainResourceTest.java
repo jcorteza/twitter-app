@@ -10,6 +10,7 @@ import com.khoros.twitterapp.models.Status;
 import com.khoros.twitterapp.models.User;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -170,6 +171,30 @@ public class MainResourceTest {
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.getFilteredTimeline(exampleText).getStatusInfo().getStatusCode());
         assertEquals(exceptionText, mainResource.getHomeTimeline().getEntity());
+
+    }
+
+    @Test
+    public void getUserTimelineTestSuccess() {
+
+        try {
+
+            when(mockFactory.getUserTimeline()).thenReturn(exampleTwitterFeed);
+            Response testResponse = mainResource.getUserTimeline();
+            List<Status> testList = (List<Status>) testResponse.getEntity();
+
+            assertEquals(Response.Status.OK.getStatusCode(), testResponse.getStatusInfo().getStatusCode());
+            assertEquals(exampleTwitterFeed.get(0).getText(), testList.get(0).getMessage());
+
+        } catch (TwitterException e) {
+
+            fail("Test failed due to a TwitterException.");
+
+        }
+    }
+
+    @Test
+    public void getUserTimelineTestError() {
 
     }
 
