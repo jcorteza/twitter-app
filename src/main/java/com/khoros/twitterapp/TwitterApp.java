@@ -10,10 +10,6 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
     }
 
     @Override
-    protected void bootstrapLogging() {
-    }
-
-    @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
 
         TwitterFactoryComponent twComponent = DaggerTwitterFactoryComponent.builder()
