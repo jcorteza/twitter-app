@@ -2,7 +2,6 @@ package com.khoros.twitterapp.resources;
 
 import com.khoros.twitterapp.ResponseImplTest;
 import com.khoros.twitterapp.Twitter4jStatusImpl;
-import com.khoros.twitterapp.resources.MainResource;
 import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
 import com.khoros.twitterapp.services.TwitterServiceException;
@@ -10,7 +9,6 @@ import com.khoros.twitterapp.models.Status;
 import com.khoros.twitterapp.models.User;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -194,7 +192,13 @@ public class MainResourceTest {
     }
 
     @Test
-    public void getUserTimelineTestError() {
+    public void getUserTimelineTestError() throws TwitterException {
+
+            when(mockFactory.getUserTimeline()).thenThrow(new TwitterException(exceptionText));
+            Response testResponse = mainResource.getUserTimeline();
+
+            assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), testResponse.getStatusInfo().getStatusCode());
+            assertEquals(exceptionText, testResponse.getEntity());
 
     }
 
