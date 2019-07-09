@@ -1,8 +1,7 @@
-package com.khoros.twitterapp;
+package com.khoros.twitterapp.services;
 
-import com.khoros.twitterapp.services.TwitterService;
-import com.khoros.twitterapp.services.TwitterServiceException;
-import com.khoros.twitterapp.services.CacheUp;
+import com.khoros.twitterapp.ResponseImplTest;
+import com.khoros.twitterapp.Twitter4jStatusImpl;
 import com.khoros.twitterapp.models.Status;
 
 
@@ -31,6 +30,8 @@ public class TwitterServiceTest {
     private String testStatusText;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
+    private TwitterException testExceptionWithoutMessage;
+    private TwitterException testEceptionWithmessage;
 
     @Before
     public void setup() {
@@ -43,6 +44,8 @@ public class TwitterServiceTest {
         twResponse = new ResponseImplTest<>();
         exampleStatus = new Twitter4jStatusImpl();
         twResponse.add(exampleStatus);
+        testExceptionWithoutMessage = new TwitterException("");
+        testEceptionWithmessage = new TwitterException("Test Exception");
 
     }
 
@@ -74,6 +77,24 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getText(), serviceResponse.get().getMessage());
         assertEquals(exampleStatus.getCreatedAt(), serviceResponse.get().getCreatedAt());
         assertEquals(exampleStatus.getId(), serviceResponse.get().getStatusID());
+
+    }
+
+    @Test
+    public void updateStatusTestError() throws TwitterException {
+
+        try{
+
+            when(mockFactory.updateStatus(testStatusText)).thenThrow(testExceptionWithoutMessage);
+            twSingleton.updateStatus(testStatusText);
+
+            fail("Expected TwitterServiceException to be thrown.");
+
+        } catch (TwitterServiceException e) {
+
+            assertEquals(e.getCause(), testExceptionWithoutMessage);
+
+        }
 
     }
 
@@ -119,6 +140,15 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
         assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
 
+    }
+
+    @Test
+    public void getUserTimelineTestError() {
+
+        try {
+
+            when(mockFactory.getUserTimeline()).thenThrow()
+        }
     }
 
     @Test
@@ -212,13 +242,13 @@ public class TwitterServiceTest {
 
             when(mockFactory
                     .updateStatus(testUpdate))
-                    .thenThrow(new TwitterException("Test Exception"));
+                    .thenThrow(testEceptionWithmessage);
             twSingleton.replyToTweet(testStatusText, testID);
             fail("Expected a TwitterServiceException to be thrown.");
 
         } catch (TwitterServiceException twServiceException) {
 
-            assertEquals(twServiceException.getCause().getMessage(), "Test Exception");
+            assertEquals(twServiceException.getCause().getMessage(), testEceptionWithmessage.getErrorMessage());
         }
     }
 
@@ -228,19 +258,19 @@ public class TwitterServiceTest {
         long testID = 999999;
         StatusUpdate testUpdate = new StatusUpdate(testStatusText);
         testUpdate.setInReplyToStatusId(testID);
-        TwitterException testException = new TwitterException("");
 
         try {
 
             when(mockFactory
                     .updateStatus(testUpdate))
-                    .thenThrow(testException);
+                    .thenThrow(testExceptionWithoutMessage);
             twSingleton.replyToTweet(testStatusText, testID);
             fail("Expected a TwitterServiceException to be thrown.");
 
         } catch (TwitterServiceException twServiceException) {
 
-            assertEquals(twServiceException.getCause(), testException);
+            assertEquals(twServiceException.getCause(), testExceptionWithoutMessage);
+
         }
     }
 

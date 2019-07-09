@@ -1,5 +1,6 @@
-package com.khoros.twitterapp;
+package com.khoros.twitterapp.services;
 
+import com.khoros.twitterapp.Twitter4jStatusImpl;
 import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
 import org.junit.Assert;

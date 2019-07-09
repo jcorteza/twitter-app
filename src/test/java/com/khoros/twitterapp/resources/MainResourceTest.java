@@ -1,5 +1,7 @@
-package com.khoros.twitterapp;
+package com.khoros.twitterapp.resources;
 
+import com.khoros.twitterapp.ResponseImplTest;
+import com.khoros.twitterapp.Twitter4jStatusImpl;
 import com.khoros.twitterapp.resources.MainResource;
 import com.khoros.twitterapp.services.CacheUp;
 import com.khoros.twitterapp.services.TwitterService;
