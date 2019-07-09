@@ -191,10 +191,17 @@ public class TwitterService {
         newUser.setProfileImageUrl(originalStatus.getUser().get400x400ProfileImageURL());
 
         Status newStatus = new com.khoros.twitterapp.models.Status();
+        String url = new StringBuilder()
+                .append("https://twitter.com/")
+                .append(handle)
+                .append("/status/")
+                .append(originalStatus.getId())
+                .toString();
         newStatus.setMessage(originalStatus.getText());
         newStatus.setUser(newUser);
         newStatus.setCreatedAt(originalStatus.getCreatedAt());
         newStatus.setStatusID(originalStatus.getId());
+        newStatus.setPostUrl(url);
 
         return newStatus;
 

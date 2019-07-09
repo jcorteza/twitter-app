@@ -12,6 +12,8 @@ public class Status {
 
     private Date createdAt;
 
+    private String postUrl;
+
     public void setStatusID(long id) {
 
         this.statusID = id;
@@ -58,5 +60,13 @@ public class Status {
 
         return createdAt;
         
+    }
+
+    public void setPostUrl(String postUrl) {
+        this.postUrl = postUrl;
+    }
+
+    public String getPostUrl() {
+        return postUrl;
     }
 }
