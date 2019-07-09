@@ -209,7 +209,7 @@ public class TwitterServiceTest {
 
         } catch (TwitterServiceException e) {
 
-            assertEquals("inReplyToID was not a parseable long type.", e.getMessage());
+            assertEquals(TwitterService.ID_TYPE_ERR_MSG, e.getMessage());
             assertEquals(NumberFormatException.class, e.getCause().getClass());
 
         }

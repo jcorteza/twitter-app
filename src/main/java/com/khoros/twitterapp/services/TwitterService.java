@@ -20,8 +20,7 @@ public class TwitterService {
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
-    public static final String TW_ERR_MSG = "TwitterException thrown.";
-    public static final String ID_TYPE_ERR_MSG = "NumberFormatException thrown during replyToTweet.";
+    public static final String ID_TYPE_ERR_MSG = "Wrong type for inReplyTo value. Must be a number.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
@@ -174,7 +173,7 @@ public class TwitterService {
                     numberFormatException);
 
             throw new TwitterServiceException(
-                    "NumberFormatException thrown during replyToTweet.",
+                    ID_TYPE_ERR_MSG,
                     numberFormatException
             );
 
@@ -264,7 +263,7 @@ public class TwitterService {
 
         }
 
-        return new TwitterServiceException(TW_ERR_MSG, e);
+        return new TwitterServiceException(GENERAL_ERR_MSG, e);
 
     }
 }

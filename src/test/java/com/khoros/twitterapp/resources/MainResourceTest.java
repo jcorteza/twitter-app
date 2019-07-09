@@ -137,7 +137,7 @@ public class MainResourceTest {
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.getHomeTimeline().getStatusInfo().getStatusCode());
-        assertEquals(TwitterService.TW_ERR_MSG, mainResource.getHomeTimeline().getEntity());
+        assertEquals(TwitterService.GENERAL_ERR_MSG, mainResource.getHomeTimeline().getEntity());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class MainResourceTest {
         when(twSingleton.getHomeTimeline()).thenThrow(new TwitterException(exceptionText));
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.getFilteredTimeline(exampleText).getStatusInfo().getStatusCode());
-        assertEquals(TwitterService.TW_ERR_MSG, mainResource.getHomeTimeline().getEntity());
+        assertEquals(TwitterService.GENERAL_ERR_MSG, mainResource.getHomeTimeline().getEntity());
 
     }
 
@@ -198,7 +198,7 @@ public class MainResourceTest {
             Response testResponse = mainResource.getUserTimeline();
 
             assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), testResponse.getStatusInfo().getStatusCode());
-            assertEquals(TwitterService.TW_ERR_MSG, testResponse.getEntity());
+            assertEquals(TwitterService.GENERAL_ERR_MSG, testResponse.getEntity());
 
     }
 
@@ -232,7 +232,7 @@ public class MainResourceTest {
         when(mockFactory.updateStatus(testUpdate)).thenThrow(new TwitterException(""));
 
         assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.replyToTweet(exampleText, testID).getStatusInfo().getStatusCode());
-        assertEquals(TwitterService.TW_ERR_MSG, mainResource.replyToTweet(exampleText, testID).getEntity());
+        assertEquals(TwitterService.GENERAL_ERR_MSG, mainResource.replyToTweet(exampleText, testID).getEntity());
 
     }
 
