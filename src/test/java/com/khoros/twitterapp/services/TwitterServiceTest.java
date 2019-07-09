@@ -28,6 +28,7 @@ public class TwitterServiceTest {
     private TwitterService twSingleton;
     private Twitter mockFactory;
     private String testStatusText;
+    private String testUrl;
     private ResponseList<twitter4j.Status> twResponse;
     private twitter4j.Status exampleStatus;
     private TwitterException testExceptionWithoutMessage;
@@ -46,6 +47,12 @@ public class TwitterServiceTest {
         twResponse.add(exampleStatus);
         testExceptionWithoutMessage = new TwitterException("");
         testEceptionWithmessage = new TwitterException("Test Exception");
+        testUrl = new StringBuilder()
+                .append("https://twitter.com/")
+                .append(exampleStatus.getUser().getScreenName())
+                .append("/status/")
+                .append(exampleStatus.getId())
+                .toString();
 
     }
 
@@ -77,6 +84,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getText(), serviceResponse.get().getMessage());
         assertEquals(exampleStatus.getCreatedAt(), serviceResponse.get().getCreatedAt());
         assertEquals(exampleStatus.getId(), serviceResponse.get().getStatusID());
+        assertEquals(testUrl, serviceResponse.get().getPostUrl());
 
     }
 
@@ -117,6 +125,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
         assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
         assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
+        assertEquals(testUrl, responseList.get().get(0).getPostUrl());
 
     }
 
@@ -139,6 +148,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
         assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
         assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
+        assertEquals(testUrl, responseList.get().get(0).getPostUrl());
 
     }
 
@@ -183,6 +193,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getText(), response.get().getMessage());
         assertEquals(exampleStatus.getCreatedAt(), response.get().getCreatedAt());
         assertEquals(exampleStatus.getId(), response.get().getStatusID());
+        assertEquals(testUrl, response.get().getPostUrl());
 
     }
 
@@ -197,6 +208,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getUser().getScreenName(), exampleNewStatus.getUser().getTwHandle());
         assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), exampleNewStatus.getUser().getProfileImageUrl());
         assertEquals(exampleStatus.getId(), exampleNewStatus.getStatusID());
+        assertEquals(testUrl, exampleNewStatus.getPostUrl());
 
     }
 
