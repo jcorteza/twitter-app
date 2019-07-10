@@ -8,7 +8,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class AccessOriginFilter implements ContainerResponseFilter {
     private final String headerACAO = "Access-Control-Allow-Origin";
-    private final String origin = "*";
+    private final String origin = "http://localhost:9000";
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)  {
