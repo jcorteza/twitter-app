@@ -22,5 +22,6 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
                 .build();
 
         environment.jersey().register(resourceComponent.mainResource());
+        environment.jersey().register(SetDefaultHeaderFeature.class);
     }
 }

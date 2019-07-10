@@ -23,9 +23,6 @@ public class MainResource {
 
     private final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private final TwitterService twitterService;
-    private final String headerACAO = "Access-Control-Allow-Origin";
-    private final String origin = "*";
-    private Response baseResponse = Response.noContent().header(headerACAO, origin).build();
 
     @Inject
     public MainResource(TwitterService twitterService) {
@@ -45,12 +42,10 @@ public class MainResource {
 
             return twitterService.updateStatus(statusText)
                     .map(newStatus -> Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.CREATED)
                             .entity(newStatus)
                             .build())
                     .orElse(Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
@@ -74,12 +69,10 @@ public class MainResource {
 
             return twitterService.getHomeTimeline()
                     .map(feedResponse -> Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.OK)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
@@ -105,12 +98,10 @@ public class MainResource {
 
             return twitterService.getFilteredHomeTimeline(keyword)
                     .map(feedResponse -> Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.OK)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
@@ -135,12 +126,10 @@ public class MainResource {
 
             return twitterService.getUserTimeline()
                     .map(feedResponse -> Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.OK)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
-                            .fromResponse(baseResponse)
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
@@ -157,7 +146,7 @@ public class MainResource {
     @Path("/reply")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @POST
-    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") long inReplyToID) {
+    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") Long inReplyToID) {
 
         logger.info("Accessing Twitter Service replyToTweet feature.");
 
@@ -165,12 +154,10 @@ public class MainResource {
 
             return twitterService.replyToTweet(statusText.trim(), inReplyToID)
                     .map(newStatus -> Response
-                        .fromResponse(baseResponse)
                         .status(Response.Status.CREATED)
                         .entity(newStatus)
                         .build())
                     .orElse(Response
-                        .fromResponse(baseResponse)
                         .status(Response.Status.INTERNAL_SERVER_ERROR)
                         .entity(TwitterService.GENERAL_ERR_MSG)
                         .build());

@@ -136,16 +136,15 @@ public class TwitterService {
 
     }
 
-    public Optional<Status> replyToTweet(String statusText, long inReplyToID) throws TwitterServiceException {
+    public Optional<Status> replyToTweet(String statusText, Long inReplyToID) throws TwitterServiceException {
 
         logger.info("Attempting to reply to status through Twitter API.");
 
-        verifyTextLength(statusText);
-//        if (Long.valueOf(inReplyToID).equals(null)) {
-//
-//            throw new TwitterServiceException(ID_ERR_MSG);
-//
-//        }
+        if(inReplyToID == null) {
+
+            throw new TwitterServiceException(ID_ERR_MSG);
+
+        }
 
         twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
         statusUpdate.setInReplyToStatusId(inReplyToID);
