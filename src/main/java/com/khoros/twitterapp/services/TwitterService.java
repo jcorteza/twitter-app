@@ -20,6 +20,7 @@ public class TwitterService {
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
+    public static final String IN_REPLY_TO_NUll_MSG = "Value for inReplyTo is required.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
@@ -35,39 +36,25 @@ public class TwitterService {
 
         logger.info("Attempting to update status through Twitter API.");
 
-        if (StringUtils.isEmpty(statusText)) {
+        verifyTextLength(statusText);
 
-            logger.info("Twitter status update unsuccessful.");
+        try {
 
-            throw new TwitterServiceException(TwitterService.NO_TWEET_TEXT_MSG);
+            cacheUp.getTimelineCache().clear();
 
-        } else if (statusText.length() > TwitterService.MAX_TWEET_LENGTH) {
-
-            logger.info("Twitter status update unsuccessful.");
-
-            throw new TwitterServiceException(TwitterService.TWEET_TOO_LONG_MSG);
-
-        } else {
-
-            Optional<Status> responseOptional = null;
-
-            try {
-
-                responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
-                        .map(s -> createNewStatusObject(s));
-
-                cacheUp.getTimelineCache().clear();
-
-            } catch (TwitterException twitterException) {
-
-                logger.info("Twitter status update aborted. Twitter Exception thrown.");
-
-                handleTwitterException(twitterException);
-
-            }
+            Optional<Status> responseOptional = Optional.ofNullable(twitterFactory.updateStatus(statusText))
+                    .map(s -> createNewStatusObject(s));
 
             return responseOptional;
+
+        } catch (TwitterException twitterException) {
+
+            logger.info("TwitterService status update aborted. Twitter Exception thrown.");
+
+            throw handleTwitterException(twitterException);
+
         }
+
     }
 
     public Optional<List<Status>> getHomeTimeline() throws TwitterServiceException {
@@ -91,9 +78,9 @@ public class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                logger.info("Home timeline retrieval aborted. Twitter Exception thrown.");
+                logger.info("TwitterService home timeline retrieval aborted. Twitter Exception thrown.");
 
-                handleTwitterException(twitterException);
+                throw handleTwitterException(twitterException);
 
             }
 
@@ -133,9 +120,9 @@ public class TwitterService {
 
             } catch (TwitterException twitterException) {
 
-                logger.info("User timeline retrieval aborted. Twitter Exception thrown.");
+                logger.info("TwitterService user timeline retrieval aborted. Twitter Exception thrown.");
 
-                handleTwitterException(twitterException);
+                throw handleTwitterException(twitterException);
 
             }
 
@@ -149,6 +136,40 @@ public class TwitterService {
 
     }
 
+    public Optional<Status> replyToTweet(String statusText, Long inReplyToID) throws TwitterServiceException {
+
+        logger.info("Attempting to reply to status through Twitter API.");
+
+        verifyTextLength(statusText);
+        if(inReplyToID == null) {
+
+            throw new TwitterServiceException(IN_REPLY_TO_NUll_MSG);
+
+        }
+
+        twitter4j.StatusUpdate statusUpdate = new twitter4j.StatusUpdate(statusText);
+        statusUpdate.setInReplyToStatusId(inReplyToID);
+
+        try {
+
+            Optional<Status> newStatus = Optional.ofNullable(twitterFactory.updateStatus(statusUpdate))
+                    .map(status -> createNewStatusObject(status));
+
+            cacheUp.getTimelineCache().clear();
+
+            return newStatus;
+
+
+        } catch (TwitterException twitterException) {
+
+            logger.info("TwitterService replyToTweet aborted. Twitter Exception thrown.");
+
+            throw handleTwitterException(twitterException);
+
+        }
+
+    }
+
     public void setCacheUp(CacheUp cacheUp) {
 
         this.cacheUp = cacheUp;
@@ -156,7 +177,9 @@ public class TwitterService {
     }
 
     public CacheUp getCacheUp() {
+
         return cacheUp;
+
     }
 
     public Twitter getTwitterFactory() {
@@ -183,30 +206,38 @@ public class TwitterService {
         newStatus.setMessage(originalStatus.getText());
         newStatus.setUser(newUser);
         newStatus.setCreatedAt(originalStatus.getCreatedAt());
+        newStatus.setStatusID(originalStatus.getId());
         newStatus.setPostUrl(url);
 
         return newStatus;
 
     }
 
-    private void handleTwitterException(TwitterException e) throws TwitterServiceException {
+    private void verifyTextLength(String statusText) throws TwitterServiceException {
 
-        if (e.isErrorMessageAvailable()) {
+        logger.info("Verifying length of new status text.");
 
-            logger.error("Twitter Exception — Error Message: {} — Exception Code: {}",
-                    e.getErrorMessage(),
-                    e.getExceptionCode(),
-                    e);
+        if (StringUtils.isEmpty(statusText)) {
 
-        } else {
+            logger.info("Twitter status update unsuccessful.");
 
-            logger.error("Unknown Twitter Exception — Exception Code: {}",
-                    e.getExceptionCode(),
-                    e);
+            throw new TwitterServiceException(TwitterService.NO_TWEET_TEXT_MSG);
+
+        } else if (statusText.length() > TwitterService.MAX_TWEET_LENGTH) {
+
+            logger.info("Twitter status update unsuccessful.");
+
+            throw new TwitterServiceException(TwitterService.TWEET_TOO_LONG_MSG);
 
         }
 
-        throw new TwitterServiceException("Twitter Exception thrown.", e);
+        logger.info("Text passed length verification.");
+
+    }
+
+    private TwitterServiceException handleTwitterException(TwitterException e) {
+
+        return new TwitterServiceException(GENERAL_ERR_MSG, e);
 
     }
 }

@@ -23,8 +23,6 @@ public class MainResource {
 
     private final Logger logger = LoggerFactory.getLogger(MainResource.class);
     private final TwitterService twitterService;
-    private final String headerACAO = "Access-Control-Allow-Origin";
-    private final String origin = "http://localhost:9000";
 
     @Inject
     public MainResource(TwitterService twitterService) {
@@ -45,20 +43,18 @@ public class MainResource {
             return twitterService.updateStatus(statusText)
                     .map(newStatus -> Response
                             .status(Response.Status.CREATED)
-                            .header(headerACAO,origin)
                             .entity(newStatus)
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service process, updateStatus, aborted. Twitter Service Excpetion thrown.");
+            logger.info("MainResource process, postStatusUpdate, aborted. TwitterServiceExcpetion thrown.");
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
         }
 
     }
@@ -74,20 +70,18 @@ public class MainResource {
             return twitterService.getHomeTimeline()
                     .map(feedResponse -> Response
                             .status(Response.Status.OK)
-                            .header(headerACAO, origin)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service process, getHomeTimeline, aborted. Twitter Service Exception thrown." );
+            logger.info("MainResource process, getHomeTimeline, aborted. TwitterServiceException thrown." );
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
 
         }
 
@@ -105,20 +99,18 @@ public class MainResource {
             return twitterService.getFilteredHomeTimeline(keyword)
                     .map(feedResponse -> Response
                             .status(Response.Status.OK)
-                            .header(headerACAO,origin)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service process, getFilteredHomeTimeline, aborted. Twitter Service Exception thrown." );
+            logger.info("MainResource process, getFilteredTimeline, aborted. TwitterServiceException thrown." );
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
 
         }
 
@@ -135,29 +127,54 @@ public class MainResource {
             return twitterService.getUserTimeline()
                     .map(feedResponse -> Response
                             .status(Response.Status.OK)
-                            .header(headerACAO, origin)
                             .entity(feedResponse)
                             .build())
                     .orElse(Response
                             .status(Response.Status.INTERNAL_SERVER_ERROR)
-                            .header(headerACAO,origin)
                             .entity(TwitterService.GENERAL_ERR_MSG)
                             .build());
 
         } catch (TwitterServiceException twServiceException) {
 
-            logger.info("Twitter Service processk, getUserTimeline, aborted. Twitter Service Exception thrown.");
+            logger.info("MainResource process, getUserTimeline, aborted. TwitterServiceException thrown.");
 
-            return handleException(twServiceException);
+            return createExceptionResponseObject(twServiceException);
         }
 
     }
 
-    private Response handleException(TwitterServiceException exception) {
+    @Path("/reply")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @POST
+    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") Long inReplyToID) {
+
+        logger.info("Accessing Twitter Service replyToTweet feature.");
+
+        try {
+
+            return twitterService.replyToTweet(statusText.trim(), inReplyToID)
+                    .map(newStatus -> Response
+                        .status(Response.Status.CREATED)
+                        .entity(newStatus)
+                        .build())
+                    .orElse(Response
+                        .status(Response.Status.INTERNAL_SERVER_ERROR)
+                        .entity(TwitterService.GENERAL_ERR_MSG)
+                        .build());
+
+        } catch (TwitterServiceException twServiceException) {
+
+            logger.info("MainResource process, replyToTweet, aborted. TwitterServiceExcpetion thrown.");
+
+            return createExceptionResponseObject(twServiceException);
+        }
+    }
+
+    private Response createExceptionResponseObject(TwitterServiceException exception) {
 
         if (exception.getCause() == null) {
 
-            logger.error("Twitter Service Exception — Error Message: {}",
+            logger.error("TwitterServiceException — Error Message: {}",
                     exception.getMessage(),
                     exception);
 
@@ -168,13 +185,14 @@ public class MainResource {
 
         } else {
 
-            logger.error("Twitter Service Exception — Error Cause: {}",
+            logger.error("TwitterServiceException — Error Cause: {}: {}",
+                    exception.getCause().getClass().getSimpleName(),
                     exception.getCause().getMessage(),
                     exception);
 
             return Response
                     .status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(exception.getCause().getMessage())
+                    .entity(exception.getMessage())
                     .build();
 
         }
