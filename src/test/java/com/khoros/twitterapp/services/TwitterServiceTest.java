@@ -197,24 +197,6 @@ public class TwitterServiceTest {
 
     }
 
-//    @Test
-//    public void replyToTweetTestTypeError() {
-//
-//        try {
-//
-//            Optional<long> testId = Optional.ofNullable();
-//            twSingleton.replyToTweet(testStatusText, testID);
-//
-//            fail("Expected a TwitterServiceException to be thrown.");
-//
-//        } catch (TwitterServiceException e) {
-//
-//            assertEquals(TwitterService.ID_TYPE_ERR_MSG, e.getMessage());
-//            assertEquals(NumberFormatException.class, e.getCause().getClass());
-//
-//        }
-//    }
-
     @Test
     public void createNewStatusObjectTest() {
 
