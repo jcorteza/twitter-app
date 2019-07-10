@@ -20,7 +20,7 @@ public class TwitterService {
 
     public static final int MAX_TWEET_LENGTH = 280;
     public static final String GENERAL_ERR_MSG = "Whoops! Something went wrong. Try again later.";
-    public static final String ID_ERR_MSG = "No value entered for inReplyTo.";
+    public static final String IN_REPLY_TO_NUll_MSG = "No value entered for inReplyTo.";
     public static final String NO_TWEET_TEXT_MSG = "No tweet text entered.";
     public static final String TWEET_TOO_LONG_MSG = "Tweet text surpassed " + TwitterService.MAX_TWEET_LENGTH + " characters.";
     public Twitter twitterFactory;
@@ -143,7 +143,7 @@ public class TwitterService {
         verifyTextLength(statusText);
         if(inReplyToID == null) {
 
-            throw new TwitterServiceException(ID_ERR_MSG);
+            throw new TwitterServiceException(IN_REPLY_TO_NUll_MSG);
 
         }
 

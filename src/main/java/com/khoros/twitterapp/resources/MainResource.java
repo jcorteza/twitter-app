@@ -146,7 +146,7 @@ public class MainResource {
     @Path("/reply")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @POST
-    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") long inReplyToID) {
+    public Response replyToTweet(@FormParam("message") String statusText, @FormParam("inReplyTo") Long inReplyToID) {
 
         logger.info("Accessing Twitter Service replyToTweet feature.");
 

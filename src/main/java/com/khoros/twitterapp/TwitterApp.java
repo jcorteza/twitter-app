@@ -17,9 +17,14 @@ public class TwitterApp extends Application<TwitterAppConfiguration> {
     @Override
     public void run(TwitterAppConfiguration configuration, Environment environment) {
 
+        final String accessAllowedOrigin = "http://localhost:9000";
+        final String accessAllowedMethods = "GET, POST";
+        final String accessAllowedHeaders = "Origin, Content-Type, Method";
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("cors", CrossOriginFilter.class);
-        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, "*");
-        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_ORIGIN_HEADER, accessAllowedOrigin);
+        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_METHODS_HEADER, accessAllowedMethods);
+        cors.setInitParameter(CrossOriginFilter.ACCESS_CONTROL_ALLOW_HEADERS_HEADER, accessAllowedHeaders);
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), false, "*");
 
         TwitterFactoryComponent twComponent = DaggerTwitterFactoryComponent.builder()
                 .twitterFactoryModule(
