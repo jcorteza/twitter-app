@@ -140,6 +140,7 @@ public class TwitterService {
 
         logger.info("Attempting to reply to status through Twitter API.");
 
+        verifyTextLength(statusText);
         if(inReplyToID == null) {
 
             throw new TwitterServiceException(ID_ERR_MSG);
@@ -235,21 +236,6 @@ public class TwitterService {
     }
 
     private TwitterServiceException handleTwitterException(TwitterException e) {
-
-        if (!e.getMessage().isEmpty()) {
-
-            logger.error("TwitterException thrown — Error Message: {} — Exception Code: {}",
-                    e.getMessage(),
-                    e.getExceptionCode(),
-                    e);
-
-        } else {
-
-            logger.error("Unknown TwitterException thrown — Exception Code: {}",
-                    e.getExceptionCode(),
-                    e);
-
-        }
 
         return new TwitterServiceException(GENERAL_ERR_MSG, e);
 
