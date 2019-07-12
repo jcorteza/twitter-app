@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Status {
 
-    private long statusID;
+    private String statusID;
 
     private String message;
 
@@ -14,13 +14,13 @@ public class Status {
 
     private String postUrl;
 
-    public void setStatusID(long id) {
+    public void setStatusID(String id) {
 
         this.statusID = id;
 
     }
 
-    public long getStatusID() {
+    public String getStatusID() {
 
         return statusID;
 

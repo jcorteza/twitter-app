@@ -206,7 +206,7 @@ public class TwitterService {
         newStatus.setMessage(originalStatus.getText());
         newStatus.setUser(newUser);
         newStatus.setCreatedAt(originalStatus.getCreatedAt());
-        newStatus.setStatusID(originalStatus.getId());
+        newStatus.setStatusID(Long.toString(originalStatus.getId()));
         newStatus.setPostUrl(url);
 
         return newStatus;
