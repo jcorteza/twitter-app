@@ -83,7 +83,7 @@ public class TwitterServiceTest {
 
         assertEquals(exampleStatus.getText(), serviceResponse.get().getMessage());
         assertEquals(exampleStatus.getCreatedAt(), serviceResponse.get().getCreatedAt());
-        assertEquals(exampleStatus.getId(), serviceResponse.get().getStatusID());
+        assertEquals(exampleStatus.getId(), Long.parseLong(serviceResponse.get().getStatusID()));
         assertEquals(testUrl, serviceResponse.get().getPostUrl());
 
     }
@@ -124,7 +124,7 @@ public class TwitterServiceTest {
 
         assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
         assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
-        assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
+        assertEquals(exampleStatus.getId(), Long.parseLong(responseList.get().get(0).getStatusID()));
         assertEquals(testUrl, responseList.get().get(0).getPostUrl());
 
     }
@@ -146,8 +146,8 @@ public class TwitterServiceTest {
         }
 
         assertEquals(exampleStatus.getText(), responseList.get().get(0).getMessage());
+        assertEquals(exampleStatus.getId(), Long.parseLong(responseList.get().get(0).getStatusID()));
         assertEquals(exampleStatus.getCreatedAt(), responseList.get().get(0).getCreatedAt());
-        assertEquals(exampleStatus.getId(), responseList.get().get(0).getStatusID());
         assertEquals(testUrl, responseList.get().get(0).getPostUrl());
 
     }
@@ -192,7 +192,7 @@ public class TwitterServiceTest {
 
         assertEquals(exampleStatus.getText(), response.get().getMessage());
         assertEquals(exampleStatus.getCreatedAt(), response.get().getCreatedAt());
-        assertEquals(exampleStatus.getId(), response.get().getStatusID());
+        assertEquals(exampleStatus.getId(), Long.parseLong(response.get().getStatusID()));
         assertEquals(testUrl, response.get().getPostUrl());
 
     }
@@ -207,7 +207,7 @@ public class TwitterServiceTest {
         assertEquals(exampleStatus.getUser().getName(), exampleNewStatus.getUser().getName());
         assertEquals(exampleStatus.getUser().getScreenName(), exampleNewStatus.getUser().getTwHandle());
         assertEquals(exampleStatus.getUser().get400x400ProfileImageURL(), exampleNewStatus.getUser().getProfileImageUrl());
-        assertEquals(exampleStatus.getId(), exampleNewStatus.getStatusID());
+        assertEquals(exampleStatus.getId(), Long.parseLong(exampleNewStatus.getStatusID()));
         assertEquals(testUrl, exampleNewStatus.getPostUrl());
 
     }

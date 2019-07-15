@@ -34,7 +34,7 @@ public class MainResourceTest {
     private MainResource mainResource;
     private String exampleText;
     private String exceptionText;
-    private long testID;
+    private String testID;
     private ResponseList<twitter4j.Status> exampleTwitterFeed;
     private List<Status> twServiceResponse = new ArrayList<>();
     private List<Status> responseList;
@@ -51,7 +51,7 @@ public class MainResourceTest {
         mainResource = new MainResource(twSingleton);
         cacheUp = mock(CacheUp.class);
         twSingleton.setCacheUp(cacheUp);
-        testID = 999999l;
+        testID = "999999";
         exampleText = "Tweet Test";
         exceptionText = "Testing TwitterException.";
         exampleTwitterFeed = new ResponseImplTest<>();
@@ -207,32 +207,32 @@ public class MainResourceTest {
     @Test
     public void replyToTweetTestSuccess() {
         StatusUpdate testUpdate = new StatusUpdate(exampleText);
-        testUpdate.setInReplyToStatusId(testID);
+        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
         Status response = null;
 
         try {
 
             when(mockFactory.updateStatus(testUpdate)).thenReturn(twitterStatus);
-            response = (Status) mainResource.replyToTweet(exampleText, testID).getEntity();
+            response = (Status) mainResource.replyToTweet(exampleText, Long.parseLong(testID)).getEntity();
 
         } catch (TwitterException e) {
 
             fail("Test failed due to TwitterException.");
         }
 
-        assertEquals(Response.Status.CREATED.getStatusCode(), mainResource.replyToTweet(exampleText, testID).getStatusInfo().getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(), mainResource.replyToTweet(exampleText, Long.parseLong(testID)).getStatusInfo().getStatusCode());
         assertEquals(twitterStatus.getText(), response.getMessage());
     }
 
     @Test
     public void replyToTweetTestTwitterException() throws TwitterException {
         StatusUpdate testUpdate = new StatusUpdate(exampleText);
-        testUpdate.setInReplyToStatusId(testID);
+        testUpdate.setInReplyToStatusId(Long.parseLong(testID));
 
         when(mockFactory.updateStatus(testUpdate)).thenThrow(new TwitterException(""));
 
-        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.replyToTweet(exampleText, testID).getStatusInfo().getStatusCode());
-        assertEquals(TwitterService.GENERAL_ERR_MSG, mainResource.replyToTweet(exampleText, testID).getEntity());
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), mainResource.replyToTweet(exampleText, Long.parseLong(testID)).getStatusInfo().getStatusCode());
+        assertEquals(TwitterService.GENERAL_ERR_MSG, mainResource.replyToTweet(exampleText, Long.parseLong(testID)).getEntity());
 
     }
 
